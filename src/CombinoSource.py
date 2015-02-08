@@ -50,6 +50,32 @@ class CombinoSource():
 			returnRate_l = float(cellValue_l)
 		return returnRate_l
 	
+	def getNbPlayers(self) :
+		currRow_l = 1 
+		currCol_l = 3 
+		nbPlayers_l = -1
+		if (self.__worksheetConfig != None) :
+			try :
+				cellValue_l = self.__worksheetConfig.cell_value(currRow_l, currCol_l)
+				nbPlayers_l = float(cellValue_l)
+			except (ValueError, IndexError) :
+				nbPlayers_l = -1
+	
+		return nbPlayers_l
+
+	def getJackpot(self) :
+		currRow_l = 0 
+		currCol_l = 3 
+		jackpot_l = -1
+		if (self.__worksheetConfig != None) :
+			try :
+				cellValue_l = self.__worksheetConfig.cell_value(currRow_l, currCol_l)
+				jackpot_l = float(cellValue_l)
+			except (ValueError, IndexError) :
+				jackpot_l = -1
+	
+		return jackpot_l
+
 	def getScndRankRate(self) :
 		currRow_l = 2 
 		currCol_l = 1 
