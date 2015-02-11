@@ -2,9 +2,13 @@ import os,string, sys
 from PySide import QtCore, QtGui
 from CombinoSource import CombinoSource
 from CombinoEngine import CombinoEngine
+from CombinoEngine import GenBetCounter
 
 height_g = 500
 width_g = 600
+__nbGenBets = 0
+__lock = None
+
 
 class CombinoGUI(QtGui.QMainWindow) :
 	def __init__(self, parent_l=None):
@@ -170,6 +174,8 @@ class CombinoGUI(QtGui.QMainWindow) :
 		
 
 	def generate(self) :
+		lock_l = threading.Lock()
+		nbGenBets_l = GenBetCounter()
 		espMin_l = 1 # default value
 		mySource_l = CombinoSource(self.__inputFileName)
 		myGrille_l = mySource_l.getGrille()
@@ -187,6 +193,10 @@ class CombinoGUI(QtGui.QMainWindow) :
 		print "Calcul Proba et Esperances des grilles"
 		f1=open(outputFile_l, 'w+')
 		f1.write("Game;Proba-Rg1;Esp-Rg1;Estim-Rg1;Proba-Rg2;Esp-Rg2;Estim-Rg2;Proba-Rg3;Esp-Rg3;Estim-Rg3;Esp-tot\n")
+		strBet1_l = ""
+		strBetN_l = ""
+		strBet2_l = ""
+
 		returnRate_l = mySource_l.getReturnRate()
 		firstRankRate_l = mySource_l.getFirstRankRate()
 		scndRankRate_l = mySource_l.getScndRankRate()
@@ -203,22 +213,36 @@ class CombinoGUI(QtGui.QMainWindow) :
 			print "3rd rank rate Esp : %f" % thirdRankRate_l
 			print "Jackpot : %f Euros" % jackpot_l
 			print "Nb Players Esp : %f" % nbPlayers_l
-			myBets = CombinoEngine(myGrille_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, totalRate2nd_l, totalRate3rd_l, self)
+			myBet1 = CombinoEngine(myGrille_l, 0, lock_l, nbGenBets_l, strBet1_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, totalRate2nd_l, totalRate3rd_l, self)
+			myBetN = CombinoEngine(myGrille_l, 1, lock_l, nbGenBets_l, strBetN_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, totalRate2nd_l, totalRate3rd_l, self)
+			myBet2 = CombinoEngine(myGrille_l, 2, lock_l, nbGenBets_l, strBet2_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, totalRate2nd_l, totalRate3rd_l, self)
 		elif scndRankRate_l != -1 :
 			totalRate2nd_l = returnRate_l * scndRankRate_l
 			print "1st rank rate Esp : %f" % firstRankRate_l
 			print "2nd rank rate Esp : %f" % scndRankRate_l
 			print "Jackpot : %f Euros" % jackpot_l
 			print "Nb Players Esp : %f" % nbPlayers_l
-			myBets = CombinoEngine(myGrille_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, totalRate2nd_l, 0, self)
+			myBet1 = CombinoEngine(myGrille_l, 0, lock_l, nbGenBets_l, strBet1_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, totalRate2nd_l, 0, self)
+			myBetN = CombinoEngine(myGrille_l, 1, lock_l, nbGenBets_l, strBetN_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, totalRate2nd_l, 0, self)
+			myBet2 = CombinoEngine(myGrille_l, 2, lock_l, nbGenBets_l, strBet2_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, totalRate2nd_l, 0, self)
 		else :
 			print "1st rank rate Esp : %f" % firstRankRate_l
 			print "Jackpot : %f Euros" % jackpot_l
 			print "Nb Players Esp : %f" % nbPlayers_l
-			myBets = CombinoEngine(myGrille_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, 0, 0, self)
-		myBets.generateCombinoBets()
+			myBet1 = CombinoEngine(myGrille_l, 0, lock_l, nbGenBets_l, strBet1_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, 0, 0, self)
+			myBetN = CombinoEngine(myGrille_l, 1, lock_l, nbGenBets_l, strBetN_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, 0, 0, self)
+			myBet2 = CombinoEngine(myGrille_l, 2, lock_l, nbGenBets_l, strBet2_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, 0, 0, self)
+		myBet1.start()
+		myBetN.start()
+		myBet2.start()
+		myBet1.join()
+		myBetN.join()
+		myBet2.join()
 		print "Fichier genere :", outputFile_l
-		f1.write(str(myBets))
+		f1.write(strBet1_l)
+		f1.write(strBetN_l)
+		f1.write(strBet2_l)
+
 
 
 app_l = QtGui.QApplication(sys.argv)

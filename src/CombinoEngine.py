@@ -4,16 +4,21 @@ from PySide import QtCore, QtGui
 import math
 import copy
 from Bet import Bet
+from multiprocessing import Process
 
 betChoice = ['1', 'N', '2']
 
-class CombinoEngine():
+class CombinoEngine(Process):
 
-	def __init__(self, grille_p, returnRate_p, expectedEsperance_p, file_p, jackpot_p, nbPlayers_p, scndRankRate_p=0, thirdRankRate_p=0, mainWindow_p=None): 
+	def __init__(self, grille_p, choice_p, lock_p, nbGenBet_p, strBet_p, returnRate_p, expectedEsperance_p, file_p, jackpot_p, nbPlayers_p, scndRankRate_p=0, thirdRankRate_p=0, mainWindow_p=None): 
+		Process.__init__(self)
 		self.__grille = grille_p
+		self.__choice = choice_p
+		self.__lock = lock_p
+		self.__nbGenBets = nbGenBet_p
+		self.__strBet = strBet_p
 		self.__combinoBets = []
 		self.__nbTotBet = 0
-		self.__nbGenBets = 0
 		self.__indexDisplayPct = 0
 		self.__currentBet = None
 		self.__returnRate = returnRate_p
@@ -47,7 +52,7 @@ class CombinoEngine():
 		return self.__nbPlayers
 
 
-	def generateCombinoBets(self):
+	def run(self):
 		gridSize_l = self.__grille.getSize()
 		if self.__mainWindow != None :
 			self.__progressBar.setGeometry(300, 300, 280, 30)
@@ -64,9 +69,7 @@ class CombinoEngine():
 		self.__currentBet = Bet(self)
 		#self.__currentBet.setReturnRate2(self.__returnRate2)
 		#self.__currentBet.setReturnRate3(self.__returnRate3)
-		self.genCombinoBetRecurcive(0, 0)
-		self.genCombinoBetRecurcive(0, 1)
-		self.genCombinoBetRecurcive(0, 2)
+		self.genCombinoBetRecurcive(0, self.__choice)
 		if self.__mainWindow != None :
 			self.__progressBar.close()
 
@@ -76,19 +79,36 @@ class CombinoEngine():
 			if (self.__currentBet.getRoughEsp() > 1) or (self.__expectedEsperance == 0)  : # optimization
 				self.__currentBet.updateEsperanceAndProba()
 				if self.__currentBet.getNetEsperance(self) >= self.__expectedEsperance :
-					self.__file.write(str(self.__currentBet))
-					#self.__combinoBets.append(copy.deepcopy(self.__currentBet))
-			#else :
-				#print "optimzation"
-			self.__nbGenBets += 1
-			pct_l =  self.__nbGenBets / self.__nbTotBet * 100
-			if pct_l > self.__indexDisplayPct :
-				if self.__mainWindow != None :
-					self.__progressBar.setValue(int(pct_l))
-					self.__progressBar.update()
-				else :
-					self.__indexDisplayPct += 1
-					print "%.0f pct" % pct_l
+					#self.__strBet = ''.join((self.__strBet,str(self.__currentBet)))
+#					print "strBet : %s" % self.__strBet
+					attempt_l = 0
+					written_l = False
+					while not written_l :
+			#*******************LOCK*************************
+						if self.__lock.acquire() :
+							try :
+								self.__file.write(str(self.__currentBet))
+								self.__file.flush()
+								#print "file : %s" % self.__file
+								#print "strBet : %s" % str(self.__currentBet)
+								self.__lock.release()
+								writte_l = True
+							except :
+								if attempt_l >= 5:
+									written_l = True
+									print "Echec ecriture : %s" % str(self.__currentBet)
+								attempt_l += 1
+			#*******************UNLOCK*************************
+
+				self.__nbGenBets.increase() 
+				pct_l =  self.__nbGenBets.getCounter() / self.__nbTotBet * 300
+				if pct_l > self.__indexDisplayPct :
+					if self.__mainWindow != None :
+						self.__progressBar.setValue(int(pct_l))
+						self.__progressBar.update()
+					else :
+						self.__indexDisplayPct += 1
+						print "%.0f pct" % pct_l 
 		else :	
 			self.genCombinoBetRecurcive(numGame_p + 1, 0)
 			self.genCombinoBetRecurcive(numGame_p + 1, 1)
@@ -101,3 +121,13 @@ class CombinoEngine():
 			output_l = ''.join((output_l, str(self.__combinoBets[index_l])))
 
 		return output_l
+
+class GenBetCounter() :
+	def __init__(self) :
+		self.__compteur = 0
+	
+	def increase(self) :
+		self.__compteur += 1
+
+	def getCounter(self) :
+		return self.__compteur

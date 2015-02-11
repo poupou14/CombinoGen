@@ -1,0 +1,19 @@
+Lancement scrap de FrancePari
+7 params
+Lecture fichier Source
+Row: 1
+	1 : Nancy 
+	1 : /
+	1 : Creteil
+	2 : 0.75
+	2 : 0.17
+	2 : 0.08
+	2 : 1.0
+	2 : 1.93
+	2 : 3.55
+	2 : 4.81
+	2 : 1.00772506377
+Row: 2
+	1 : Munich 1860 
+	1 : /
+	1 : 
