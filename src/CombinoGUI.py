@@ -27,8 +27,8 @@ class CombinoGUI(QtGui.QMainWindow) :
 	        self.__labelOutputDirName = None
 	        self.__labelOutputDirMesg = None
 	        self.__buttonInputChoseFile = None
-		self.__ouputFileName = None
-		self.__ouputFile= None
+		self.__outputFileName = None
+		self.__outputFile= None
 
 		# other attribut
 	        self.__inputFileName = None
@@ -167,6 +167,7 @@ class CombinoGUI(QtGui.QMainWindow) :
 #	self.__inputFileName = QtGui.QFileDialog.getOpenFileName(self, "Open xls", os.getcwd(), "xls Files (*.xls)")
 		self.__labelInputFileName.setText(self.__inputFileName)
 		self.__labelInputFileName.adjustSize()
+		print "Input file : %s" % self.__inputFileName
 		if (self.__inputFileName != None) and  (self.__outputDirName != None) :
 			self.__buttonGenerate.setEnabled(True)
 		else :
@@ -177,6 +178,7 @@ class CombinoGUI(QtGui.QMainWindow) :
 		self.__outputDirName = outputDirName_l.replace("\\", "/")
 		self.__labelOutputDirName.setText(self.__outputDirName)
 		self.__labelOutputDirName.adjustSize()
+		print "Output dir : %s" % self.__outputDirName
 		if (self.__inputFileName != None) and  (self.__outputDirName != None) :
 			self.__buttonGenerate.setEnabled(True)
 		else :
@@ -184,23 +186,22 @@ class CombinoGUI(QtGui.QMainWindow) :
 		
 
 	def generate(self) :
-		self.__progressBar.show()
 		espMin_l = 1 # default value
+		print "Lecture fichier Source : %s" % self.__inputFileName
 		mySource_l = CombinoSource(self.__inputFileName)
 		myGrille_l = mySource_l.getGrille()
 		# create outputfile name
-		print "Lecture fichier Source : %s" % self.__inputFileName
 		self.__outputDirName = ''.join((self.__outputDirName, "/")) 
-		self.__ouputFileName = ''.join((self.__inputFileName[0:-3], "csv"))
-		print "outputfile etape 1: %s" % self.__ouputFileName
-		indexStartFileName_l = self.__ouputFileName.rfind("/")
+		self.__outputFileName = ''.join((self.__inputFileName[0:-3], "csv"))
+		print "outputfile etape 1: %s" % self.__outputFileName
+		indexStartFileName_l = self.__outputFileName.rfind("/")
 		#print "separateur : %s" % os.sep
-		self.__ouputFileName = ''.join((self.__outputDirName, self.__ouputFileName[indexStartFileName_l:])) 
+		self.__outputFileName = ''.join((self.__outputDirName, self.__outputFileName[indexStartFileName_l:]))
 		print "outputfile final :", self.__outputDirName
-		print "Destination :", self.__ouputFileName
+		print "Destination :", self.__outputFileName
 
 		print "Calcul Proba et Esperances des grilles"
-		self.__outputFile=open(self.__ouputFileName, 'w+')
+		self.__outputFile=open(self.__outputFileName, 'w+')
 		self.__outputFile.write("Game;Proba-Rg1;Esp-Rg1;Estim-Rg1;Proba-Rg2;Esp-Rg2;Estim-Rg2;Proba-Rg3;Esp-Rg3;Estim-Rg3;Esp-tot\n")
 		returnRate_l = mySource_l.getReturnRate()
 		firstRankRate_l = mySource_l.getFirstRankRate()
@@ -235,16 +236,19 @@ class CombinoGUI(QtGui.QMainWindow) :
  		self.__myBets.finishedSig.connect(self.on_finished)
  		self.__myBets.progressSig.connect(self.on_progressed)
 		self.__progressBar.show()
+		self.__progressBar.setValue(0)
+		self.__progressBar.show()
 		self.__myBets.start()
 
 	@Slot(int)
 	def on_progressed(self, prog):
+		print "%d pct" % prog
 		self.__progressBar.setValue(prog)
 		self.__progressBar.update()
 
 	@Slot()
 	def on_finished(self ):
-		print "Fichier genere :", self.__ouputFileName
+		print "Fichier genere :", self.__outputFileName
 		self.__outputFile.write(str(self.__myBets))
 		self.__progressBar.hide()
 

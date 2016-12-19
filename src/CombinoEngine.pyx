@@ -61,8 +61,9 @@ class CombinoEngine(QThread):
 		self.finishedSig.emit()
 
 	def genCombinoBetRecurcive(self, int numGame_p, int unNDeux_p):
-		cdef :
+		cdef:
 			float pct_l = 0.0
+			int   pctInt = 0
 
 		self.__currentBet.setChoice(numGame_p, betChoice[unNDeux_p])
 		if numGame_p == (self.__grille.getSize() - 1) : # fin de grille
@@ -73,10 +74,12 @@ class CombinoEngine(QThread):
 					#self.__combinoBets.append(copy.deepcopy(self.__currentBet))
 			#else :
 				#print "optimzation"
+			pctInt =  int(self.__nbGenBets / self.__nbTotBet * 100)
 			self.__nbGenBets += 1
 			pct_l =  self.__nbGenBets / self.__nbTotBet * 100
-			self.progressSig.emit(int(pct_l))
-			#print "%.0f pct" % pct_l
+			if int(pct_l) > pctInt :
+				self.progressSig.emit(int(pct_l))
+				#print "%.0f PCT" % pct_l
 		else :	
 			self.genCombinoBetRecurcive(numGame_p + 1, 0)
 			self.genCombinoBetRecurcive(numGame_p + 1, 1)

@@ -11,7 +11,7 @@ clean()
 {
 	rm -f src/*.c
 	rm -f src/*.so
-	rm -rf build
+	rm -rf src/build
 }
 
 ### main logic ###
