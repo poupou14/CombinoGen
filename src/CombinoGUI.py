@@ -1,14 +1,11 @@
 import os,string, sys
 from PySide import QtCore, QtGui
+from PySide.QtCore import  Signal, Slot
 from CombinoSource import CombinoSource
 from CombinoEngine import CombinoEngine
-from CombinoEngine import GenBetCounter
 
-height_g = 500
-width_g = 600
-__nbGenBets = 0
-__lock = None
-
+height_g = 600
+width_g = 800
 
 class CombinoGUI(QtGui.QMainWindow) :
 	def __init__(self, parent_l=None):
@@ -16,9 +13,6 @@ class CombinoGUI(QtGui.QMainWindow) :
 		self.resize(width_g,height_g)
 		self.setFont(QtGui.QFont("Verdana"))
 		self.setWindowTitle("Combino GUI")
-		try:
-			self.setWindowIcon(QtGui.Icon("icon.jpg"))
-		except:pass
 
 		# widgets
 		self.__quit1 = None 
@@ -33,12 +27,28 @@ class CombinoGUI(QtGui.QMainWindow) :
 	        self.__labelOutputDirName = None
 	        self.__labelOutputDirMesg = None
 	        self.__buttonInputChoseFile = None
+		self.__ouputFileName = None
+		self.__ouputFile= None
 
 		# other attribut
 	        self.__inputFileName = None
 		self.__outputDirName = None
 		self.__buttonGenerate = None
+		self.__myBets = None
 
+		self.__progressBar = QtGui.QProgressBar()
+		self.__progressBar.setGeometry(300, 300, 280, 30)
+		size_l = self.__progressBar.geometry()
+		fen_l = QtGui.QDesktopWidget().screenGeometry()
+		self.__progressBar.move((fen_l.width()-size_l.width())/2, (fen_l.height()-size_l.height())/2)
+		self.__progressBar.setRange(0,100)
+		self.__progressBar.setValue(0)
+		self.__progressBar.update()
+		self.__progressBar.setFocus()
+		self.__progressBar.setWindowTitle("Generation progress")
+		try:
+			self.setWindowIcon(QtGui.Icon("icon.jpg"))
+		except:pass
 
 	def createWindow(self) :		
 		# center the window
@@ -75,8 +85,8 @@ class CombinoGUI(QtGui.QMainWindow) :
 
 		#Ajout des QWidgets en temps que Tab du QTabWidget.
 		#Le premier Tab portera le nom Entree et le deuxieme le nom Lecture.
-		self.__tabWidget.addTab(self.__pageGen, "General")
 		self.__tabWidget.addTab(self.__pageGrille, "Grille")
+		self.__tabWidget.addTab(self.__pageGen, "General")
 		self.__tabWidget.addTab(self.__pageConfig, "Config")
         
 		#Modification de la couleur de fond des QWidget.
@@ -153,7 +163,7 @@ class CombinoGUI(QtGui.QMainWindow) :
 
 
 	def browseFile(self) :
-		self.__inputFileName = QtGui.QFileDialog.getOpenFileName(self, "Open xls", os.getcwd(), "xls Files (*.xls)")[0]
+		self.__inputFileName = QtGui.QFileDialog.getOpenFileName(self, "Open xls", ''.join((os.getcwd(), "/../Input/")), "xls Files (*.xls)")[0]
 #	self.__inputFileName = QtGui.QFileDialog.getOpenFileName(self, "Open xls", os.getcwd(), "xls Files (*.xls)")
 		self.__labelInputFileName.setText(self.__inputFileName)
 		self.__labelInputFileName.adjustSize()
@@ -163,7 +173,7 @@ class CombinoGUI(QtGui.QMainWindow) :
 			self.__buttonGenerate.setEnabled(False)
 		
 	def browseDir(self) :
-		outputDirName_l = QtGui.QFileDialog.getExistingDirectory(self, "Output directory", os.getcwd(), QtGui.QFileDialog.ShowDirsOnly | QtGui.QFileDialog.DontResolveSymlinks)
+		outputDirName_l = QtGui.QFileDialog.getExistingDirectory(self, "Output directory", ''.join((os.getcwd(), "/../Output/")), QtGui.QFileDialog.ShowDirsOnly | QtGui.QFileDialog.DontResolveSymlinks)
 		self.__outputDirName = outputDirName_l.replace("\\", "/")
 		self.__labelOutputDirName.setText(self.__outputDirName)
 		self.__labelOutputDirName.adjustSize()
@@ -174,29 +184,24 @@ class CombinoGUI(QtGui.QMainWindow) :
 		
 
 	def generate(self) :
-		lock_l = threading.Lock()
-		nbGenBets_l = GenBetCounter()
+		self.__progressBar.show()
 		espMin_l = 1 # default value
 		mySource_l = CombinoSource(self.__inputFileName)
 		myGrille_l = mySource_l.getGrille()
 		# create outputfile name
 		print "Lecture fichier Source : %s" % self.__inputFileName
 		self.__outputDirName = ''.join((self.__outputDirName, "/")) 
-		outputFile_l = ''.join((self.__inputFileName[0:-3], "csv"))
-		print "outputfile etape 1: %s" % outputFile_l
-		indexStartFileName_l = outputFile_l.rfind("/")
+		self.__ouputFileName = ''.join((self.__inputFileName[0:-3], "csv"))
+		print "outputfile etape 1: %s" % self.__ouputFileName
+		indexStartFileName_l = self.__ouputFileName.rfind("/")
 		#print "separateur : %s" % os.sep
-		outputFile_l = ''.join((self.__outputDirName, outputFile_l[indexStartFileName_l:])) 
+		self.__ouputFileName = ''.join((self.__outputDirName, self.__ouputFileName[indexStartFileName_l:])) 
 		print "outputfile final :", self.__outputDirName
-		print "Destination :", outputFile_l
+		print "Destination :", self.__ouputFileName
 
 		print "Calcul Proba et Esperances des grilles"
-		f1=open(outputFile_l, 'w+')
-		f1.write("Game;Proba-Rg1;Esp-Rg1;Estim-Rg1;Proba-Rg2;Esp-Rg2;Estim-Rg2;Proba-Rg3;Esp-Rg3;Estim-Rg3;Esp-tot\n")
-		strBet1_l = ""
-		strBetN_l = ""
-		strBet2_l = ""
-
+		self.__outputFile=open(self.__ouputFileName, 'w+')
+		self.__outputFile.write("Game;Proba-Rg1;Esp-Rg1;Estim-Rg1;Proba-Rg2;Esp-Rg2;Estim-Rg2;Proba-Rg3;Esp-Rg3;Estim-Rg3;Esp-tot\n")
 		returnRate_l = mySource_l.getReturnRate()
 		firstRankRate_l = mySource_l.getFirstRankRate()
 		scndRankRate_l = mySource_l.getScndRankRate()
@@ -213,36 +218,35 @@ class CombinoGUI(QtGui.QMainWindow) :
 			print "3rd rank rate Esp : %f" % thirdRankRate_l
 			print "Jackpot : %f Euros" % jackpot_l
 			print "Nb Players Esp : %f" % nbPlayers_l
-			myBet1 = CombinoEngine(myGrille_l, 0, lock_l, nbGenBets_l, strBet1_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, totalRate2nd_l, totalRate3rd_l, self)
-			myBetN = CombinoEngine(myGrille_l, 1, lock_l, nbGenBets_l, strBetN_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, totalRate2nd_l, totalRate3rd_l, self)
-			myBet2 = CombinoEngine(myGrille_l, 2, lock_l, nbGenBets_l, strBet2_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, totalRate2nd_l, totalRate3rd_l, self)
+			self.__myBets = CombinoEngine(myGrille_l, totalRate_l, espMin_l, self.__outputFile, jackpot_l, nbPlayers_l, totalRate2nd_l, totalRate3rd_l, self)
 		elif scndRankRate_l != -1 :
 			totalRate2nd_l = returnRate_l * scndRankRate_l
 			print "1st rank rate Esp : %f" % firstRankRate_l
 			print "2nd rank rate Esp : %f" % scndRankRate_l
 			print "Jackpot : %f Euros" % jackpot_l
 			print "Nb Players Esp : %f" % nbPlayers_l
-			myBet1 = CombinoEngine(myGrille_l, 0, lock_l, nbGenBets_l, strBet1_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, totalRate2nd_l, 0, self)
-			myBetN = CombinoEngine(myGrille_l, 1, lock_l, nbGenBets_l, strBetN_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, totalRate2nd_l, 0, self)
-			myBet2 = CombinoEngine(myGrille_l, 2, lock_l, nbGenBets_l, strBet2_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, totalRate2nd_l, 0, self)
+			self.__myBets = CombinoEngine(myGrille_l, totalRate_l, espMin_l, self.__outputFile, jackpot_l, nbPlayers_l, totalRate2nd_l, 0, self)
 		else :
 			print "1st rank rate Esp : %f" % firstRankRate_l
 			print "Jackpot : %f Euros" % jackpot_l
 			print "Nb Players Esp : %f" % nbPlayers_l
-			myBet1 = CombinoEngine(myGrille_l, 0, lock_l, nbGenBets_l, strBet1_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, 0, 0, self)
-			myBetN = CombinoEngine(myGrille_l, 1, lock_l, nbGenBets_l, strBetN_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, 0, 0, self)
-			myBet2 = CombinoEngine(myGrille_l, 2, lock_l, nbGenBets_l, strBet2_l, totalRate_l, espMin_l, f1, jackpot_l, nbPlayers_l, 0, 0, self)
-		myBet1.start()
-		myBetN.start()
-		myBet2.start()
-		myBet1.join()
-		myBetN.join()
-		myBet2.join()
-		print "Fichier genere :", outputFile_l
-		f1.write(strBet1_l)
-		f1.write(strBetN_l)
-		f1.write(strBet2_l)
+			self.__myBets = CombinoEngine(myGrille_l, totalRate_l, espMin_l, self.__outputFile, jackpot_l, nbPlayers_l, 0, 0, self)
+		# Finished generation
+ 		self.__myBets.finishedSig.connect(self.on_finished)
+ 		self.__myBets.progressSig.connect(self.on_progressed)
+		self.__progressBar.show()
+		self.__myBets.start()
 
+	@Slot(int)
+	def on_progressed(self, prog):
+		self.__progressBar.setValue(prog)
+		self.__progressBar.update()
+
+	@Slot()
+	def on_finished(self ):
+		print "Fichier genere :", self.__ouputFileName
+		self.__outputFile.write(str(self.__myBets))
+		self.__progressBar.hide()
 
 
 app_l = QtGui.QApplication(sys.argv)

@@ -5,12 +5,8 @@ import time
 import urllib2
 
 
-
-class Bet():
-
+class Bet:
 	def __init__(self, myCombinoEngine_p): 
-		self.__engine = myCombinoEngine_p
-		self.__combin = []
 		self.__esperance = 0.0
 		self.__esperance_n_1 = 0.0
 		self.__esperance_n_2 = 0.0
@@ -21,6 +17,8 @@ class Bet():
 		self.__proba = 0.0
 		self.__proba_n_1 = 0.0
 		self.__proba_n_2 = 0.0
+		self.__engine = myCombinoEngine_p
+		self.__combin = []
 		self.__returnRate = myCombinoEngine_p.getReturnRate()
 		self.__scndRankRate = myCombinoEngine_p.getReturnRate2()
 		self.__thirdRankRate = myCombinoEngine_p.getReturnRate3()
@@ -41,6 +39,9 @@ class Bet():
 		self.updateEsperanceAndProba()
 
 	def getRoughEsp(self):
+		cdef int result_l
+		cdef int index_l
+		result_l = -1
 		grille_l = self.__engine.getGrille() 
 		esperance_l = 1
 		size_l = grille_l.getSize()
@@ -56,13 +57,15 @@ class Bet():
 		return esperance_l
 
 	def getResult(self, bet_p) :
-			if bet_p == '1' :
-				result_l = 0
-			elif bet_p == 'N' :
-				result_l = 1
-			elif bet_p == '2' :
-				result_l = 2
-			return result_l
+		cdef int result_l
+		result_l = -1
+		if bet_p == '1' :
+			result_l = 0
+		elif bet_p == 'N' :
+			result_l = 1
+		elif bet_p == '2' :
+			result_l = 2
+		return result_l
 
 	def getProba(self) :
 		return self.__proba
@@ -84,6 +87,7 @@ class Bet():
 		return esperance_l
 
 	def __str__(self):
+		cdef int index_l
 		output_l = ""
 		for index_l in range(0, len(self.__combin)) :
 			output_l = ''.join((output_l, self.__combin[index_l]))
@@ -166,6 +170,14 @@ class Bet():
 
 		
 	def updateEsperanceAndProba(self):
+		cdef:
+			int result_l, index2ndRank_l, size_l, index_l, index_n_2_A_l, index_n_2_B_l
+			double esperance_l,gainEst_l,proba_l, proba_n_1_l, cote2ndRank_l,result2ndRank_l, probaMatch_l, repartitionMatch_l, proba_tmp_l, probaMatch_n_2_A_l, probaMatch_n_2_B_l, esperance2ndMin_l, esperance2nd_l, esperance3rd_l, gainEst_tmp_l, gainEst_n_1_l, gainEst_n_2_l, gainEst_n_2_min_l, repartitionMatch_n_2_A_l, repartitionMatch_n_2_B_l, sommeInvGagnants_n_1, sommeInvGagnants_n_1_max_l, sommeInvGagnants_n_2, sommeInvGagnants_n_2_max_l, nbgagnantsMax_l, nbgagnants_l, nbPlayers_l
+			double probaN_1_l[20]
+			double gainEstN_1_l[20]
+			#float probaN_2_l[20]
+			double gainEstN_2_l[20][20]
+		result_l = -1
 		grille_l = self.__engine.getGrille() 
 		esperance_l = 1
 		gainEst_l = 1
@@ -178,14 +190,17 @@ class Bet():
 		cote2ndRank_l = 100000 # maximum !!
 		index2ndRank_l = 0
 		result2ndRank_l = 0
-		probaN_1_l = []
-		gainEstN_1_l = []
-		probaN_2_l = []
-		gainEstN_2_l = []
+		#probaN_1_l = []
+		#gainEstN_1_l = []
+		#probaN_2_l = []
+		#gainEstN_2_l = []
 		size_l = grille_l.getSize()
-		for index_l in range(0,size_l):
-			probaN_2_l.append([0]*size_l)
-			gainEstN_2_l.append([0]*size_l)
+		#for index_l in range(0,size_l):
+		for index_l from 0 <= index_l < size_l:
+			#probaN_2_l.append([0]*size_l)
+			#probaN_2_l[index_l] = 0
+			#gainEstN_2_l[index_l]=[0]*size_l
+			#gainEstN_2_l[index_l] = 0
 			bet_l = self.__combin[index_l]
 
 			result_l = self.getResult(bet_l)
@@ -194,12 +209,19 @@ class Bet():
 			probaMatch_l = 1/grille_l.getGame(index_l).getCotes(result_l)
 			repartitionMatch_l = grille_l.getGame(index_l).getRepartition(result_l)
 			#esperance_l = esperance_l * (probaMatch_l/repartitionMatch_l) 
+
+			for index_n_1_l from 0 <= index_n_1_l < size_l:
+				gainEstN_2_l[index_l][index_n_1_l] = 0
 			
 			if (self.__scndRankRate > 0) :
 				# Proba and gain scnd rank
-				probaN_1_l.append(proba_l * (1 - probaMatch_l)) 
-				gainEstN_1_l.append(gainEst_l / (1 - repartitionMatch_l)) 
-				for index_n_1_l in range(0, index_l) :
+				#probaN_1_l.append(proba_l * (1 - probaMatch_l)) 
+				probaN_1_l[index_l] = proba_l * (1 - probaMatch_l)
+				#gainEstN_1_l.append(gainEst_l / (1 - repartitionMatch_l)) 
+				gainEstN_1_l[index_l] = gainEst_l / (1 - repartitionMatch_l)
+				#for index_n_1_l in range(0, index_l) :
+				for index_n_1_l from 0 <= index_n_1_l < index_l:
+#					gainEstN_2_l[index_l][index_n_1_l] = 0
 					gainEstN_1_l[index_n_1_l] = gainEstN_1_l[index_n_1_l] / repartitionMatch_l
 					probaN_1_l[index_n_1_l] = probaN_1_l[index_n_1_l] * probaMatch_l
 			#		print "Calc proba rg 2 : %f pct" % probaN_1_l[index_n_1_l]
@@ -208,17 +230,19 @@ class Bet():
 			proba_l = proba_l * probaMatch_l
 			gainEst_l = gainEst_l / repartitionMatch_l
 
-		nbPlayers_l = self.__engine.getNbPlayers()
+		nbPlayers_l = float(self.__engine.getNbPlayers())
 		# Proba and gain third rank
 		if (self.__thirdRankRate > 0) :
-			for index_n_2_A_l in range(0, size_l) :
+			#for index_n_2_A_l in range(0, size_l) :
+			for index_n_2_A_l from 0 <= index_n_2_A_l < size_l:
 	#		if (index_n_1_l < size_l -1) :
 				bet_n_2_A_l = self.__combin[index_n_2_A_l]
 				result_n_2_A_l = self.getResult(bet_n_2_A_l)
 				probaMatch_n_2_A_l =  1/grille_l.getGame(index_n_2_A_l).getCotes(result_n_2_A_l)
 				repartitionMatch_n_2_A_l = grille_l.getGame(index_n_2_A_l).getRepartition(result_n_2_A_l)
 
-				for index_n_2_B_l in range(index_n_2_A_l + 1, size_l) :
+				#for index_n_2_B_l in range(index_n_2_A_l + 1, size_l) :
+				for index_n_2_B_l from index_n_2_A_l + 1 <= index_n_2_B_l < size_l:
 					proba_tmp_l = proba_l * (1 - probaMatch_n_2_A_l) / probaMatch_n_2_A_l
 					gainEst_tmp_l = gainEst_l * repartitionMatch_n_2_A_l / (1 - repartitionMatch_n_2_A_l) 
 					bet_n_2_B_l = self.__combin[index_n_2_B_l]
@@ -239,7 +263,8 @@ class Bet():
 			sommeInvGagnants_n_1_max_l = 0
 			sommeInvGagnants_n_2 = 0
 			sommeInvGagnants_n_2_max_l = 0
-			for index_n_1_l in range(0, size_l) :
+			#for index_n_1_l in range(0, size_l) :
+			for index_n_1_l from 0 <= index_n_1_l < size_l:
 				self.__proba_n_1 = self.__proba_n_1 + probaN_1_l[index_n_1_l]
 				sommeInvGagnants_n_1 = sommeInvGagnants_n_1 + 1/gainEstN_1_l[index_n_1_l]
 				sommeInvGagnants_n_1_max_l = max(sommeInvGagnants_n_1_max_l, 1/gainEstN_1_l[index_n_1_l])
@@ -247,10 +272,14 @@ class Bet():
 					sommeInvGagnants_n_1_max_l = min(sommeInvGagnants_n_1_max_l,nbPlayers_l)
 					sommeInvGagnants_n_1 = min(sommeInvGagnants_n_1,nbPlayers_l)
 				if self.__thirdRankRate > 0 :
-					for index_n_2_l in range(0, size_l) :
+					#for index_n_2_l in range(0, size_l) :
+					for index_n_2_l from 0 <= index_n_2_l < size_l:
 						if (gainEstN_2_l[index_n_1_l][index_n_2_l] != 0) :
 							sommeInvGagnants_n_2 = sommeInvGagnants_n_2 + 1/gainEstN_2_l[index_n_1_l][index_n_2_l]
 							sommeInvGagnants_n_2_max_l = max(sommeInvGagnants_n_2_max_l, 1/gainEstN_2_l[index_n_1_l][index_n_2_l])
+						#else :
+							#print "index 1 : %d" % index_n_1_l
+							#print "index 2 : %d" % index_n_2_l
 						if (nbPlayers_l > 0):
 							sommeInvGagnants_n_2_max_l = min(sommeInvGagnants_n_2_max_l,nbPlayers_l)
 							sommeInvGagnants_n_2 = min(sommeInvGagnants_n_2,nbPlayers_l)
@@ -297,7 +326,7 @@ class Bet():
 			else :
 				self.__gainEst = 1000000/nbgagnants_l
 		else :
-			nbgagnants_l = int(nbPlayers_l / gainEst_l / self.__returnRate) + 1
+			nbgagnants_l = int((nbPlayers_l) / gainEst_l)  + 1
 			#print "gain :", gainEst_l, nbgagnants_l
 			if (jackpot_l >0) : 
 				#self.__gainEst = min(gainEst_l, jackpot_l)

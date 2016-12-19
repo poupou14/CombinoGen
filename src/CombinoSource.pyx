@@ -17,24 +17,24 @@ from xlwt import Workbook,easyxf,Formula,Style
 from Grille import Grille
 from Match import Match
 
-def onlyascii(char):
-    if ord(char) <= 0 or ord(char) > 127: 
-	return ''
-    else: 
-	return char
+def onlyascii(char_p):
+	if ord(char_p) <= 0 or ord(char_p) > 127: 
+		return ''
+	else: 
+		return char_p
 
 def isnumber(s):
-    try:
-        float(s)
-        return True
-    except ValueError:
-        return False
+	try:
+		float(s)
+		return True
+	except ValueError:
+		return False
 
 class CombinoSource():
 
 	def __init__(self, fileName_p): 
-    		self.__workbook = open_workbook(fileName_p)
-    		self.__grille = None
+		self.__workbook = open_workbook(fileName_p)
+		self.__grille = None
 		self.__worksheet = self.__workbook.sheet_by_name('Grille')
 		try :
 			self.__worksheetConfig = self.__workbook.sheet_by_name('Config')
@@ -113,6 +113,16 @@ class CombinoSource():
 
 
 	def getGrille(self) :
+		cdef :
+			float cote1_l = 0.0
+			float coteN_l = 0.0
+			float cote2_l = 0.0
+			float rep1_l = 0.0
+			float repN_l = 0.0
+			float rep2_l = 0.0
+			int currRow_l, nbRows_l
+			int currCol_l, nbCols_l
+
 		self.__grille = Grille()
 		nbRows_l = self.__worksheet.nrows - 1
 		nbCols_l = self.__worksheet.ncols - 1
@@ -170,29 +180,29 @@ class CombinoSource():
 
 
 def open_excel_sheet():
-    """ Opens a reference to an Excel WorkBook and Worksheet objects """
-    workbook = Workbook()
-    worksheet = workbook.add_sheet("Sheet 1")
-    return workbook, worksheet
+	""" Opens a reference to an Excel WorkBook and Worksheet objects """
+	workbook = Workbook()
+	worksheet = workbook.add_sheet("Sheet 1")
+	return workbook, worksheet
 
 def write_excel_header(worksheet, title_cols):
-    """ Write the header line into the worksheet """
-    cno = 0
-    for title_col in title_cols:
-        worksheet.write(0, cno, title_col)
-        cno = cno + 1
-    return
+	""" Write the header line into the worksheet """
+	cno = 0
+	for title_col in title_cols:
+		worksheet.write(0, cno, title_col)
+		cno = cno + 1
+	return
 
 def write_excel_row(worksheet, rowNumber, columnNumber):
-    """ Write a non-header row into the worksheet """
-    cno = 0
-    for column in columns:
-        worksheet.write(lno, cno, column)
-        cno = cno + 1
-    return
+	""" Write a non-header row into the worksheet """
+	cno = 0
+	for column in columns:
+		worksheet.write(lno, cno, column)
+		cno = cno + 1
+	return
 
 def save_excel_sheet(workbook, output_file_name):
-    """ Saves the in-memory WorkBook object into the specified file """
-    workbook.save(output_file_name)
-    return
+	""" Saves the in-memory WorkBook object into the specified file """
+	workbook.save(output_file_name)
+	return
 
