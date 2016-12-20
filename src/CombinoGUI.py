@@ -8,6 +8,7 @@ height_g = 600
 width_g = 800
 
 class CombinoGUI(QtGui.QMainWindow) :
+	stopGenSig = Signal()
 	def __init__(self, parent_l=None):
 		QtGui.QMainWindow.__init__(self, parent_l)
 		self.resize(width_g,height_g)
@@ -27,6 +28,7 @@ class CombinoGUI(QtGui.QMainWindow) :
 	        self.__labelOutputDirName = None
 	        self.__labelOutputDirMesg = None
 	        self.__buttonInputChoseFile = None
+		self.__buttonCancelGen = None
 		self.__outputFileName = None
 		self.__outputFile= None
 
@@ -36,16 +38,8 @@ class CombinoGUI(QtGui.QMainWindow) :
 		self.__buttonGenerate = None
 		self.__myBets = None
 
-		self.__progressBar = QtGui.QProgressBar()
-		self.__progressBar.setGeometry(300, 300, 280, 30)
-		size_l = self.__progressBar.geometry()
+		self.__progressBar = None
 		fen_l = QtGui.QDesktopWidget().screenGeometry()
-		self.__progressBar.move((fen_l.width()-size_l.width())/2, (fen_l.height()-size_l.height())/2)
-		self.__progressBar.setRange(0,100)
-		self.__progressBar.setValue(0)
-		self.__progressBar.update()
-		self.__progressBar.setFocus()
-		self.__progressBar.setWindowTitle("Generation progress")
 		try:
 			self.setWindowIcon(QtGui.Icon("icon.jpg"))
 		except:pass
@@ -114,7 +108,7 @@ class CombinoGUI(QtGui.QMainWindow) :
 
 		#self.__quit = QtGui.QPushButton("Quitter", self.__pageGen)
 		#self.__quit.move(100, 100)
-		#self.__quit.clicked.connect(self.close)
+		#self.__quit.clicked.connect(self.close1)
 
 
 	def fillPageGen(self) :
@@ -152,8 +146,29 @@ class CombinoGUI(QtGui.QMainWindow) :
 		self.__buttonOutputDir.move(self.width() - 100 ,80)
 		self.__buttonOutputDir.clicked.connect(self.browseDir)
 
+		# Progress Bar
+		sizeFen_l = self.geometry()
+		self.__progressBar = QtGui.QProgressBar(self.__pageGen)
+		print "height = %d" % sizeFen_l.height()
+		self.__progressBar.setGeometry(10, sizeFen_l.height() - 180, sizeFen_l.width() - 140, 30)
+		size_l = self.__progressBar.geometry()
+		#self.__progressBar.move((fen_l.width()-size_l.width())/2, (fen_l.height()-size_l.height())/2)
+		self.__progressBar.setRange(0,100)
+		self.__progressBar.setValue(0)
+		self.__progressBar.update()
+		self.__progressBar.setFocus()
+		self.__progressBar.setWindowTitle("Generation progress")
+		self.__progressBar.hide()
 		#self.__quit = QtGui.QPushButton("Quitter", self.__pageGen)
-	
+		# Input File button
+		self.__buttonCancelGen = QtGui.QPushButton("Cancel", self.__pageGen)
+		buttonSize_l = self.__buttonCancelGen.geometry()
+		print "height - 180 = %d" % (sizeFen_l.height() - 180)
+		self.__buttonCancelGen.move(self.width() - 100 ,sizeFen_l.height() - 180)
+		self.__buttonCancelGen.hide()
+		self.__buttonCancelGen.clicked.connect(self.cancelGen)
+
+
 	def fillPageConfig(self) :
 		print "config"
 
@@ -163,7 +178,8 @@ class CombinoGUI(QtGui.QMainWindow) :
 
 
 	def browseFile(self) :
-		self.__inputFileName = QtGui.QFileDialog.getOpenFileName(self, "Open xls", ''.join((os.getcwd(), "/../Input/")), "xls Files (*.xls)")[0]
+		print "input dir = %s" % ''.join((os.getcwd(), "/Input/"))
+		self.__inputFileName = QtGui.QFileDialog.getOpenFileName(self, "Open xls", ''.join((os.getcwd(), "/Input/")), "xls Files (*.xls)")[0]
 #	self.__inputFileName = QtGui.QFileDialog.getOpenFileName(self, "Open xls", os.getcwd(), "xls Files (*.xls)")
 		self.__labelInputFileName.setText(self.__inputFileName)
 		self.__labelInputFileName.adjustSize()
@@ -173,8 +189,13 @@ class CombinoGUI(QtGui.QMainWindow) :
 		else :
 			self.__buttonGenerate.setEnabled(False)
 		
+	def cancelGen(self) :
+		self.stopGenSig.emit()
+
+
 	def browseDir(self) :
-		outputDirName_l = QtGui.QFileDialog.getExistingDirectory(self, "Output directory", ''.join((os.getcwd(), "/../Output/")), QtGui.QFileDialog.ShowDirsOnly | QtGui.QFileDialog.DontResolveSymlinks)
+		print "run dir = %s" % ''.join((os.getcwd(), "/Output/"))
+		outputDirName_l = QtGui.QFileDialog.getExistingDirectory(self, "Output directory", ''.join((os.getcwd(), "/Output/")), QtGui.QFileDialog.ShowDirsOnly | QtGui.QFileDialog.DontResolveSymlinks)
 		self.__outputDirName = outputDirName_l.replace("\\", "/")
 		self.__labelOutputDirName.setText(self.__outputDirName)
 		self.__labelOutputDirName.adjustSize()
@@ -235,9 +256,9 @@ class CombinoGUI(QtGui.QMainWindow) :
 		# Finished generation
  		self.__myBets.finishedSig.connect(self.on_finished)
  		self.__myBets.progressSig.connect(self.on_progressed)
-		self.__progressBar.show()
 		self.__progressBar.setValue(0)
 		self.__progressBar.show()
+		self.__buttonCancelGen.show()
 		self.__myBets.start()
 
 	@Slot(int)
@@ -251,6 +272,7 @@ class CombinoGUI(QtGui.QMainWindow) :
 		print "Fichier genere :", self.__outputFileName
 		self.__outputFile.write(str(self.__myBets))
 		self.__progressBar.hide()
+		self.__buttonCancelGen.hide()
 
 
 app_l = QtGui.QApplication(sys.argv)

@@ -14,7 +14,7 @@ class CombinoEngine(QThread):
 	finishedSig = Signal()
 
 	def __init__(self, grille_p, returnRate_p, expectedEsperance_p, file_p, jackpot_p, nbPlayers_p, scndRankRate_p=0, thirdRankRate_p=0, mainWindow_p=None, parent = None): 
-		QThread.__init__(self, parent)
+		QThread.__init__(self, mainWindow_p)
 		self.exiting = False
 		self.__grille = grille_p
 		self.__combinoBets = []
@@ -28,6 +28,8 @@ class CombinoEngine(QThread):
 		self.__file = file_p
 		self.__jackpot = jackpot_p
 		self.__nbPlayers = nbPlayers_p
+		self.__cancel = False
+		mainWindow_p.stopGenSig.connect(self.cancelGen)
 
 	def getGrille(self):
 		return self.__grille
@@ -64,7 +66,8 @@ class CombinoEngine(QThread):
 		cdef:
 			float pct_l = 0.0
 			int   pctInt = 0
-
+		if self.__cancel:
+			return
 		self.__currentBet.setChoice(numGame_p, betChoice[unNDeux_p])
 		if numGame_p == (self.__grille.getSize() - 1) : # fin de grille
 			if (self.__currentBet.getRoughEsp() > 1) or (self.__expectedEsperance == 0)  : # optimization
@@ -85,7 +88,10 @@ class CombinoEngine(QThread):
 			self.genCombinoBetRecurcive(numGame_p + 1, 1)
 			self.genCombinoBetRecurcive(numGame_p + 1, 2)
 		return
-	
+	def cancelGen(self):
+		print "cancelGen slot"
+		self.__cancel = True
+
 	def __str__(self):
 		cdef int index_l
 		output_l = ""
