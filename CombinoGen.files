@@ -13,3 +13,5 @@ src/CombinoEngine.pyx
 src/CombinoGUI.py
 src/CombinoSource.pyx
 src/Match.pyx
+src/mainwin.ui
+src/ui_mainwin.py

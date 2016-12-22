@@ -3,6 +3,7 @@ from PySide import QtCore, QtGui
 from PySide.QtCore import  Signal, Slot
 from CombinoSource import CombinoSource
 from CombinoEngine import CombinoEngine
+from ui_mainwin import Ui_MainWin
 
 height_g = 600
 width_g = 800
@@ -14,7 +15,11 @@ class CombinoGUI(QtGui.QMainWindow) :
 		self.resize(width_g,height_g)
 		self.setFont(QtGui.QFont("Verdana"))
 		self.setWindowTitle("Combino GUI")
+		# ui
+		self.ui = Ui_MainWin()
+		self.ui.setupUi(self)
 
+		self.ui.pbUpdate.clicked.connect(self.do_update)
 		# widgets
 		self.__quit1 = None 
 		self.__menuquit = None 
@@ -43,6 +48,9 @@ class CombinoGUI(QtGui.QMainWindow) :
 		try:
 			self.setWindowIcon(QtGui.Icon("icon.jpg"))
 		except:pass
+
+	def do_update(self):
+		print "update !"
 
 	def createWindow(self) :		
 		# center the window
@@ -277,7 +285,7 @@ class CombinoGUI(QtGui.QMainWindow) :
 
 app_l = QtGui.QApplication(sys.argv)
 combinoGui_l = CombinoGUI()
-combinoGui_l.createWindow()
+#combinoGui_l.createWindow()
 combinoGui_l.show()
 sys.exit(app_l.exec_())
 
