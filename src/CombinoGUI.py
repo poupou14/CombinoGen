@@ -50,7 +50,13 @@ class CombinoGUI(QtGui.QMainWindow) :
 		except:pass
 
 	def do_update(self):
-		print "update !"
+		self.ui.comboBookBox.addItem("Winamax 7")
+		self.ui.comboBookBox.addItem("Winamax 12")
+		self.ui.comboBookBox.addItem("LotoFoot 7")
+		self.ui.comboBookBox.addItem("LotoFoot 15")
+		self.ui.comboBookBox.addItem("Betclic 5")
+		self.ui.comboBookBox.addItem("Betclic 8")
+		print "updated !"
 
 	def createWindow(self) :		
 		# center the window
