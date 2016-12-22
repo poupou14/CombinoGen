@@ -1,6 +1,7 @@
 import os,string, sys
 from PySide import QtCore, QtGui
-from PySide.QtCore import  Signal, Slot
+from PySide.QtCore import  Signal, Slot, QUrl, QRegExp
+from PySide.QtNetwork import  *
 from CombinoSource import CombinoSource
 from CombinoEngine import CombinoEngine
 from ui_mainwin import Ui_MainWin
@@ -20,22 +21,12 @@ class CombinoGUI(QtGui.QMainWindow) :
 		self.ui.setupUi(self)
 
 		self.ui.pbUpdate.clicked.connect(self.do_update)
-		# widgets
-		self.__quit1 = None 
-		self.__menuquit = None 
-		self.__menubar = None 
-		self.__tabWidget = None 
-		self.__pageGen = None 
-		self.__pageGrille = None 
-		self.__pageConfig = None 
-	        self.__labelInputFileName = None
-	        self.__labelInputFileMesg = None
-	        self.__labelOutputDirName = None
-	        self.__labelOutputDirMesg = None
-	        self.__buttonInputChoseFile = None
-		self.__buttonCancelGen = None
-		self.__outputFileName = None
-		self.__outputFile= None
+		self.ui.comboBookBox.activated[int].connect(self.do_changeBook)
+
+		self.__bookUrl = None
+		self.__manager = QNetworkAccessManager(self)
+		self.__manager.finished[QNetworkReply].connect(self.do_receiveHtml)
+
 
 		# other attribut
 	        self.__inputFileName = None
@@ -49,6 +40,34 @@ class CombinoGUI(QtGui.QMainWindow) :
 			self.setWindowIcon(QtGui.Icon("icon.jpg"))
 		except:pass
 
+	def do_receiveHtml(self, reply):
+		htmlPage = reply.readAll()
+		wina7rx = QRegExp("\"pool_id\":7000(\\d+)")
+		posi = wina7rx.indexIn(str(htmlPage))
+		print "grille : %s" % wina7rx.cap(1)
+
+	def do_changeBook(self, index):
+		if index == 0 :
+			request = QNetworkRequest(QUrl("https://www.winamax.fr/paris-sportifs-grilles/"))
+			request.setAttribute(QNetworkRequest.RedirectionTargetAttribute, True)
+			reponse = self.__manager.get(request)
+			print "Winamax 7"
+			#event = QEventLoop()
+			#self.__manager.finished.connect(event.quit());
+			#event.exec_()
+		elif index == 1 :
+			print "Winamax 12"
+		elif index == 2 :
+			print "LotoFoot 7"
+		elif index == 3 :
+			print "LotoFoot 15"
+		elif index == 4 :
+			print "Betclic 5"
+		elif index == 5 :
+			print "Betclic 8"
+		else:
+			print "index = %s" % index
+
 	def do_update(self):
 		self.ui.comboBookBox.addItem("Winamax 7")
 		self.ui.comboBookBox.addItem("Winamax 12")
@@ -56,6 +75,7 @@ class CombinoGUI(QtGui.QMainWindow) :
 		self.ui.comboBookBox.addItem("LotoFoot 15")
 		self.ui.comboBookBox.addItem("Betclic 5")
 		self.ui.comboBookBox.addItem("Betclic 8")
+		self.do_changeBook(0)
 		print "updated !"
 
 	def createWindow(self) :		
