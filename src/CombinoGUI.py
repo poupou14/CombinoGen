@@ -1,10 +1,13 @@
 import os,string, sys
 from PySide import QtCore, QtGui
-from PySide.QtCore import  Signal, Slot, QUrl, QRegExp
+from PySide.QtCore import  Signal, Slot, QUrl
 from PySide.QtNetwork import  *
 from CombinoSource import CombinoSource
 from CombinoEngine import CombinoEngine
 from ui_mainwin import Ui_MainWin
+from readGridHandler import readGridHandler
+from readWinamax7Handler import readWinamax7Handler
+from readWinamax12Handler import readWinamax12Handler
 
 height_g = 600
 width_g = 800
@@ -23,7 +26,7 @@ class CombinoGUI(QtGui.QMainWindow) :
 		self.ui.pbUpdate.clicked.connect(self.do_update)
 		self.ui.comboBookBox.activated[int].connect(self.do_changeBook)
 
-		self.__bookUrl = None
+		self.__gridHandler = None
 		self.__manager = QNetworkAccessManager(self)
 		self.__manager.finished[QNetworkReply].connect(self.do_receiveHtml)
 
@@ -35,38 +38,53 @@ class CombinoGUI(QtGui.QMainWindow) :
 		self.__myBets = None
 
 		self.__progressBar = None
-		fen_l = QtGui.QDesktopWidget().screenGeometry()
+		#fen_l = QtGui.QDesktopWidget().screenGeometry()
 		try:
 			self.setWindowIcon(QtGui.Icon("icon.jpg"))
 		except:pass
 
 	def do_receiveHtml(self, reply):
+		print "do_receiveHtml"
 		htmlPage = reply.readAll()
-		wina7rx = QRegExp("\"pool_id\":7000(\\d+)")
-		posi = wina7rx.indexIn(str(htmlPage))
-		print "grille : %s" % wina7rx.cap(1)
+		self.__gridHandler.handleHtmlPage(htmlPage)
+		self.updateWindow()
 
 	def do_changeBook(self, index):
 		if index == 0 :
-			request = QNetworkRequest(QUrl("https://www.winamax.fr/paris-sportifs-grilles/"))
-			request.setAttribute(QNetworkRequest.RedirectionTargetAttribute, True)
-			reponse = self.__manager.get(request)
-			print "Winamax 7"
-			#event = QEventLoop()
-			#self.__manager.finished.connect(event.quit());
-			#event.exec_()
+			self.__gridHandler = readWinamax7Handler()
 		elif index == 1 :
+			self.__gridType = "winamax12"
 			print "Winamax 12"
 		elif index == 2 :
+			self.__gridType = "lotofoot7"
 			print "LotoFoot 7"
 		elif index == 3 :
+			self.__gridType = "lotofoot15"
 			print "LotoFoot 15"
 		elif index == 4 :
+			self.__gridType = "betclic5"
 			print "Betclic 5"
 		elif index == 5 :
+			self.__gridType = "betclic8"
 			print "Betclic 8"
 		else:
 			print "index = %s" % index
+		#try :
+		request = QNetworkRequest(self.__gridHandler.bookUrl)
+		#request.setAttribute(QNetworkRequest.RedirectionTargetAttribute, True)
+		reponse = self.__manager.get(request)
+		#except :
+			#print "Error while getting grid info"
+
+	def updateWindow(self) :
+		index = self.ui.comboGridBox.count()
+		while index != 0:
+			print "remove index %d" % index
+			self.ui.comboGridBox.removeItem(index-1)
+			index = self.ui.comboGridBox.count()
+		for gridNumber in self.__gridHandler.gridList :
+			print "add grid n %s" % gridNumber
+			self.ui.comboGridBox.addItem(gridNumber)
 
 	def do_update(self):
 		self.ui.comboBookBox.addItem("Winamax 7")

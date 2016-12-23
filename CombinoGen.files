@@ -11,6 +11,9 @@ src/Grille.pyx
 src/setup.py
 src/CombinoEngine.pyx
 src/CombinoGUI.py
+src/readGridHandler.py
+src/readWinamax7Handler.py
+src/readWinamax12Handler.py
 src/CombinoSource.pyx
 src/Match.pyx
 src/mainwin.ui
