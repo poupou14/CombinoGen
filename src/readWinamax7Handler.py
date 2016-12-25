@@ -14,12 +14,30 @@ class readWinamax7Handler(readGridHandler):
 		return
 
 	def handleHtmlPage(self, htmlPage):
+		tup = ()
 		self.gridList = []
-		wina7rx = QRegExp("\"pool_id\":7000(\\d+)")
+		wina7rx = QRegExp("\{\"pool_id\":7000(\\d+).*\"pool_end\":(\\d+).*\}")
 		posi = wina7rx.indexIn(str(htmlPage))
-		self.gridList.append(wina7rx.cap(1))
-		print "grille : %s" % self.gridList[0]
+		ngrille = wina7rx.cap(1)
+		print "ngrille=%s" % ngrille
+		#self.gridList.append(wina7rx.cap(1))
+		date = wina7rx.cap(2)
+		print "date=%s" % date
+		tup = (ngrille, date)
+		self.gridList.append(tup)
 		while posi != -1 :
 			posi = wina7rx.indexIn(str(htmlPage), posi+1)
-			self.gridList.append(wina7rx.cap(1))
+			ngrille = wina7rx.cap(1)
+			print "ngrille=%s" % ngrille
+			date = wina7rx.cap(2)
+			print "date=%s" % date
+			tup = (ngrille, date)
+			self.gridList.append(tup)
+		print self.gridList
 
+
+	def changeGrid(self, index):
+		readGridHandler.changeGrid(self, index)
+		self.distributionUrl = "https://www.winamax.fr/paris-sportifs-grilles/grille7-%s/grilles-publiques" % self.gridList[index][0]
+		print "distributionUrl=%s" % self.distributionUrl
+		return

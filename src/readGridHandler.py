@@ -8,6 +8,12 @@ class readGridHandler():
 		self.gridName = ""
 		self.bookUrl = None
 		self.gridList = []
+		self.index = 0
+		self.distributionUrl = ""
+
+	def changeGrid(self, index):
+		self.index = index
+		return
 
 	def handleHtmlPage(self, htmlPage):
 		return

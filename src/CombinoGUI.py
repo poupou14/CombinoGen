@@ -1,6 +1,6 @@
 import os,string, sys
 from PySide import QtCore, QtGui
-from PySide.QtCore import  Signal, Slot, QUrl
+from PySide.QtCore import  Signal, Slot, QUrl, QDateTime
 from PySide.QtNetwork import  *
 from CombinoSource import CombinoSource
 from CombinoEngine import CombinoEngine
@@ -25,6 +25,8 @@ class CombinoGUI(QtGui.QMainWindow) :
 
 		self.ui.pbUpdate.clicked.connect(self.do_update)
 		self.ui.comboBookBox.activated[int].connect(self.do_changeBook)
+		self.ui.comboGridBox.activated[int].connect(self.do_changeGrid)
+		self.ui.pbGenerate.clicked.connect(self.do_generate)
 
 		self.__gridHandler = None
 		self.__manager = QNetworkAccessManager(self)
@@ -48,6 +50,9 @@ class CombinoGUI(QtGui.QMainWindow) :
 		htmlPage = reply.readAll()
 		self.__gridHandler.handleHtmlPage(htmlPage)
 		self.updateWindow()
+
+	def do_changeGrid(self, index):
+		self.__gridHandler.changeGrid(index)
 
 	def do_changeBook(self, index):
 		if index == 0 :
@@ -82,9 +87,21 @@ class CombinoGUI(QtGui.QMainWindow) :
 			print "remove index %d" % index
 			self.ui.comboGridBox.removeItem(index-1)
 			index = self.ui.comboGridBox.count()
+		index = 0
+		now =  QDateTime.currentMSecsSinceEpoch() / 1000 # in sec
+		print "now=%d" % now
 		for gridNumber in self.__gridHandler.gridList :
-			print "add grid n %s" % gridNumber
-			self.ui.comboGridBox.addItem(gridNumber)
+			print "add grid n %s" % gridNumber[0]
+			self.ui.comboGridBox.addItem(gridNumber[0])
+			try :
+				if int(now) >= int(gridNumber[1]):
+					print "disabled"
+					self.ui.comboGridBox.model().item(index).setEnabled(False)
+			except ValueError :
+				pass
+
+	def do_generate(self):
+		return
 
 	def do_update(self):
 		self.ui.comboBookBox.addItem("Winamax 7")

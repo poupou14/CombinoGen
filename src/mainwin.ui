@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="MainPanel">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="Config">
        <attribute name="title">
@@ -72,7 +72,7 @@
         <item row="4" column="0">
          <widget class="QPushButton" name="pbGenerate">
           <property name="text">
-           <string>Generate input File</string>
+           <string>Generate distribution</string>
           </property>
          </widget>
         </item>
@@ -90,6 +90,16 @@
           </property>
          </widget>
         </item>
+        <item row="1" column="4">
+         <widget class="QLabel" name="label_11">
+          <property name="text">
+           <string>%</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QLineEdit" name="lineEditDistrib1"/>
+        </item>
         <item row="0" column="1">
          <widget class="QLabel" name="label_5">
           <property name="text">
@@ -97,23 +107,10 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="2">
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>68</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="0" column="3">
-         <widget class="QLabel" name="label_6">
+        <item row="3" column="0">
+         <widget class="QPushButton" name="pbGenerateOdds">
           <property name="text">
-           <string>1</string>
+           <string>Generate Odds</string>
           </property>
          </widget>
         </item>
@@ -124,22 +121,8 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="7">
-         <widget class="QLabel" name="label_8">
-          <property name="text">
-           <string>2</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_9">
-          <property name="text">
-           <string>SM Caen</string>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="1">
-         <widget class="QLabel" name="label_10">
+         <widget class="QLabel" name="labelTeam2">
           <property name="text">
            <string>SCO Angers</string>
           </property>
@@ -153,23 +136,33 @@
           <property name="sizeHint" stdset="0">
            <size>
             <width>68</width>
-            <height>20</height>
+            <height>19</height>
            </size>
           </property>
          </spacer>
         </item>
-        <item row="1" column="3">
-         <widget class="QLineEdit" name="lineEdit_2"/>
+        <item row="1" column="5">
+         <widget class="QLineEdit" name="lineEditDistribN"/>
         </item>
-        <item row="1" column="4">
-         <widget class="QLabel" name="label_11">
+        <item row="3" column="7" colspan="2">
+         <widget class="QPushButton" name="pbImport">
           <property name="text">
-           <string>%</string>
+           <string>Import Input File</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="5">
-         <widget class="QLineEdit" name="lineEdit_3"/>
+        <item row="0" column="2">
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>68</width>
+            <height>17</height>
+           </size>
+          </property>
+         </spacer>
         </item>
         <item row="1" column="6">
          <widget class="QLabel" name="label_12">
@@ -179,12 +172,26 @@
          </widget>
         </item>
         <item row="1" column="7">
-         <widget class="QLineEdit" name="lineEdit_4"/>
+         <widget class="QLineEdit" name="lineEditDistrib2"/>
         </item>
         <item row="1" column="8">
          <widget class="QLabel" name="label_13">
           <property name="text">
            <string>%</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="7">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>2</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="labelTeam1">
+          <property name="text">
+           <string>SM Caen</string>
           </property>
          </widget>
         </item>
@@ -195,23 +202,16 @@
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>20</width>
-            <height>233</height>
+            <width>68</width>
+            <height>237</height>
            </size>
           </property>
          </spacer>
         </item>
-        <item row="3" column="0">
-         <widget class="QPushButton" name="pbGenerateOdds">
+        <item row="0" column="3">
+         <widget class="QLabel" name="label_6">
           <property name="text">
-           <string>Generate Odds</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="7" colspan="2">
-         <widget class="QPushButton" name="pbImport">
-          <property name="text">
-           <string>Import Input File</string>
+           <string>1</string>
           </property>
          </widget>
         </item>
