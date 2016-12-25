@@ -5,27 +5,39 @@ from PySide.QtCore import  QUrl
 class readGridHandler():
 
 	def __init__(self):
-		self.gridName = ""
-		self.bookUrl = None
-		self.gridList = []
-		self.index = 0
-		self.distributionUrl = ""
+		self._gridName = ""
+		self._bookUrl = None
+		self._gridList = []
+		self._index = 0
+		self._distributionUrl = ""
 
 	def changeGrid(self, index):
-		self.index = index
+		self._index = index
 		return
 
+	def gridList(self):
+		return self._gridList
+
+	def bookUrl(self):
+		return self._bookUrl
+
 	def handleHtmlPage(self, htmlPage):
+		return
+
+	def handleDistribHtmlPage(self, htmlPage):
+		return
+
+	def generateInputGrid(self):
 		return
 
 	def __str__(self):
 		output_l = ""
 		output_l = ''.join((output_l, "self.gridName:"))
-		output_l = ''.join((output_l, str(self.gridName)))
+		output_l = ''.join((output_l, str(self._gridName)))
 		output_l = ''.join((output_l, "\nself.bookUrl:"))
-		output_l = ''.join((output_l, str(self.bookUrl)))
+		output_l = ''.join((output_l, str(self._bookUrl)))
 		output_l = ''.join((output_l, "\nself.gridList:"))
-		for grid in self.gridList :
+		for grid in self._gridList :
 			output_l = ''.join((output_l, str(grid)))
 
 		return output_l

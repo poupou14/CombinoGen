@@ -28,3 +28,13 @@ class Match():
 
 	def getCotes(self, index_p) :
 		return self.__cotes[index_p]
+
+	def __str__(self):
+		str = self.__affiche
+		str = ''.join((str, " %f \%" % self.__repartition[0]))
+		str = ''.join((str, " %f \%" % self.__repartition[1]))
+		str = ''.join((str, " %f \%" % self.__repartition[2]))
+		str = ''.join((str, " - %f" % self.__cotes[0]))
+		str = ''.join((str, " %f" % self.__cotes[1]))
+		str = ''.join((str, " %f" % self.__cotes[2]))
+		return str

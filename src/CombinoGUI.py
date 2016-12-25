@@ -11,6 +11,8 @@ from readWinamax12Handler import readWinamax12Handler
 
 height_g = 600
 width_g = 800
+actions = ('CombinoGenBook', 'CombinoGenDistrib', 'CombinoGenResult')
+
 
 class CombinoGUI(QtGui.QMainWindow) :
 	stopGenSig = Signal()
@@ -26,11 +28,13 @@ class CombinoGUI(QtGui.QMainWindow) :
 		self.ui.pbUpdate.clicked.connect(self.do_update)
 		self.ui.comboBookBox.activated[int].connect(self.do_changeBook)
 		self.ui.comboGridBox.activated[int].connect(self.do_changeGrid)
-		self.ui.pbGenerate.clicked.connect(self.do_generate)
+		self.ui.pbGenerate.clicked.connect(self.do_generateInputGrid)
 
+		self.__grid= None
 		self.__gridHandler = None
 		self.__manager = QNetworkAccessManager(self)
 		self.__manager.finished[QNetworkReply].connect(self.do_receiveHtml)
+		self.__nextAction = actions[0]
 
 
 		# other attribut
@@ -48,8 +52,17 @@ class CombinoGUI(QtGui.QMainWindow) :
 	def do_receiveHtml(self, reply):
 		print "do_receiveHtml"
 		htmlPage = reply.readAll()
-		self.__gridHandler.handleHtmlPage(htmlPage)
-		self.updateWindow()
+		if self.__nextAction == 'CombinoGenBook':
+			self.__gridHandler.handleHtmlPage(htmlPage)
+			self.updateConfigTab()
+			self.__nextAction = 'CombinoGenDistrib'
+		elif self.__nextAction == 'CombinoGenDistrib':
+			self.__grid = self.__gridHandler.handleDistribHtmlPage(htmlPage)
+			print "grille :\n%s" % self.__grid
+			self.updateDistribTab()
+		elif self.__nextAction == 'CombinoGenResult':
+			self.__gridHandler.handleHtmlPage(htmlPage)
+			self.updateConfigTab()
 
 	def do_changeGrid(self, index):
 		self.__gridHandler.changeGrid(index)
@@ -75,13 +88,16 @@ class CombinoGUI(QtGui.QMainWindow) :
 		else:
 			print "index = %s" % index
 		#try :
-		request = QNetworkRequest(self.__gridHandler.bookUrl)
+		request = QNetworkRequest(self.__gridHandler.bookUrl())
 		#request.setAttribute(QNetworkRequest.RedirectionTargetAttribute, True)
 		reponse = self.__manager.get(request)
 		#except :
 			#print "Error while getting grid info"
 
-	def updateWindow(self) :
+	def updateDistribTab(self) :
+		return
+
+	def updateConfigTab(self) :
 		index = self.ui.comboGridBox.count()
 		while index != 0:
 			print "remove index %d" % index
@@ -90,7 +106,7 @@ class CombinoGUI(QtGui.QMainWindow) :
 		index = 0
 		now =  QDateTime.currentMSecsSinceEpoch() / 1000 # in sec
 		print "now=%d" % now
-		for gridNumber in self.__gridHandler.gridList :
+		for gridNumber in self.__gridHandler.gridList() :
 			print "add grid n %s" % gridNumber[0]
 			self.ui.comboGridBox.addItem(gridNumber[0])
 			try :
@@ -100,7 +116,9 @@ class CombinoGUI(QtGui.QMainWindow) :
 			except ValueError :
 				pass
 
-	def do_generate(self):
+	def do_generateInputGrid(self):
+		request = QNetworkRequest(self.__gridHandler.distribUrl())
+		reponse = self.__manager.get(request)
 		return
 
 	def do_update(self):

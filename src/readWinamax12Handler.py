@@ -21,3 +21,9 @@ class readWinamax12Handler(readGridHandler):
 		while posi != -1 :
 			posi = wina7rx.indexIn(str(htmlPage), posi+1)
 			self.gridList.append(wina7rx.cap(1))
+
+	def handleDistribHtmlPage(self, htmlPage):
+		return
+
+	def generateInputGrid(self):
+		return
