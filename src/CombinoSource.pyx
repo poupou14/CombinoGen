@@ -3,9 +3,9 @@ import os,string, sys
 import copy
 #import chardet
 #### SPECIFIC IMPORT #####
-sys.path.append("../Import/xlrd-0.7.1")
-sys.path.append("../Import/xlwt-0.7.2")
-sys.path.append("../Import/pyexcelerator-0.6.4.1")
+#sys.path.append("../Import/xlrd-0.7.1")
+#sys.path.append("../Import/xlwt-0.7.2")
+#sys.path.append("../Import/pyexcelerator-0.6.4.1")
 
 from pyExcelerator import *
 import xlrd

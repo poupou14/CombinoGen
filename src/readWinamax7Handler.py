@@ -45,6 +45,6 @@ class readWinamax7Handler(readGridHandler):
 
 	def changeGrid(self, index):
 		readGridHandler.changeGrid(self, index)
-		self._distributionUrl = "https://www.winamax.fr/paris-sportifs-grilles/grille7-%s/grilles-publiques" % self.gridList[index][0]
+		self._distributionUrl = "https://www.winamax.fr/paris-sportifs-grilles/grille7-%s/grilles-publiques" % self._gridList[index][0]
 		print "distributionUrl=%s" % self._distributionUrl
 		return
