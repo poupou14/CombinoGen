@@ -8,6 +8,10 @@ from ui_mainwin import Ui_MainWin
 from readGridHandler import readGridHandler
 from readWinamax7Handler import readWinamax7Handler
 from readWinamax12Handler import readWinamax12Handler
+from contextlib import closing
+from selenium.webdriver import Firefox # pip install selenium
+from selenium.webdriver.support.ui import WebDriverWait
+from pyvirtualdisplay import Display
 
 height_g = 600
 width_g = 800
@@ -58,10 +62,6 @@ class CombinoGUI(QtGui.QMainWindow):
         if self.__nextAction == 'CombinoGenBook':
             self.__gridHandler.handleHtmlPage(htmlPage)
             self.updateConfigTab()
-        elif self.__nextAction == 'CombinoGenDistrib':
-	    print "[do_receiveHtml]grille :\n%s" % self.__grid
-	    self.__grid = self.__gridHandler.handleDistribHtmlPage(htmlPage)
-            self.updateDistribTab()
         elif self.__nextAction == 'CombinoGenResult':
             self.__gridHandler.handleHtmlPage(htmlPage)
             self.updateConfigTab()
@@ -96,8 +96,23 @@ class CombinoGUI(QtGui.QMainWindow):
 
     def do_generateInputGrid(self):
 	self.__nextAction = 'CombinoGenDistrib'
-	request = QNetworkRequest(self.__gridHandler.distribUrl())
-	reponse = self.__manager.get(request)
+	display = Display(visible=0, size=(800, 600))
+	display.start()
+	page_source = ""
+	# use firefox to get page with javascript generated content
+	with closing(Firefox()) as browser:
+		browser = Firefox()
+		browser.get(self.__gridHandler.distribUrl())
+		# wait for the page to load
+		WebDriverWait(browser, timeout=10)#.until(
+		#lambda x: x.find_element_by_id('someId_that_must_be_on_new_page'))
+		# store it to string variable
+		page_source = browser.page_source
+		browser.quit()
+	print(page_source)
+	display.stop()
+	self.__grid = self.__gridHandler.handleDistribHtmlPage(page_source)
+	self.updateDistribTab()
 	return
 
     def do_quit(self):

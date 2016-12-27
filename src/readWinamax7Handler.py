@@ -5,6 +5,7 @@ from PySide.QtCore import  QUrl, QRegExp
 from PySide.QtNetwork import  *
 sys.path.append("../WinaScan/WinaScan/src/")
 from WSParser import WSGridParser, onlyascii
+import WSDataFormat
 
 class readWinamax7Handler(readGridHandler):
 
@@ -42,11 +43,11 @@ class readWinamax7Handler(readGridHandler):
 		print "handleDistribHtmlPage"
 		print htmlPage
 		myParser = WSGridParser()
-		#myParser.html = filter(onlyascii, htmlPage)
+		myParser.html = filter(onlyascii, htmlPage)
 		myParser.feed(htmlPage)
 		index_l = 0
 		total = 0
-		size_l = len(WSDataFormat.grille['team1'])
+		size_l = 7
 		for i in range(0, size_l) :
 			p1 = WSDataFormat.grille['croix_1'][i]
 			pN = WSDataFormat.grille['croix_x'][i]
@@ -56,7 +57,7 @@ class readWinamax7Handler(readGridHandler):
 			r2 = p2/total*100
 			rN = pN/total*100
 			#print "{} vs {} \t{0:.3f}\t{0:.3f}\t{0:.3f}\n".format( WSDataFormat.grille['team1'][i], WSDataFormat.grille['team2'][i], r1, rN, r2)
-			print "{} vs {}\t{:10.3f}\t{:10.3f}\t{:10.3f} ".format( WSDataFormat.grille['team1'][i], WSDataFormat.grille['team2'][i], r1,rN,r2)
+			print "{} vs {}\t{:10.3f}\t{:10.3f}\t{:10.3f} ".format( WSDataFormat.grille['team1'][i].encode('utf-8'), WSDataFormat.grille['team2'][i].encode('utf-8'), r1,rN,r2)
 		print "%d grilles" % total
 		#self.__workbook1.save(self.__outPutFileName)
 		return
