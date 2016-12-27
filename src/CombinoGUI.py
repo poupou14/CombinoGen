@@ -1,6 +1,6 @@
-import os, string, sys
+import os, sys
 from PySide import QtCore, QtGui
-from PySide.QtCore import Signal, Slot, QUrl, QDateTime
+from PySide.QtCore import Signal, Slot, QDateTime
 from PySide.QtNetwork import *
 from CombinoSource import CombinoSource
 from CombinoEngine import CombinoEngine
@@ -58,10 +58,9 @@ class CombinoGUI(QtGui.QMainWindow):
         if self.__nextAction == 'CombinoGenBook':
             self.__gridHandler.handleHtmlPage(htmlPage)
             self.updateConfigTab()
-            self.__nextAction = 'CombinoGenDistrib'
         elif self.__nextAction == 'CombinoGenDistrib':
-            self.__grid = self.__gridHandler.handleDistribHtmlPage(htmlPage)
-            print "grille :\n%s" % self.__grid
+	    print "[do_receiveHtml]grille :\n%s" % self.__grid
+	    self.__grid = self.__gridHandler.handleDistribHtmlPage(htmlPage)
             self.updateDistribTab()
         elif self.__nextAction == 'CombinoGenResult':
             self.__gridHandler.handleHtmlPage(htmlPage)
@@ -96,6 +95,7 @@ class CombinoGUI(QtGui.QMainWindow):
         reponse = self.__manager.get(request)
 
     def do_generateInputGrid(self):
+	self.__nextAction = 'CombinoGenDistrib'
 	request = QNetworkRequest(self.__gridHandler.distribUrl())
 	reponse = self.__manager.get(request)
 	return
@@ -104,6 +104,7 @@ class CombinoGUI(QtGui.QMainWindow):
 	QtCore.QCoreApplication.instance().quit()
 
     def do_update(self):
+	self.__nextAction = 'CombinoGenBook'
 	self.ui.comboBookBox.addItem("Winamax 7")
 	self.ui.comboBookBox.addItem("Winamax 12")
 	self.ui.comboBookBox.addItem("LotoFoot 7")

@@ -21,6 +21,9 @@ class readGridHandler():
 	def bookUrl(self):
 		return self._bookUrl
 
+	def distribUrl(self):
+		return self._distributionUrl
+
 	def handleHtmlPage(self, htmlPage):
 		return
 

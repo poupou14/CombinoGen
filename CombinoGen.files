@@ -18,3 +18,6 @@ src/CombinoSource.pyx
 src/Match.pyx
 src/mainwin.ui
 src/ui_mainwin.py
+../WinaScan/WinaScan/src/WSParser.py
+../WinaScan/WinaScan/src/WSDataFormat.py
+../WinaScan/WinaScan/src/WS.py
