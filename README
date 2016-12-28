@@ -1,0 +1,13 @@
+CombinoGen :
+------------
+
+- install pyhton 2.7
+- install pip
+- get WinaScan, and put it at the same level as CombinoGen
+- get Selenium :
+	$> pip install selenium
+- get xvfb :
+	$> sudo apt-get install xvfb
+	$> sudo pip install pyvirtualdisplay
+- get geckdriver :
+	put it in a local directory, and update CombinoGUI.sh : export PATH=...	

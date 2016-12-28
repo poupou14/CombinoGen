@@ -8,10 +8,7 @@ from ui_mainwin import Ui_MainWin
 from readGridHandler import readGridHandler
 from readWinamax7Handler import readWinamax7Handler
 from readWinamax12Handler import readWinamax12Handler
-from contextlib import closing
-from selenium.webdriver import Firefox # pip install selenium
-from selenium.webdriver.support.ui import WebDriverWait
-from pyvirtualdisplay import Display
+from GridRequestor import GridRequestor, DistribPageGeneratedSignal
 
 height_g = 600
 width_g = 800
@@ -39,7 +36,9 @@ class CombinoGUI(QtGui.QMainWindow):
         self.__grid = None
         self.__gridHandler = None
         self.__manager = QNetworkAccessManager(self)
-        self.__manager.finished[QNetworkReply].connect(self.do_receiveHtml)
+	self.__manager.finished[QNetworkReply].connect(self.do_receiveHtml)
+	self.__gridRequestor = GridRequestor()
+	self.__gridRequestor.distribPageGenerated.sig.connect(self.do_handleDistribHtmlPage)
         self.__nextAction = actions[0]
 
         # other attribut
@@ -94,25 +93,15 @@ class CombinoGUI(QtGui.QMainWindow):
         # request.setAttribute(QNetworkRequest.RedirectionTargetAttribute, True)
         reponse = self.__manager.get(request)
 
+    def do_handleDistribHtmlPage(self, sourcePage):
+	print(sourcePage)
+	self.__grid = self.__gridHandler.handleDistribHtmlPage(sourcePage)
+	self.updateDistribTab()
+
     def do_generateInputGrid(self):
 	self.__nextAction = 'CombinoGenDistrib'
-	display = Display(visible=0, size=(800, 600))
-	display.start()
-	page_source = ""
-	# use firefox to get page with javascript generated content
-	with closing(Firefox()) as browser:
-		browser = Firefox()
-		browser.get(self.__gridHandler.distribUrl())
-		# wait for the page to load
-		WebDriverWait(browser, timeout=10)#.until(
-		#lambda x: x.find_element_by_id('someId_that_must_be_on_new_page'))
-		# store it to string variable
-		page_source = browser.page_source
-		browser.quit()
-	print(page_source)
-	display.stop()
-	self.__grid = self.__gridHandler.handleDistribHtmlPage(page_source)
-	self.updateDistribTab()
+	self.__gridRequestor.setUrl(self.__gridHandler.distribUrl())
+	self.__gridRequestor.start()
 	return
 
     def do_quit(self):
