@@ -10,6 +10,20 @@ class Match():
 		self.__repartition = [33.0, 34.0, 33.0]
 		self.__cotes = [3.0, 3.0, 3.0]
 		self.__invSum = 1
+		self.__team1 = None
+		self.__team2 = None
+
+	def setTeam1(self, team1):
+		self.__team1 = team1
+
+	def setTeam2(self, team2):
+		self.__team2 = team2
+
+	def team1(self):
+		return self.__team1
+
+	def team2(self):
+		return self.__team2
 
 	def setRepartition(self, un_p, n_p, deux_p) :
 		self.__repartition[0] = un_p

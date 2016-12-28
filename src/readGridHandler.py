@@ -9,6 +9,8 @@ class readGridHandler():
 		self._bookUrl = None
 		self._gridList = []
 		self._index = 0
+		self._gridSize = 0
+		self._grid = None
 		self._distributionUrl = ""
 
 	def changeGrid(self, index):
@@ -17,6 +19,12 @@ class readGridHandler():
 
 	def gridList(self):
 		return self._gridList
+
+	def grid(self):
+		return self._grid
+
+	def gridSize(self):
+		return self._gridSize
 
 	def bookUrl(self):
 		return self._bookUrl

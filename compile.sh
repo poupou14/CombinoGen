@@ -3,6 +3,7 @@
 all()
 {
 	cd src
+	pyside-uic -o ui_mainwin.py mainwin.ui
 	python setup.py build_ext --inplace
 	cd -
 }

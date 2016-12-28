@@ -1,5 +1,6 @@
 import os, sys
 from PySide import QtCore, QtGui
+from PySide.QtGui import QGridLayout, QLineEdit, QLabel
 from PySide.QtCore import Signal, Slot, QDateTime
 from PySide.QtNetwork import *
 from CombinoSource import CombinoSource
@@ -14,13 +15,6 @@ height_g = 600
 width_g = 800
 actions = ('CombinoGenBook', 'CombinoGenDistrib', 'CombinoGenResult')
 
-class DistribTeamDisplay:
-    def __init__(self):
-	self.labelTeam1 = None
-	self.labelTeam2 = None
-	self.lineDistrib1 = None
-	self.lineDistribN = None
-	self.lineDistrib2 = None
 
 
 
@@ -57,6 +51,7 @@ class CombinoGUI(QtGui.QMainWindow):
         self.__outputDirName = None
         self.__buttonGenerate = None
         self.__myBets = None
+	self.__teamDisplay = []
 
         self.__progressBar = None
         # fen_l = QtGui.QDesktopWidget().screenGeometry()
@@ -131,21 +126,40 @@ class CombinoGUI(QtGui.QMainWindow):
 # ################ End Slots ######################
 
     def initDistribTab(self):
-	self.__teamDisplay = []
-	teamDisplay0 = DistribTeamDisplay()
-	teamDisplay0.labelTeam1 = self.ui.labelTeam1
-	teamDisplay0.labelTeam2 = self.ui.labelTeam2
-	teamDisplay0.lineDistrib1 = self.ui.lineEditDistrib1
-	teamDisplay0.lineDistribN = self.ui.lineEditDistribN
-	teamDisplay0.lineDistrib2 = self.ui.lineEditDistrib2
-	self.__teamDisplay.append(teamDisplay0)
+	self.__gridDistribLayout = QGridLayout()
+	label1 = QLabel("Team1")
+	label2 = QLabel("Team2")
+	self.__gridDistribLayout.addWidget(label1, 0, 0)
+	self.__gridDistribLayout.addWidget(label2, 0, 1)
 	return
 
     def updateDistribTab(self):
-	size = len(self.__teamDisplay)
-	for i in [1..size]:
+	size = int(self.__gridHandler.gridSize())
+	for i in range(0, size):
+		label1 = QLabel(self.__gridHandler.grid().getGame(i).team1())
+		self.__gridDistribLayout.addWidget(label1, 1+i, 0)
+		label1 = QLabel(self.__gridHandler.grid().getGame(i).team2())
+		self.__gridDistribLayout.addWidget(label1, 1+i, 1)
+		lineEdit1 = QLineEdit()
+		lineEdit1.setText("%.2f" % (self.__gridHandler.grid().getGame(i).getRepartition(0)*100))
+		lineEditN = QLineEdit()
+		lineEditN.setText("%.2f" % (self.__gridHandler.grid().getGame(i).getRepartition(1)*100))
+		lineEdit2 = QLineEdit()
+		lineEdit2.setText("%.2f"% (self.__gridHandler.grid().getGame(i).getRepartition(2)*100))
+		self.__gridDistribLayout.addWidget(lineEdit1, 1+i, 2)
+		labelPct = QLabel("%")
+		self.__gridDistribLayout.addWidget(labelPct, 1+i, 3)
+		self.__gridDistribLayout.addWidget(lineEditN, 1+i, 4)
+		labelPct = QLabel("%")
+		self.__gridDistribLayout.addWidget(labelPct, 1+i, 5)
+		self.__gridDistribLayout.addWidget(lineEdit2, 1+i, 6)
+		labelPct = QLabel("%")
+		self.__gridDistribLayout.addWidget(labelPct, 1+i, 7)
 
-        return
+	self.__gridDistribLayout.addWidget(self.ui.pbGenerateOdds, size+1, 0)
+	self.__gridDistribLayout.addWidget(self.ui.pbImport, size+1, 7)
+	self.ui.Distrib.setLayout(self.__gridDistribLayout)
+	return
 
     def updateConfigTab(self):
         index = self.ui.comboGridBox.count()

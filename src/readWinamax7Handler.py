@@ -5,6 +5,8 @@ from PySide.QtCore import  QUrl, QRegExp
 from PySide.QtNetwork import  *
 sys.path.append("../WinaScan/WinaScan/src/")
 from WSParser import WSGridParser, onlyascii
+from Grille import Grille
+from Match import Match
 import WSDataFormat
 
 class readWinamax7Handler(readGridHandler):
@@ -15,6 +17,7 @@ class readWinamax7Handler(readGridHandler):
 		self._gridName = "Winamax 7"
 		self._bookUrl = QUrl("https://www.winamax.fr/paris-sportifs-grilles/")
 		print "W7: %s" % str(self)
+		self._gridSize = 7
 		return
 
 	def handleHtmlPage(self, htmlPage):
@@ -40,6 +43,7 @@ class readWinamax7Handler(readGridHandler):
 		print self._gridList
 
 	def handleDistribHtmlPage(self, htmlPage):
+		self._grid = Grille()
 		print "handleDistribHtmlPage"
 		print htmlPage
 		myParser = WSGridParser()
@@ -49,6 +53,12 @@ class readWinamax7Handler(readGridHandler):
 		total = 0
 		size_l = 7
 		for i in range(0, size_l) :
+			print "indice %i" % i
+			team1 = WSDataFormat.grille['team1'][i]
+			team2 = WSDataFormat.grille['team2'][i]
+			match = Match(team1 + " vs " + team2)
+			match.setTeam1(team1)
+			match.setTeam2(team2)
 			p1 = WSDataFormat.grille['croix_1'][i]
 			pN = WSDataFormat.grille['croix_x'][i]
 			p2 = WSDataFormat.grille['croix_2'][i]
@@ -56,8 +66,10 @@ class readWinamax7Handler(readGridHandler):
 			r1 = p1/total*100
 			r2 = p2/total*100
 			rN = pN/total*100
+			match.setRepartition(p1/total, pN/total, p2/total)
 			#print "{} vs {} \t{0:.3f}\t{0:.3f}\t{0:.3f}\n".format( WSDataFormat.grille['team1'][i], WSDataFormat.grille['team2'][i], r1, rN, r2)
 			print "{} vs {}\t{:10.3f}\t{:10.3f}\t{:10.3f} ".format( WSDataFormat.grille['team1'][i].encode('utf-8'), WSDataFormat.grille['team2'][i].encode('utf-8'), r1,rN,r2)
+			self._grid.addGame(match)
 		print "%d grilles" % total
 		#self.__workbook1.save(self.__outPutFileName)
 		return

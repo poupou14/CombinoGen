@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="Config">
      <attribute name="title">
@@ -91,8 +91,8 @@
      <widget class="QPushButton" name="pbGenerateOdds">
       <property name="geometry">
        <rect>
-        <x>9</x>
-        <y>156</y>
+        <x>10</x>
+        <y>300</y>
         <width>99</width>
         <height>22</height>
        </rect>
@@ -104,8 +104,8 @@
      <widget class="QPushButton" name="pbImport">
       <property name="geometry">
        <rect>
-        <x>244</x>
-        <y>156</y>
+        <x>590</x>
+        <y>300</y>
         <width>108</width>
         <height>22</height>
        </rect>
