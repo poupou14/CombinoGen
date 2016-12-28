@@ -14,6 +14,15 @@ height_g = 600
 width_g = 800
 actions = ('CombinoGenBook', 'CombinoGenDistrib', 'CombinoGenResult')
 
+class DistribTeamDisplay:
+    def __init__(self):
+	self.labelTeam1 = None
+	self.labelTeam2 = None
+	self.lineDistrib1 = None
+	self.lineDistribN = None
+	self.lineDistrib2 = None
+
+
 
 class CombinoGUI(QtGui.QMainWindow):
     stopGenSig = Signal()
@@ -26,6 +35,8 @@ class CombinoGUI(QtGui.QMainWindow):
         # ui
         self.ui = Ui_MainWin()
         self.ui.setupUi(self)
+
+	self.initDistribTab()
 
         self.ui.pbUpdate.clicked.connect(self.do_update)
         self.ui.comboBookBox.activated[int].connect(self.do_changeBook)
@@ -119,7 +130,21 @@ class CombinoGUI(QtGui.QMainWindow):
 	print "updated !"
 # ################ End Slots ######################
 
+    def initDistribTab(self):
+	self.__teamDisplay = []
+	teamDisplay0 = DistribTeamDisplay()
+	teamDisplay0.labelTeam1 = self.ui.labelTeam1
+	teamDisplay0.labelTeam2 = self.ui.labelTeam2
+	teamDisplay0.lineDistrib1 = self.ui.lineEditDistrib1
+	teamDisplay0.lineDistribN = self.ui.lineEditDistribN
+	teamDisplay0.lineDistrib2 = self.ui.lineEditDistrib2
+	self.__teamDisplay.append(teamDisplay0)
+	return
+
     def updateDistribTab(self):
+	size = len(self.__teamDisplay)
+	for i in [1..size]:
+
         return
 
     def updateConfigTab(self):
