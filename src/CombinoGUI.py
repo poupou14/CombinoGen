@@ -185,6 +185,7 @@ class CombinoGUI(QtGui.QMainWindow):
                     print "disabled"
 		    self.ui.comboGridBox.model().item(index).setEnabled(False)
 		elif not selected:
+		    self.ui.comboGridBox.setCurrentIndex(index)
 		    self.do_changeGrid(index)
 		    selected = True
             except ValueError:
