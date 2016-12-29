@@ -37,6 +37,7 @@ class CombinoGUI(QtGui.QMainWindow):
         self.ui.comboGridBox.activated[int].connect(self.do_changeGrid)
         self.ui.pbGenerate.clicked.connect(self.do_generateInputGrid)
 	self.ui.pbQuit.clicked.connect(self.do_quit)
+	self.ui.progressBar.hide()
 
         self.__grid = None
         self.__gridHandler = None
@@ -101,13 +102,16 @@ class CombinoGUI(QtGui.QMainWindow):
 
     def do_handleDistribHtmlPage(self, sourcePage):
 	print(sourcePage)
+	self.ui.progressBar.hide()
 	self.__grid = self.__gridHandler.handleDistribHtmlPage(sourcePage)
 	self.updateDistribTab()
 
     def do_generateInputGrid(self):
 	self.__nextAction = 'CombinoGenDistrib'
 	self.__gridRequestor.setUrl(self.__gridHandler.distribUrl())
+	print "requested url = %s" % self.__gridHandler.distribUrl()
 	self.__gridRequestor.start()
+	self.ui.progressBar.show()
 	return
 
     def do_quit(self):
@@ -162,12 +166,15 @@ class CombinoGUI(QtGui.QMainWindow):
 	return
 
     def updateConfigTab(self):
+	# clean the comboGridBox
         index = self.ui.comboGridBox.count()
         while index != 0:
             print "remove index %d" % index
             self.ui.comboGridBox.removeItem(index - 1)
             index = self.ui.comboGridBox.count()
-        index = 0
+	# fill the comboGridBox with new values
+	index = 0
+	selected = False
         now = QDateTime.currentMSecsSinceEpoch() / 1000  # in sec
         print "now=%d" % now
         for gridNumber in self.__gridHandler.gridList():
@@ -176,9 +183,13 @@ class CombinoGUI(QtGui.QMainWindow):
             try:
                 if int(now) >= int(gridNumber[1]):
                     print "disabled"
-                    self.ui.comboGridBox.model().item(index).setEnabled(False)
+		    self.ui.comboGridBox.model().item(index).setEnabled(False)
+		elif not selected:
+		    self.do_changeGrid(index)
+		    selected = True
             except ValueError:
-                pass
+		pass
+	    index+=1
 
 
     def browseFile(self):

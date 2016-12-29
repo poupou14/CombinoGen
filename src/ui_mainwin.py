@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwin.ui'
 #
-# Created: Wed Dec 28 22:38:37 2016
+# Created: Thu Dec 29 16:37:53 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -15,8 +15,9 @@ class Ui_MainWin(object):
         MainWin.resize(741, 472)
         self.centralWidget = QtGui.QWidget(MainWin)
         self.centralWidget.setObjectName("centralWidget")
+        self.gridLayout = QtGui.QGridLayout(self.centralWidget)
+        self.gridLayout.setObjectName("gridLayout")
         self.MainPanel = QtGui.QTabWidget(self.centralWidget)
-        self.MainPanel.setGeometry(QtCore.QRect(9, 9, 716, 363))
         self.MainPanel.setObjectName("MainPanel")
         self.Config = QtGui.QWidget()
         self.Config.setObjectName("Config")
@@ -103,9 +104,15 @@ class Ui_MainWin(object):
         self.pbGenerateGrid.setObjectName("pbGenerateGrid")
         self.gridLayout_4.addWidget(self.pbGenerateGrid, 3, 0, 1, 1)
         self.MainPanel.addTab(self.Odds, "")
+        self.gridLayout.addWidget(self.MainPanel, 0, 0, 1, 2)
         self.pbQuit = QtGui.QPushButton(self.centralWidget)
-        self.pbQuit.setGeometry(QtCore.QRect(9, 383, 80, 22))
         self.pbQuit.setObjectName("pbQuit")
+        self.gridLayout.addWidget(self.pbQuit, 1, 0, 1, 1)
+        self.progressBar = QtGui.QProgressBar(self.centralWidget)
+        self.progressBar.setMaximum(0)
+        self.progressBar.setProperty("value", -1)
+        self.progressBar.setObjectName("progressBar")
+        self.gridLayout.addWidget(self.progressBar, 1, 1, 1, 1)
         MainWin.setCentralWidget(self.centralWidget)
         self.menuBar = QtGui.QMenuBar(MainWin)
         self.menuBar.setGeometry(QtCore.QRect(0, 0, 741, 19))

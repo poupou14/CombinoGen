@@ -2,6 +2,7 @@
 import os,string, sys
 from readGridHandler import readGridHandler
 from PySide.QtCore import  QUrl, QRegExp
+from PySide.QtGui import  QMessageBox
 from PySide.QtNetwork import  *
 sys.path.append("../WinaScan/WinaScan/src/")
 from WSParser import WSGridParser, onlyascii
@@ -52,7 +53,8 @@ class readWinamax7Handler(readGridHandler):
 		index_l = 0
 		total = 0
 		size_l = 7
-		for i in range(0, size_l) :
+		try:
+		    for i in range(0, size_l) :
 			print "indice %i" % i
 			team1 = WSDataFormat.grille['team1'][i]
 			team2 = WSDataFormat.grille['team2'][i]
@@ -70,9 +72,13 @@ class readWinamax7Handler(readGridHandler):
 			#print "{} vs {} \t{0:.3f}\t{0:.3f}\t{0:.3f}\n".format( WSDataFormat.grille['team1'][i], WSDataFormat.grille['team2'][i], r1, rN, r2)
 			print "{} vs {}\t{:10.3f}\t{:10.3f}\t{:10.3f} ".format( WSDataFormat.grille['team1'][i].encode('utf-8'), WSDataFormat.grille['team2'][i].encode('utf-8'), r1,rN,r2)
 			self._grid.addGame(match)
-		print "%d grilles" % total
+		    print "%d grilles" % total
+		except:
+			msg = QMessageBox()
+			msg.setText("Loading page error")
+			msg.exec_()
 		#self.__workbook1.save(self.__outPutFileName)
-		return
+		return self._grid
 
 	def generateInputGrid(self):
 		return

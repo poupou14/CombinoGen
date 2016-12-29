@@ -12,7 +12,6 @@ class DistribPageGeneratedSignal(QObject):
 class GridRequestor(QThread):
 	def __init__(self, parent = None):
 		QThread.__init__(self, parent)
-		self.__display = Display(visible=0, size=(800, 600))
 		self.distribPageGenerated = DistribPageGeneratedSignal()
 		self.__url = None
 
@@ -20,6 +19,7 @@ class GridRequestor(QThread):
 		self.__url = url
 
 	def run(self):
+		self.__display = Display(visible=0, size=(800, 600))
 		self.__display.start()
 		page_source = ""
 		# use firefox to get page with javascript generated content
@@ -35,3 +35,4 @@ class GridRequestor(QThread):
 		#print(page_source)
 		self.distribPageGenerated.sig.emit(page_source)
 		self.__display.stop()
+		#self.__display.delete()
