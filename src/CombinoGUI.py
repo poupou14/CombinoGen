@@ -13,7 +13,7 @@ from GridRequestor import GridRequestor, DistribPageGeneratedSignal
 
 height_g = 600
 width_g = 800
-actions = ('CombinoGenBook', 'CombinoGenDistrib', 'CombinoGenResult')
+actions = ('CombinoGenBook', 'CombinoGenDistrib', 'CombinoGenOdds','CombinoGenResult')
 
 
 
@@ -36,6 +36,7 @@ class CombinoGUI(QtGui.QMainWindow):
         self.ui.comboBookBox.activated[int].connect(self.do_changeBook)
         self.ui.comboGridBox.activated[int].connect(self.do_changeGrid)
         self.ui.pbGenerate.clicked.connect(self.do_generateInputGrid)
+	self.ui.pbGenerateOdds.clicked.connect(self.do_generateOdds)
 	self.ui.pbQuit.clicked.connect(self.do_quit)
 	self.ui.progressBar.hide()
 
@@ -68,7 +69,11 @@ class CombinoGUI(QtGui.QMainWindow):
         if self.__nextAction == 'CombinoGenBook':
             self.__gridHandler.handleHtmlPage(htmlPage)
             self.updateConfigTab()
-        elif self.__nextAction == 'CombinoGenResult':
+	elif self.__nextAction == 'CombinoGenOdds':
+	    #self.__gridHandler.handleOddsHtmlPage(htmlPage)
+	    #self.updateOdddsTab()
+	    pass
+	elif self.__nextAction == 'CombinoGenResult':
             self.__gridHandler.handleHtmlPage(htmlPage)
             self.updateConfigTab()
 
@@ -106,6 +111,12 @@ class CombinoGUI(QtGui.QMainWindow):
 	self.__grid = self.__gridHandler.handleDistribHtmlPage(sourcePage)
 	self.updateDistribTab()
 
+    def do_generateOdds(self):
+	#self.sendOddsRequest(self)
+	#self.updateOddsTab()
+	return
+
+
     def do_generateInputGrid(self):
 	self.__nextAction = 'CombinoGenDistrib'
 	self.__gridRequestor.setUrl(self.__gridHandler.distribUrl())
@@ -128,6 +139,9 @@ class CombinoGUI(QtGui.QMainWindow):
 	self.do_changeBook(0)
 	print "updated !"
 # ################ End Slots ######################
+
+    #def sendOddsRequest(self):
+	#for match in self.__grid:
 
     def initDistribTab(self):
 	self.__gridDistribLayout = QGridLayout()
@@ -160,7 +174,7 @@ class CombinoGUI(QtGui.QMainWindow):
 		labelPct = QLabel("%")
 		self.__gridDistribLayout.addWidget(labelPct, 1+i, 7)
 
-	self.__gridDistribLayout.addWidget(self.ui.pbGenerateOdds, size+1, 0)
+	#self.__gridDistribLayout.addWidget(self.ui.pbGenerateOdds, size+1, 0)
 	self.__gridDistribLayout.addWidget(self.ui.pbImport, size+1, 7)
 	self.ui.Distrib.setLayout(self.__gridDistribLayout)
 	return
