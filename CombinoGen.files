@@ -12,6 +12,7 @@ src/setup.py
 src/CombinoEngine.pyx
 src/CombinoGUI.py
 src/GridRequestor.py
+src/CombinoNetworkManager.py
 src/readGridHandler.py
 src/readWinamax7Handler.py
 src/readWinamax12Handler.py

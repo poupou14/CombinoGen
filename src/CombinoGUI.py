@@ -2,7 +2,8 @@ import os, sys
 from PySide import QtCore, QtGui
 from PySide.QtGui import QGridLayout, QLineEdit, QLabel
 from PySide.QtCore import Signal, Slot, QDateTime
-from PySide.QtNetwork import *
+from PySide.QtNetwork import QNetworkReply
+from CombinoNetworkManager import CombinoNetworkManager
 from CombinoSource import CombinoSource
 from CombinoEngine import CombinoEngine
 from ui_mainwin import Ui_MainWin
@@ -42,8 +43,6 @@ class CombinoGUI(QtGui.QMainWindow):
 
         self.__grid = None
         self.__gridHandler = None
-        self.__manager = QNetworkAccessManager(self)
-	self.__manager.finished[QNetworkReply].connect(self.do_receiveHtml)
 	self.__gridRequestor = GridRequestor()
 	self.__gridRequestor.distribPageGenerated.sig.connect(self.do_handleDistribHtmlPage)
         self.__nextAction = actions[0]
@@ -75,7 +74,11 @@ class CombinoGUI(QtGui.QMainWindow):
 	    pass
 	elif self.__nextAction == 'CombinoGenResult':
             self.__gridHandler.handleHtmlPage(htmlPage)
-            self.updateConfigTab()
+	    self.updateConfigTab()
+
+	print "DISCONNECT"
+	combinoManager = CombinoNetworkManager.Instance()
+	combinoManager.manager.finished[QNetworkReply].disconnect(self.do_receiveHtml)
 
     def do_changeGrid(self, index):
         self.__gridHandler.changeGrid(index)
@@ -100,10 +103,12 @@ class CombinoGUI(QtGui.QMainWindow):
             print "Betclic 8"
         else:
             print "index = %s" % index
-        # try :
-        request = QNetworkRequest(self.__gridHandler.bookUrl())
-        # request.setAttribute(QNetworkRequest.RedirectionTargetAttribute, True)
-        reponse = self.__manager.get(request)
+	# try :
+	combinoManager = CombinoNetworkManager.Instance()
+	combinoManager.setUrl(self.__gridHandler.bookUrl())
+	combinoManager.manager.finished[QNetworkReply].connect(self.do_receiveHtml)
+	# request.setAttribute(QNetworkRequest.RedirectionTargetAttribute, True)
+	reponse = combinoManager.get() #send request
 
     def do_handleDistribHtmlPage(self, sourcePage):
 	print(sourcePage)
