@@ -19,6 +19,9 @@ class Grille():
 	def getSize(self) :
 		return len(self.__matches)
 
+	def matches(self) :
+		return self.__matches
+
 	def __str__(self):
 		str = ''
 		for match in self.__matches :

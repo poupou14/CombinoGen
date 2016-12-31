@@ -32,6 +32,7 @@ class CombinoGUI(QtGui.QMainWindow):
         self.ui.setupUi(self)
 
 	self.initDistribTab()
+	self.initOddsTab()
 
         self.ui.pbUpdate.clicked.connect(self.do_update)
         self.ui.comboBookBox.activated[int].connect(self.do_changeBook)
@@ -69,8 +70,9 @@ class CombinoGUI(QtGui.QMainWindow):
             self.__gridHandler.handleHtmlPage(htmlPage)
             self.updateConfigTab()
 	elif self.__nextAction == 'CombinoGenOdds':
-	    #self.__gridHandler.handleOddsHtmlPage(htmlPage)
-	    #self.updateOdddsTab()
+	    self.__gridHandler.handleOddsHtmlPage(htmlPage)
+	    self.ui.progressBar.hide()
+	    self.updateOdddsTab()
 	    pass
 	elif self.__nextAction == 'CombinoGenResult':
             self.__gridHandler.handleHtmlPage(htmlPage)
@@ -117,8 +119,14 @@ class CombinoGUI(QtGui.QMainWindow):
 	self.updateDistribTab()
 
     def do_generateOdds(self):
-	#self.sendOddsRequest(self)
-	#self.updateOddsTab()
+	self.__nextAction = 'CombinoGenOdds'
+	print "Generate Odds"
+	print "requested url = %s" % self.__gridHandler.oddsUrl()
+	self.ui.progressBar.show()
+	combinoManager = CombinoNetworkManager.Instance()
+	combinoManager.setUrl(self.__gridHandler.oddsUrl())
+	combinoManager.manager.finished[QNetworkReply].connect(self.do_receiveHtml)
+	reponse = combinoManager.get() #send request
 	return
 
 
@@ -148,12 +156,53 @@ class CombinoGUI(QtGui.QMainWindow):
     #def sendOddsRequest(self):
 	#for match in self.__grid:
 
+    def initOddsTab(self):
+	self.__gridOddsLayout = QGridLayout()
+	label1 = QLabel("Team1")
+	label2 = QLabel("Team2")
+	labelP1 = QLabel("1")
+	labelPN = QLabel("N")
+	labelP2 = QLabel("2")
+	self.__gridOddsLayout.addWidget(label1, 0, 0)
+	self.__gridOddsLayout.addWidget(label2, 0, 1)
+	self.__gridOddsLayout.addWidget(labelP1, 0, 2)
+	self.__gridOddsLayout.addWidget(labelPN, 0, 3)
+	self.__gridOddsLayout.addWidget(labelP2, 0, 4)
+	return
+
     def initDistribTab(self):
 	self.__gridDistribLayout = QGridLayout()
 	label1 = QLabel("Team1")
 	label2 = QLabel("Team2")
+	labelP1 = QLabel("1")
+	labelPN = QLabel("N")
+	labelP2 = QLabel("2")
 	self.__gridDistribLayout.addWidget(label1, 0, 0)
 	self.__gridDistribLayout.addWidget(label2, 0, 1)
+	self.__gridDistribLayout.addWidget(labelP1, 0, 2)
+	self.__gridDistribLayout.addWidget(labelPN, 0, 4)
+	self.__gridDistribLayout.addWidget(labelP2, 0, 6)
+	return
+
+    def updateOdddsTab(self):
+	size = int(self.__gridHandler.gridSize())
+	for i in range(0, size):
+		label1 = QLabel(self.__gridHandler.grid().getGame(i).team1())
+		self.__gridOddsLayout.addWidget(label1, 1+i, 0)
+		label1 = QLabel(self.__gridHandler.grid().getGame(i).team2())
+		self.__gridOddsLayout.addWidget(label1, 1+i, 1)
+		lineEdit1 = QLineEdit()
+		lineEdit1.setText("%.2f" % (self.__gridHandler.grid().getGame(i).getCotes(0)))
+		lineEditN = QLineEdit()
+		lineEditN.setText("%.2f" % (self.__gridHandler.grid().getGame(i).getCotes(1)))
+		lineEdit2 = QLineEdit()
+		lineEdit2.setText("%.2f"% (self.__gridHandler.grid().getGame(i).getCotes(2)))
+		self.__gridOddsLayout.addWidget(lineEdit1, 1+i, 2)
+		self.__gridOddsLayout.addWidget(lineEditN, 1+i, 3)
+		self.__gridOddsLayout.addWidget(lineEdit2, 1+i, 4)
+
+	self.__gridOddsLayout.addWidget(self.ui.pbGenerateGrid, size+1, 0)
+	self.ui.Odds.setLayout(self.__gridOddsLayout)
 	return
 
     def updateDistribTab(self):
@@ -179,7 +228,7 @@ class CombinoGUI(QtGui.QMainWindow):
 		labelPct = QLabel("%")
 		self.__gridDistribLayout.addWidget(labelPct, 1+i, 7)
 
-	#self.__gridDistribLayout.addWidget(self.ui.pbGenerateOdds, size+1, 0)
+	self.__gridDistribLayout.addWidget(self.ui.pbGenerateOdds, size+1, 0)
 	self.__gridDistribLayout.addWidget(self.ui.pbImport, size+1, 7)
 	self.ui.Distrib.setLayout(self.__gridDistribLayout)
 	return

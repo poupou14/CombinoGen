@@ -45,10 +45,10 @@ class Match():
 
 	def __str__(self):
 		str = self.__affiche
-		str = ''.join((str, " %f \%" % self.__repartition[0]))
-		str = ''.join((str, " %f \%" % self.__repartition[1]))
-		str = ''.join((str, " %f \%" % self.__repartition[2]))
-		str = ''.join((str, " - %f" % self.__cotes[0]))
-		str = ''.join((str, " %f" % self.__cotes[1]))
-		str = ''.join((str, " %f" % self.__cotes[2]))
+		str = ''.join((str, " %2.2f pct" % self.__repartition[0]))
+		str = ''.join((str, " %2.2f pct" % self.__repartition[1]))
+		str = ''.join((str, " %2.2f pct" % self.__repartition[2]))
+		str = ''.join((str, " - %2.2f" % self.__cotes[0]))
+		str = ''.join((str, " %2.2f" % self.__cotes[1]))
+		str = ''.join((str, " %2.2f" % self.__cotes[2]))
 		return str
