@@ -39,6 +39,7 @@ class CombinoGUI(QtGui.QMainWindow):
         self.ui.comboGridBox.activated[int].connect(self.do_changeGrid)
         self.ui.pbGenerate.clicked.connect(self.do_generateInputGrid)
 	self.ui.pbGenerateOdds.clicked.connect(self.do_generateOdds)
+	self.ui.pbGenerateGrid.clicked.connect(self.do_generateGrid)
 	self.ui.pbQuit.clicked.connect(self.do_quit)
 	self.ui.progressBar.hide()
 
@@ -117,6 +118,10 @@ class CombinoGUI(QtGui.QMainWindow):
 	self.ui.progressBar.hide()
 	self.__grid = self.__gridHandler.handleDistribHtmlPage(sourcePage)
 	self.updateDistribTab()
+
+    def do_generateGrid(self):
+	pass
+
 
     def do_generateOdds(self):
 	self.__nextAction = 'CombinoGenOdds'
@@ -206,6 +211,7 @@ class CombinoGUI(QtGui.QMainWindow):
 	return
 
     def updateDistribTab(self):
+	self.ui.Distrib.clear()
 	size = int(self.__gridHandler.gridSize())
 	for i in range(0, size):
 		label1 = QLabel(self.__gridHandler.grid().getGame(i).team1())

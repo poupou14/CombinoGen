@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwin.ui'
 #
-# Created: Sat Dec 31 13:58:00 2016
+# Created: Sun Jan  1 00:42:42 2017
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -91,7 +91,7 @@ class Ui_MainWin(object):
         MainWin.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
 
         self.retranslateUi(MainWin)
-        self.MainPanel.setCurrentIndex(2)
+        self.MainPanel.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWin)
 
     def retranslateUi(self, MainWin):

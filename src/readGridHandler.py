@@ -1,12 +1,12 @@
 #!/usr/bin/python
 import os,string, sys
-from PySide.QtCore import  QUrl, QRegExp
+from PySide.QtCore import  QUrl, QRegExp, QDateTime
 
 class readGridHandler():
 
 	def __init__(self):
 		self._gridName = ""
-		self._bookUrl = None
+		self._bookUrl = QUrl("https://www.winamax.fr/paris-sportifs-grilles/")
 		self._oddsUrl = "http://www.betexplorer.com/next/soccer/"
 		self._gridList = []
 		self._index = 0
@@ -28,7 +28,18 @@ class readGridHandler():
 		return self._gridSize
 
 	def oddsUrl(self):
-		return self._oddsUrl
+		url = self._oddsUrl
+		epochDate = self._gridList[self._index][1]
+		date = QDateTime()
+		date.setMSecsSinceEpoch(int(epochDate)*1000)
+		day = date.date().day()
+		month = date.date().month()
+		year = date.date().year()
+		urlComplement = "?year=%d" % year
+		urlComplement = urlComplement+ "&month=%d" % month
+		urlComplement = urlComplement + "&day=%d" % day
+		print "urlComplement"
+		return self._oddsUrl+urlComplement
 
 	def bookUrl(self):
 		return self._bookUrl
