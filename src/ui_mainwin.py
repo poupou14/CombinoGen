@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwin.ui'
 #
-# Created: Sun Jan  1 14:03:30 2017
+# Created: Sun Jan  1 23:55:48 2017
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -41,9 +41,9 @@ class Ui_MainWin(object):
         self.labelOutput = QtGui.QLabel(self.Config)
         self.labelOutput.setObjectName("labelOutput")
         self.gridLayout_2.addWidget(self.labelOutput, 3, 0, 1, 1)
-        self.lineEdit = QtGui.QLineEdit(self.Config)
-        self.lineEdit.setObjectName("lineEdit")
-        self.gridLayout_2.addWidget(self.lineEdit, 3, 1, 1, 1)
+        self.outputDirLine = QtGui.QLineEdit(self.Config)
+        self.outputDirLine.setObjectName("outputDirLine")
+        self.gridLayout_2.addWidget(self.outputDirLine, 3, 1, 1, 1)
         self.pb1Browse = QtGui.QPushButton(self.Config)
         self.pb1Browse.setObjectName("pb1Browse")
         self.gridLayout_2.addWidget(self.pb1Browse, 3, 2, 1, 1)

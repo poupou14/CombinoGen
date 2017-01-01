@@ -7,6 +7,7 @@ from CombinoNetworkManager import CombinoNetworkManager
 from CombinoSource import CombinoSource
 from CombinoEngine import CombinoEngine
 from ui_mainwin import Ui_MainWin
+from readGridHandlerFactory import readGridHandlerFactory
 from readGridHandler import readGridHandler
 from readWinamax7Handler import readWinamax7Handler
 from readWinamax12Handler import readWinamax12Handler
@@ -43,24 +44,29 @@ class CombinoGUI(QtGui.QMainWindow):
 	self.ui.pbGenerateOdds.clicked.connect(self.do_generateOdds)
 	self.ui.pbGenerateGrid.clicked.connect(self.do_generateGrid)
 	self.ui.pbImport.clicked.connect(self.do_importGrid)
+	self.ui.pb1Browse.clicked.connect(self.do_browseDir)
 	self.ui.pbQuit.clicked.connect(self.do_quit)
 	self.ui.progressBar.hide()
 
         self.__grid = None
-        self.__gridHandler = None
+	self.__gridIndex = -1
+	self.__gridHandler = None
 	self.__gridRequestor = GridRequestor()
 	self.__gridRequestor.distribPageGenerated.sig.connect(self.do_handleDistribHtmlPage)
         self.__nextAction = actions[0]
 
-        # other attribut
+	# other attribut
+	self.__gridHandlerFactory = readGridHandlerFactory()
         self.__inputFileName = None
-        self.__outputDirName = None
+	self.__outputDirName =  ''.join((os.getcwd(), "/Output/"))
         self.__buttonGenerate = None
         self.__myBets = None
 	self.__teamDisplay = []
+	self.__combinoEngine = None
 
         self.__progressBar = None
-        # fen_l = QtGui.QDesktopWidget().screenGeometry()
+	self.ui.outputDirLine.setText(self.__outputDirName)
+	# fen_l = QtGui.QDesktopWidget().screenGeometry()
         try:
             self.setWindowIcon(QtGui.Icon("icon.jpg"))
         except:
@@ -91,11 +97,15 @@ class CombinoGUI(QtGui.QMainWindow):
 	self.__inputFileName = QtGui.QFileDialog.getOpenFileName(self, "Open xls", ''.join((os.getcwd(), "/Input/")), "xls Files (*.xls)")[0]
 	print "Input file : %s" % self.__inputFileName
 	print "Lecture fichier Source"
-	mySource = CombinoSource(sourceFile_l)
-	myGrille = mySource.getGrille()
+	self.__gridHandler = self.__gridHandlerFactory.createGridHandler(self.__inputFileName)
+	#mySource = CombinoSource(self.__inputFileName)
+	self.__grid = self.__gridHandler.grid()
+	self.updateDistribTab()
+	self.updateOddsTab()
 
     def do_changeGrid(self, index):
-        self.__gridHandler.changeGrid(index)
+	self.__gridHandler.changeGrid(index)
+	self.__gridIndex = index
 
     def do_changeBook(self, index):
         if index == 0:
@@ -131,7 +141,25 @@ class CombinoGUI(QtGui.QMainWindow):
 	self.updateDistribTab()
 
     def do_generateGrid(self):
-	pass
+	outputFileName = self.__outputDirName
+	try:
+		outputFileName = ''.join((self.__outputDirName,'/'))
+		list = (self.__gridHandler.gridList())
+		date = list[self.__gridIndex][0]
+		outputFileName = ''.join((outputFileName,  self.__gridHandler.gridName()))
+		outputFileName = ''.join((outputFileName, "-"))
+		outputFileName = ''.join((outputFileName, str(date)))
+		outputFileName = ''.join((outputFileName, ".csv"))
+	except IndexError:
+		indexSlash = self.__inputFileName.rfind("/")
+		inputFileName = self.__inputFileName[indexSlash:]
+		outputFileName = ''.join((outputFileName, inputFileName[0:-3]))
+		outputFileName = ''.join((outputFileName, "csv"))
+	self.__combinoEngine = CombinoEngine(self.__gridHandler.grid(), 1, outputFileName, self)
+	#mainWindow_p.stopGenSig.connect(self.cancelGen)
+	self.__combinoEngine.start()
+	print "Grid generation"
+
 
 
     def do_generateOdds(self):
@@ -167,6 +195,17 @@ class CombinoGUI(QtGui.QMainWindow):
 	self.ui.comboBookBox.addItem("Betclic 8")
 	self.do_changeBook(0)
 	print "updated !"
+
+    def do_browseDir(self):
+	print "run dir = %s" % ''.join((os.getcwd(), "/Output/"))
+	outputDirName_l = QtGui.QFileDialog.getExistingDirectory(self, "Output directory",
+								 ''.join((os.getcwd(), "/Output/")),
+								 QtGui.QFileDialog.ShowDirsOnly | QtGui.QFileDialog.DontResolveSymlinks)
+	self.__outputDirName = outputDirName_l.replace("\\", "/")
+	self.ui.outputDirLine.setText(self.__outputDirName)
+	#self.ui.outputDirLine.adjustSize()
+	print "Output dir : %s" % self.__outputDirName
+
 # ################ End Slots ######################
 
     #def sendOddsRequest(self):
@@ -319,19 +358,6 @@ class CombinoGUI(QtGui.QMainWindow):
     def cancelGen(self):
         self.stopGenSig.emit()
 
-    def browseDir(self):
-        print "run dir = %s" % ''.join((os.getcwd(), "/Output/"))
-        outputDirName_l = QtGui.QFileDialog.getExistingDirectory(self, "Output directory",
-                                                                 ''.join((os.getcwd(), "/Output/")),
-                                                                 QtGui.QFileDialog.ShowDirsOnly | QtGui.QFileDialog.DontResolveSymlinks)
-        self.__outputDirName = outputDirName_l.replace("\\", "/")
-        self.__labelOutputDirName.setText(self.__outputDirName)
-        self.__labelOutputDirName.adjustSize()
-        print "Output dir : %s" % self.__outputDirName
-        if (self.__inputFileName != None) and (self.__outputDirName != None):
-            self.__buttonGenerate.setEnabled(True)
-        else:
-            self.__buttonGenerate.setEnabled(False)
 
     def generate(self):
         espMin_l = 1  # default value

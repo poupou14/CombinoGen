@@ -48,6 +48,7 @@ class CombinoSource():
 		if (self.__worksheetConfig != None) :
 			cellValue_l = self.__worksheetConfig.cell_value(currRow_l, currCol_l)
 			returnRate_l = float(cellValue_l)
+		self.__grille.setReturnRate(returnRate_l)
 		return returnRate_l
 	
 	def getNbPlayers(self) :
@@ -61,6 +62,7 @@ class CombinoSource():
 			except (ValueError, IndexError) :
 				nbPlayers_l = -1
 	
+		self.__grille.setNbPlayers(nbPlayers_l)
 		return nbPlayers_l
 
 	def getJackpot(self) :
@@ -74,6 +76,7 @@ class CombinoSource():
 			except (ValueError, IndexError) :
 				jackpot_l = -1
 	
+		self.__grille.setJackpot(jackpot_l)
 		return jackpot_l
 
 	def getScndRankRate(self) :
@@ -86,7 +89,8 @@ class CombinoSource():
 				scndRankRate_l = float(cellValue_l)
 			except (ValueError, IndexError) :
 				scndRankRate_l = -1
-	
+		self.__grille.setScndRankRate(scndRankRate_l)
+
 		return scndRankRate_l
 
 	def getFirstRankRate(self) :
@@ -96,6 +100,7 @@ class CombinoSource():
 		if (self.__worksheetConfig != None) :
 			cellValue_l = self.__worksheetConfig.cell_value(currRow_l, currCol_l)
 			firstRankRate_l = float(cellValue_l)
+		self.__grille.setFirstRankRate(firstRankRate_l)
 		return firstRankRate_l
 
 	def getThirdRankRate(self) :
@@ -108,7 +113,8 @@ class CombinoSource():
 				thirdRankRate_l = float(cellValue_l)
 			except (ValueError, IndexError) :
 				thirdRankRate_l = -1
-	
+		self.__grille.setThirdRankRate(thirdRankRate_l)
+
 		return thirdRankRate_l
 
 
@@ -140,10 +146,18 @@ class CombinoSource():
 					cellType_l = self.__worksheet.cell_type(currRow_l, currCol_l)
 					cellValue_l = self.__worksheet.cell_value(currRow_l, currCol_l)
 					print '	', cellType_l, ':', cellValue_l
-					if currCol_l <= 3 :
+					if currCol_l == 1 :
+						team1 = cellValue_l
+						matchTitle_l = ''.join((matchTitle_l, cellValue_l))
+					elif currCol_l == 3 :
+						team2 = cellValue_l
+						matchTitle_l = ''.join((matchTitle_l, cellValue_l))
+					elif currCol_l <= 3 :
 						matchTitle_l = ''.join((matchTitle_l, cellValue_l))
 					elif currCol_l == 4 :
 						currMatch_l = Match(matchTitle_l)
+						currMatch_l.setTeam1(team1)
+						currMatch_l.setTeam2(team2)
 						rep1_l= float(cellValue_l)
 						rep1_l = rep1_l + 0.02
 					elif currCol_l == 5 :
@@ -173,7 +187,13 @@ class CombinoSource():
 
 			else :
 				nbRows_l = currRow_l
-		
+
+		self.getJackpot()
+		self.getReturnRate()
+		self.getFirstRankRate()
+		self.getScndRankRate()
+		self.getThirdRankRate()
+
 		return self.__grille
 
 

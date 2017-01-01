@@ -18,8 +18,14 @@ class readGridHandler():
 		self._index = index
 		return
 
+	def gridName(self):
+		return self._gridName
+
 	def gridList(self):
 		return self._gridList
+
+	def setGrid(self, grid):
+		self._grid = grid
 
 	def grid(self):
 		return self._grid
@@ -61,7 +67,8 @@ class readGridHandler():
 			team2Rx = QRegExp(match.team2())
 			posi = team1Rx.indexIn(strHtml)
 			if posi < 0:
-				posi = team1Rx.indexIn(strHtml)
+				print "-%s- not found" % match.team1()
+				posi = team2Rx.indexIn(strHtml)
 			if posi >= 0:
 				posi = oddsRx.indexIn(strHtml, posi)
 				oddStr1 = oddsRx.cap(1)
@@ -74,6 +81,7 @@ class readGridHandler():
 				except:
 					print "Odds handling KO for %s, cant read odds" % str(match)
 			else:
+				print "-%s- not found" % match.team2()
 				print "Odds handling KO %s not found" % str(match)
 
 		return

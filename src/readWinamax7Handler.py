@@ -14,8 +14,8 @@ class readWinamax7Handler(readGridHandler):
 
 	def __init__(self):
 		readGridHandler.__init__(self)
-		print "Winamax 7"
-		self._gridName = "Winamax 7"
+		print "Winamax7"
+		self._gridName = "Winamax7"
 		print "W7: %s" % str(self)
 		self._gridSize = 7
 		return
@@ -44,6 +44,9 @@ class readWinamax7Handler(readGridHandler):
 
 	def handleDistribHtmlPage(self, htmlPage):
 		self._grid = Grille()
+		self._grid.setReturnRate(0.75)
+		self._grid.setFirstRankRate(0.55)
+		self._grid.setScndRankRate(0.45)
 		print "handleDistribHtmlPage"
 		print htmlPage
 		myParser = WSGridParser()

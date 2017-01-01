@@ -60,7 +60,7 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QLineEdit" name="lineEdit"/>
+         <widget class="QLineEdit" name="outputDirLine"/>
         </item>
         <item row="3" column="2">
          <widget class="QPushButton" name="pb1Browse">
