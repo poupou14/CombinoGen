@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwin.ui'
 #
-# Created: Sun Jan  1 00:42:42 2017
+# Created: Sun Jan  1 14:03:30 2017
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -50,15 +50,15 @@ class Ui_MainWin(object):
         self.pbGenerate = QtGui.QPushButton(self.Config)
         self.pbGenerate.setObjectName("pbGenerate")
         self.gridLayout_2.addWidget(self.pbGenerate, 4, 0, 1, 1)
+        self.pbImport = QtGui.QPushButton(self.Config)
+        self.pbImport.setObjectName("pbImport")
+        self.gridLayout_2.addWidget(self.pbImport, 4, 2, 1, 1)
         self.MainPanel.addTab(self.Config, "")
         self.Distrib = QtGui.QWidget()
         self.Distrib.setObjectName("Distrib")
         self.pbGenerateOdds = QtGui.QPushButton(self.Distrib)
         self.pbGenerateOdds.setGeometry(QtCore.QRect(10, 300, 99, 22))
         self.pbGenerateOdds.setObjectName("pbGenerateOdds")
-        self.pbImport = QtGui.QPushButton(self.Distrib)
-        self.pbImport.setGeometry(QtCore.QRect(590, 300, 108, 22))
-        self.pbImport.setObjectName("pbImport")
         self.MainPanel.addTab(self.Distrib, "")
         self.Odds = QtGui.QWidget()
         self.Odds.setObjectName("Odds")
@@ -102,9 +102,9 @@ class Ui_MainWin(object):
         self.labelOutput.setText(QtGui.QApplication.translate("MainWin", "Output dir :", None, QtGui.QApplication.UnicodeUTF8))
         self.pb1Browse.setText(QtGui.QApplication.translate("MainWin", "Browse", None, QtGui.QApplication.UnicodeUTF8))
         self.pbGenerate.setText(QtGui.QApplication.translate("MainWin", "Generate distribution", None, QtGui.QApplication.UnicodeUTF8))
+        self.pbImport.setText(QtGui.QApplication.translate("MainWin", "Import input file", None, QtGui.QApplication.UnicodeUTF8))
         self.MainPanel.setTabText(self.MainPanel.indexOf(self.Config), QtGui.QApplication.translate("MainWin", "Config", None, QtGui.QApplication.UnicodeUTF8))
         self.pbGenerateOdds.setText(QtGui.QApplication.translate("MainWin", "Generate Odds", None, QtGui.QApplication.UnicodeUTF8))
-        self.pbImport.setText(QtGui.QApplication.translate("MainWin", "Import Input File", None, QtGui.QApplication.UnicodeUTF8))
         self.MainPanel.setTabText(self.MainPanel.indexOf(self.Distrib), QtGui.QApplication.translate("MainWin", "Distrib", None, QtGui.QApplication.UnicodeUTF8))
         self.pbGenerateGrid.setText(QtGui.QApplication.translate("MainWin", "Generate Grid", None, QtGui.QApplication.UnicodeUTF8))
         self.MainPanel.setTabText(self.MainPanel.indexOf(self.Odds), QtGui.QApplication.translate("MainWin", "Odds", None, QtGui.QApplication.UnicodeUTF8))

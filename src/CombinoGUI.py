@@ -30,6 +30,8 @@ class CombinoGUI(QtGui.QMainWindow):
         # ui
         self.ui = Ui_MainWin()
         self.ui.setupUi(self)
+	self.__dynamicDistribWidgets = []
+	self.__dynamicOddsWidgets = []
 
 	self.initDistribTab()
 	self.initOddsTab()
@@ -40,6 +42,7 @@ class CombinoGUI(QtGui.QMainWindow):
         self.ui.pbGenerate.clicked.connect(self.do_generateInputGrid)
 	self.ui.pbGenerateOdds.clicked.connect(self.do_generateOdds)
 	self.ui.pbGenerateGrid.clicked.connect(self.do_generateGrid)
+	self.ui.pbImport.clicked.connect(self.do_importGrid)
 	self.ui.pbQuit.clicked.connect(self.do_quit)
 	self.ui.progressBar.hide()
 
@@ -73,7 +76,7 @@ class CombinoGUI(QtGui.QMainWindow):
 	elif self.__nextAction == 'CombinoGenOdds':
 	    self.__gridHandler.handleOddsHtmlPage(htmlPage)
 	    self.ui.progressBar.hide()
-	    self.updateOdddsTab()
+	    self.updateOddsTab()
 	    pass
 	elif self.__nextAction == 'CombinoGenResult':
             self.__gridHandler.handleHtmlPage(htmlPage)
@@ -82,6 +85,14 @@ class CombinoGUI(QtGui.QMainWindow):
 	print "DISCONNECT"
 	combinoManager = CombinoNetworkManager.Instance()
 	combinoManager.manager.finished[QNetworkReply].disconnect(self.do_receiveHtml)
+
+    def do_importGrid(self):
+	print "input dir = %s" % ''.join((os.getcwd(), "/Input/"))
+	self.__inputFileName = QtGui.QFileDialog.getOpenFileName(self, "Open xls", ''.join((os.getcwd(), "/Input/")), "xls Files (*.xls)")[0]
+	print "Input file : %s" % self.__inputFileName
+	print "Lecture fichier Source"
+	mySource = CombinoSource(sourceFile_l)
+	myGrille = mySource.getGrille()
 
     def do_changeGrid(self, index):
         self.__gridHandler.changeGrid(index)
@@ -173,6 +184,7 @@ class CombinoGUI(QtGui.QMainWindow):
 	self.__gridOddsLayout.addWidget(labelP1, 0, 2)
 	self.__gridOddsLayout.addWidget(labelPN, 0, 3)
 	self.__gridOddsLayout.addWidget(labelP2, 0, 4)
+	self.ui.Odds.setLayout(self.__gridOddsLayout)
 	return
 
     def initDistribTab(self):
@@ -187,15 +199,31 @@ class CombinoGUI(QtGui.QMainWindow):
 	self.__gridDistribLayout.addWidget(labelP1, 0, 2)
 	self.__gridDistribLayout.addWidget(labelPN, 0, 4)
 	self.__gridDistribLayout.addWidget(labelP2, 0, 6)
+	self.ui.Distrib.setLayout(self.__gridDistribLayout)
 	return
 
-    def updateOdddsTab(self):
+    def cleanDistribTab(self):
+	for widget in self.__dynamicDistribWidgets:
+		self.__gridDistribLayout.removeWidget(widget)
+		widget.deleteLater()
+	self.__gridDistribLayout.removeWidget(self.ui.pbGenerateOdds)
+
+    def cleanOddsTab(self):
+	for widget in self.__dynamicOddsWidgets:
+		self.__gridOddsLayout.removeWidget(widget)
+		widget.deleteLater()
+	self.__gridOddsLayout.removeWidget(self.ui.pbGenerateGrid)
+
+    def updateOddsTab(self):
+	self.cleanOddsTab()
 	size = int(self.__gridHandler.gridSize())
 	for i in range(0, size):
 		label1 = QLabel(self.__gridHandler.grid().getGame(i).team1())
 		self.__gridOddsLayout.addWidget(label1, 1+i, 0)
-		label1 = QLabel(self.__gridHandler.grid().getGame(i).team2())
-		self.__gridOddsLayout.addWidget(label1, 1+i, 1)
+		label2 = QLabel(self.__gridHandler.grid().getGame(i).team2())
+		self.__gridOddsLayout.addWidget(label2, 1+i, 1)
+		self.__dynamicOddsWidgets.append(label1)
+		self.__dynamicOddsWidgets.append(label2)
 		lineEdit1 = QLineEdit()
 		lineEdit1.setText("%.2f" % (self.__gridHandler.grid().getGame(i).getCotes(0)))
 		lineEditN = QLineEdit()
@@ -205,19 +233,23 @@ class CombinoGUI(QtGui.QMainWindow):
 		self.__gridOddsLayout.addWidget(lineEdit1, 1+i, 2)
 		self.__gridOddsLayout.addWidget(lineEditN, 1+i, 3)
 		self.__gridOddsLayout.addWidget(lineEdit2, 1+i, 4)
+		self.__dynamicOddsWidgets.append(lineEdit1)
+		self.__dynamicOddsWidgets.append(lineEditN)
+		self.__dynamicOddsWidgets.append(lineEdit2)
 
 	self.__gridOddsLayout.addWidget(self.ui.pbGenerateGrid, size+1, 0)
-	self.ui.Odds.setLayout(self.__gridOddsLayout)
 	return
 
     def updateDistribTab(self):
-	self.ui.Distrib.clear()
+	self.cleanDistribTab()
 	size = int(self.__gridHandler.gridSize())
 	for i in range(0, size):
 		label1 = QLabel(self.__gridHandler.grid().getGame(i).team1())
 		self.__gridDistribLayout.addWidget(label1, 1+i, 0)
-		label1 = QLabel(self.__gridHandler.grid().getGame(i).team2())
-		self.__gridDistribLayout.addWidget(label1, 1+i, 1)
+		self.__dynamicDistribWidgets.append(label1)
+		label2 = QLabel(self.__gridHandler.grid().getGame(i).team2())
+		self.__gridDistribLayout.addWidget(label2, 1+i, 1)
+		self.__dynamicDistribWidgets.append(label2)
 		lineEdit1 = QLineEdit()
 		lineEdit1.setText("%.2f" % (self.__gridHandler.grid().getGame(i).getRepartition(0)*100))
 		lineEditN = QLineEdit()
@@ -225,18 +257,22 @@ class CombinoGUI(QtGui.QMainWindow):
 		lineEdit2 = QLineEdit()
 		lineEdit2.setText("%.2f"% (self.__gridHandler.grid().getGame(i).getRepartition(2)*100))
 		self.__gridDistribLayout.addWidget(lineEdit1, 1+i, 2)
+		self.__dynamicDistribWidgets.append(lineEdit1)
 		labelPct = QLabel("%")
 		self.__gridDistribLayout.addWidget(labelPct, 1+i, 3)
+		self.__dynamicDistribWidgets.append(labelPct)
 		self.__gridDistribLayout.addWidget(lineEditN, 1+i, 4)
+		self.__dynamicDistribWidgets.append(lineEditN)
 		labelPct = QLabel("%")
 		self.__gridDistribLayout.addWidget(labelPct, 1+i, 5)
+		self.__dynamicDistribWidgets.append(labelPct)
 		self.__gridDistribLayout.addWidget(lineEdit2, 1+i, 6)
+		self.__dynamicDistribWidgets.append(lineEdit2)
 		labelPct = QLabel("%")
 		self.__gridDistribLayout.addWidget(labelPct, 1+i, 7)
+		self.__dynamicDistribWidgets.append(labelPct)
 
 	self.__gridDistribLayout.addWidget(self.ui.pbGenerateOdds, size+1, 0)
-	self.__gridDistribLayout.addWidget(self.ui.pbImport, size+1, 7)
-	self.ui.Distrib.setLayout(self.__gridDistribLayout)
 	return
 
     def updateConfigTab(self):
