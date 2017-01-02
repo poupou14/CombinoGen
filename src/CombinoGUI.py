@@ -48,7 +48,6 @@ class CombinoGUI(QtGui.QMainWindow):
 	self.ui.pbQuit.clicked.connect(self.do_quit)
 	self.ui.progressBar.hide()
 
-        self.__grid = None
 	self.__gridIndex = -1
 	self.__gridHandler = None
 	self.__gridRequestor = GridRequestor()
@@ -99,7 +98,6 @@ class CombinoGUI(QtGui.QMainWindow):
 	print "Lecture fichier Source"
 	self.__gridHandler = self.__gridHandlerFactory.createGridHandler(self.__inputFileName)
 	#mySource = CombinoSource(self.__inputFileName)
-	self.__grid = self.__gridHandler.grid()
 	self.updateDistribTab()
 	self.updateOddsTab()
 
@@ -137,7 +135,7 @@ class CombinoGUI(QtGui.QMainWindow):
     def do_handleDistribHtmlPage(self, sourcePage):
 	print(sourcePage)
 	self.ui.progressBar.hide()
-	self.__grid = self.__gridHandler.handleDistribHtmlPage(sourcePage)
+	self.__gridHandler.handleDistribHtmlPage(sourcePage)
 	self.updateDistribTab()
 
     def do_generateGrid(self):
@@ -157,8 +155,8 @@ class CombinoGUI(QtGui.QMainWindow):
 		outputFileName = ''.join((outputFileName, "csv"))
 	self.__combinoEngine = CombinoEngine(self.__gridHandler.grid(), 1, outputFileName, self)
 	#mainWindow_p.stopGenSig.connect(self.cancelGen)
-	self.__combinoEngine.start()
 	print "Grid generation"
+	self.__combinoEngine.start()
 
 
 

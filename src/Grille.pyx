@@ -65,7 +65,14 @@ class Grille():
 		return self.__matches
 
 	def __str__(self):
-		stri = ''
+		stri = ""
+		stri = ''.join((stri, "returnRate = %f" % self.__returnRate))
+		stri = ''.join((stri, "firstRankRate = %f" % self.__firstRankRate))
+		stri = ''.join((stri, "scndRankRate = %f" % self.__scndRankRate))
+		stri = ''.join((stri, "thirdRankRate = %f" % self.__thirdRankRate))
+		stri = ''.join((stri, "nbPlayers = %d" % self.__nbPlayers))
+		stri = ''.join((stri, "Jackpot = %f" % self.__jackpot))
 		for match in self.__matches :
 			stri = ''.join((stri, str(match)))
+			stri = ''.join((stri, "\n"))
 		return stri

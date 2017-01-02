@@ -23,14 +23,16 @@ class readWinamax7Handler(readGridHandler):
 	def handleHtmlPage(self, htmlPage):
 		tup = ()
 		self._gridList = []
-		wina7rx = QRegExp("\{\"pool_id\":7000(\\d+).*\"pool_end\":(\\d+).*\}")
+		wina7rx = QRegExp("\{\"pool_id\":7000(\\d+).*\"pool_end\":(\\d+).*\"guaranteed_amount\":(\\d+).*\}")
 		posi = wina7rx.indexIn(str(htmlPage))
 		ngrille = wina7rx.cap(1)
 		print "ngrille=%s" % ngrille
 		#self.gridList.append(wina7rx.cap(1))
 		date = wina7rx.cap(2)
 		print "date=%s" % date
-		tup = (ngrille, date)
+		jackpot = wina7rx.cap(3)
+		print "jackpot=%s" % jackpot
+		tup = (ngrille, date, jackpot)
 		self._gridList.append(tup)
 		while posi != -1 :
 			posi = wina7rx.indexIn(str(htmlPage), posi+1)
@@ -38,7 +40,9 @@ class readWinamax7Handler(readGridHandler):
 			print "ngrille=%s" % ngrille
 			date = wina7rx.cap(2)
 			print "date=%s" % date
-			tup = (ngrille, date)
+			jackpot = wina7rx.cap(3)
+			print "jackpot=%s" % jackpot
+			tup = (ngrille, date, jackpot)
 			self._gridList.append(tup)
 		print self._gridList
 
@@ -47,6 +51,9 @@ class readWinamax7Handler(readGridHandler):
 		self._grid.setReturnRate(0.75)
 		self._grid.setFirstRankRate(0.55)
 		self._grid.setScndRankRate(0.45)
+		jackpot = int(self._gridList[self._index][2]) / 0.75
+		self._grid.setJackpot(jackpot)
+		self._grid.setNbPlayers(jackpot)
 		print "handleDistribHtmlPage"
 		print htmlPage
 		myParser = WSGridParser()
@@ -80,7 +87,7 @@ class readWinamax7Handler(readGridHandler):
 			msg.setText("Loading page error")
 			msg.exec_()
 		#self.__workbook1.save(self.__outPutFileName)
-		return self._grid
+		return
 
 	def generateInputGrid(self):
 		return

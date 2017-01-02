@@ -53,7 +53,7 @@ class CombinoEngine(QThread):
 	def run(self):
 		gridSize_l = self.__grille.getSize()
 		self.__nbTotBet = math.pow(3, gridSize_l)
-		print "Taille Grille : ", gridSize_l
+		print "Grille : %s " % self.__grille
 		self.__currentBet = Bet(self)
 
 		self.__file=open(self.__fileName, 'w+')

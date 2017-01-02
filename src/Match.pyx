@@ -26,9 +26,14 @@ class Match():
 		return self.__team2
 
 	def setRepartition(self, un_p, n_p, deux_p) :
-		self.__repartition[0] = un_p
-		self.__repartition[1] = n_p
-		self.__repartition[2] = deux_p
+		# Standard modification rep
+		rep1_l = un_p + 0.02
+		rep2_l = deux_p + 0.02
+		repN_l = n_p + 0.02
+		total = rep1_l+repN_l+rep2_l
+		self.__repartition[0] = rep1_l/total
+		self.__repartition[1] = repN_l/total
+		self.__repartition[2] = rep2_l/total
 
 
 	def setCotes(self, cote1_p, coteN_p, cote2_p) :

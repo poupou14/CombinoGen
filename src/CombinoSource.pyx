@@ -60,6 +60,7 @@ class CombinoSource():
 				cellValue_l = self.__worksheetConfig.cell_value(currRow_l, currCol_l)
 				nbPlayers_l = float(cellValue_l)
 			except (ValueError, IndexError) :
+				print "error recup nbPlayers"
 				nbPlayers_l = -1
 	
 		self.__grille.setNbPlayers(nbPlayers_l)
@@ -159,13 +160,13 @@ class CombinoSource():
 						currMatch_l.setTeam1(team1)
 						currMatch_l.setTeam2(team2)
 						rep1_l= float(cellValue_l)
-						rep1_l = rep1_l + 0.02
+						#rep1_l = rep1_l + 0.02
 					elif currCol_l == 5 :
 						repN_l = float(cellValue_l)
-						repN_l = repN_l + 0.02
+						#repN_l = repN_l + 0.02
 					elif currCol_l == 6 :
 						rep2_l = float(cellValue_l)
-						rep2_l = rep2_l + 0.02
+						#rep2_l = rep2_l + 0.02
 						repTot_l = rep1_l + repN_l + rep2_l
 						rep1_l = rep1_l / repTot_l
 						repN_l = repN_l / repTot_l
@@ -189,6 +190,7 @@ class CombinoSource():
 				nbRows_l = currRow_l
 
 		self.getJackpot()
+		self.getNbPlayers()
 		self.getReturnRate()
 		self.getFirstRankRate()
 		self.getScndRankRate()
