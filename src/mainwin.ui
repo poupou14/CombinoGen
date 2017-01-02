@@ -10,137 +10,192 @@
     <height>472</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>741</width>
+    <height>472</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>741</width>
+    <height>472</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>MainWin</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0" colspan="2">
-     <widget class="QTabWidget" name="MainPanel">
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
-      <widget class="QWidget" name="Config">
-       <attribute name="title">
-        <string>Config</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
-         <widget class="QPushButton" name="pbUpdate">
-          <property name="text">
-           <string>Update</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="labelBook">
-          <property name="text">
-           <string>Book :</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QComboBox" name="comboBookBox"/>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="labelGrid">
-          <property name="text">
-           <string>Grid :</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QComboBox" name="comboGridBox"/>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="labelOutput">
-          <property name="text">
-           <string>Output dir :</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLineEdit" name="outputDirLine"/>
-        </item>
-        <item row="3" column="2">
-         <widget class="QPushButton" name="pb1Browse">
-          <property name="text">
-           <string>Browse</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QPushButton" name="pbGenerate">
-          <property name="text">
-           <string>Generate distribution</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="2">
-         <widget class="QPushButton" name="pbImport">
-          <property name="text">
-           <string>Import input file</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="Distrib">
-       <attribute name="title">
-        <string>Distrib</string>
-       </attribute>
-       <widget class="QPushButton" name="pbGenerateOdds">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>300</y>
-          <width>99</width>
-          <height>22</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Generate Odds</string>
-        </property>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>731</width>
+      <height>411</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayoutMain">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetMaximumSize</enum>
+     </property>
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item row="0" column="0" colspan="2">
+      <widget class="QTabWidget" name="MainPanel">
+       <property name="maximumSize">
+        <size>
+         <width>691</width>
+         <height>371</height>
+        </size>
+       </property>
+       <property name="currentIndex">
+        <number>1</number>
+       </property>
+       <widget class="QWidget" name="Config">
+        <attribute name="title">
+         <string>Config</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="0">
+          <widget class="QPushButton" name="pbUpdate">
+           <property name="text">
+            <string>Update</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="labelBook">
+           <property name="text">
+            <string>Book :</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QComboBox" name="comboBookBox"/>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="labelGrid">
+           <property name="text">
+            <string>Grid :</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QComboBox" name="comboGridBox"/>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="labelOutput">
+           <property name="text">
+            <string>Output dir :</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLineEdit" name="outputDirLine"/>
+         </item>
+         <item row="3" column="2">
+          <widget class="QPushButton" name="pb1Browse">
+           <property name="text">
+            <string>Browse</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="labelJackpot">
+           <property name="text">
+            <string>Jackpot</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLineEdit" name="jackpotLine"/>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="labelNbPlayers">
+           <property name="text">
+            <string>Nb Players</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLineEdit" name="nbPlayersLine"/>
+         </item>
+         <item row="7" column="0">
+          <widget class="QPushButton" name="pbImport">
+           <property name="text">
+            <string>Import input file</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1" colspan="2">
+          <widget class="QLabel" name="labelImportFile">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0" colspan="2">
+          <widget class="QPushButton" name="pbGenerate">
+           <property name="text">
+            <string>Generate distribution and Odds</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="DistribAndOdds">
+        <attribute name="title">
+         <string>Distrib And Odds</string>
+        </attribute>
+        <widget class="QPushButton" name="pbGenerateGrid">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>300</y>
+           <width>99</width>
+           <height>22</height>
+          </rect>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>99</width>
+           <height>22</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Generate Grids</string>
+         </property>
+        </widget>
        </widget>
       </widget>
-      <widget class="QWidget" name="Odds">
-       <attribute name="title">
-        <string>Odds</string>
-       </attribute>
-       <widget class="QPushButton" name="pbGenerateGrid">
-        <property name="geometry">
-         <rect>
-          <x>9</x>
-          <y>159</y>
-          <width>93</width>
-          <height>22</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Generate Grid</string>
-        </property>
-       </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QPushButton" name="pbQuit">
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>22</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Quit</string>
+       </property>
       </widget>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QPushButton" name="pbQuit">
-      <property name="text">
-       <string>Quit</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QProgressBar" name="progressBar">
-      <property name="maximum">
-       <number>0</number>
-      </property>
-      <property name="value">
-       <number>-1</number>
-      </property>
-     </widget>
-    </item>
-   </layout>
+     </item>
+     <item row="1" column="1">
+      <widget class="QProgressBar" name="progressBar">
+       <property name="maximum">
+        <number>0</number>
+       </property>
+       <property name="value">
+        <number>-1</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
