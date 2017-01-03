@@ -3,11 +3,18 @@ CombinoGen :
 
 - install pyhton 2.7
 - install pip
+- install pyside
+	$> sudo apt-get install pyside-tools 
+- install cython
+	$> sudo apt-get install cython
+ install pyExcelerator 
+	$> sudo apt-get install python-xlwt
+	$> sudo apt-get install python-xlrd
 - get WinaScan, and put it at the same level as CombinoGen
 - get Selenium :
 	$> pip install selenium
 - get xvfb :
 	$> sudo apt-get install xvfb
 	$> sudo pip install pyvirtualdisplay
-- get geckdriver :
+- get geckodriver :
 	put it in a local directory, and update CombinoGUI.sh : export PATH=...	

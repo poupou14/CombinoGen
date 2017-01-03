@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwin.ui'
 #
-# Created: Tue Jan  3 00:06:52 2017
+# Created: Tue Jan  3 14:52:09 2017
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,21 +12,12 @@ from PySide import QtCore, QtGui
 class Ui_MainWin(object):
     def setupUi(self, MainWin):
         MainWin.setObjectName("MainWin")
-        MainWin.resize(741, 472)
-        MainWin.setMinimumSize(QtCore.QSize(741, 472))
-        MainWin.setMaximumSize(QtCore.QSize(741, 472))
+        MainWin.resize(1100, 507)
         self.centralWidget = QtGui.QWidget(MainWin)
         self.centralWidget.setObjectName("centralWidget")
-        self.widget = QtGui.QWidget(self.centralWidget)
-        self.widget.setGeometry(QtCore.QRect(10, 0, 731, 411))
-        self.widget.setObjectName("widget")
-        self.gridLayoutMain = QtGui.QGridLayout(self.widget)
-        self.gridLayoutMain.setSizeConstraint(QtGui.QLayout.SetMaximumSize)
-        self.gridLayoutMain.setSpacing(0)
-        self.gridLayoutMain.setContentsMargins(0, 0, 0, 0)
-        self.gridLayoutMain.setObjectName("gridLayoutMain")
-        self.MainPanel = QtGui.QTabWidget(self.widget)
-        self.MainPanel.setMaximumSize(QtCore.QSize(691, 371))
+        self.verticalLayout = QtGui.QVBoxLayout(self.centralWidget)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.MainPanel = QtGui.QTabWidget(self.centralWidget)
         self.MainPanel.setObjectName("MainPanel")
         self.Config = QtGui.QWidget()
         self.Config.setObjectName("Config")
@@ -86,33 +77,25 @@ class Ui_MainWin(object):
         self.pbGenerateGrid.setMaximumSize(QtCore.QSize(99, 22))
         self.pbGenerateGrid.setObjectName("pbGenerateGrid")
         self.MainPanel.addTab(self.DistribAndOdds, "")
-        self.gridLayoutMain.addWidget(self.MainPanel, 0, 0, 1, 2)
-        self.pbQuit = QtGui.QPushButton(self.widget)
+        self.verticalLayout.addWidget(self.MainPanel)
+        self.horizontalLayout = QtGui.QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.pbQuit = QtGui.QPushButton(self.centralWidget)
         self.pbQuit.setMaximumSize(QtCore.QSize(80, 22))
         self.pbQuit.setObjectName("pbQuit")
-        self.gridLayoutMain.addWidget(self.pbQuit, 1, 0, 1, 1)
-        self.progressBar = QtGui.QProgressBar(self.widget)
+        self.horizontalLayout.addWidget(self.pbQuit)
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem)
+        self.progressBar = QtGui.QProgressBar(self.centralWidget)
         self.progressBar.setMaximum(0)
         self.progressBar.setProperty("value", -1)
         self.progressBar.setObjectName("progressBar")
-        self.gridLayoutMain.addWidget(self.progressBar, 1, 1, 1, 1)
+        self.horizontalLayout.addWidget(self.progressBar)
+        self.verticalLayout.addLayout(self.horizontalLayout)
         MainWin.setCentralWidget(self.centralWidget)
-        self.menuBar = QtGui.QMenuBar(MainWin)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 741, 19))
-        self.menuBar.setObjectName("menuBar")
-        MainWin.setMenuBar(self.menuBar)
-        self.mainToolBar = QtGui.QToolBar(MainWin)
-        self.mainToolBar.setObjectName("mainToolBar")
-        MainWin.addToolBar(QtCore.Qt.TopToolBarArea, self.mainToolBar)
-        self.statusBar = QtGui.QStatusBar(MainWin)
-        self.statusBar.setObjectName("statusBar")
-        MainWin.setStatusBar(self.statusBar)
-        self.toolBar = QtGui.QToolBar(MainWin)
-        self.toolBar.setObjectName("toolBar")
-        MainWin.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
 
         self.retranslateUi(MainWin)
-        self.MainPanel.setCurrentIndex(1)
+        self.MainPanel.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWin)
 
     def retranslateUi(self, MainWin):
@@ -130,5 +113,4 @@ class Ui_MainWin(object):
         self.pbGenerateGrid.setText(QtGui.QApplication.translate("MainWin", "Generate Grids", None, QtGui.QApplication.UnicodeUTF8))
         self.MainPanel.setTabText(self.MainPanel.indexOf(self.DistribAndOdds), QtGui.QApplication.translate("MainWin", "Distrib And Odds", None, QtGui.QApplication.UnicodeUTF8))
         self.pbQuit.setText(QtGui.QApplication.translate("MainWin", "Quit", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolBar.setWindowTitle(QtGui.QApplication.translate("MainWin", "toolBar", None, QtGui.QApplication.UnicodeUTF8))
 
