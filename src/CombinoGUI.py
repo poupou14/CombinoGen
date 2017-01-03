@@ -356,6 +356,18 @@ class CombinoGUI(QtGui.QMainWindow):
                 cote2 = float(self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+11].text())
                 print "%2.2f " % cote2
                 self.__gridHandler.grid().getGame(i).setCotes(cote1, coteN, cote2)
+                sigmaCotesMoinsUn = 1/self.__gridHandler.grid().getGame(i).getCotes(0) + 1/self.__gridHandler.grid().getGame(i).getCotes(1) + 1/self.__gridHandler.grid().getGame(i).getCotes(2)
+
+                ret0 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(0)*self.__gridHandler.grid().getGame(i).getCotes(0)*sigmaCotesMoinsUn)
+                ret1 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(1)*self.__gridHandler.grid().getGame(i).getCotes(1)*sigmaCotesMoinsUn)
+                ret2 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(2)*self.__gridHandler.grid().getGame(i).getCotes(2)*sigmaCotesMoinsUn)
+
+                self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+13].setText("%2.2f" % ret0)
+                self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+13].repaint()
+                self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+14].setText("%2.2f" % ret1)
+                self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+14].repaint()
+                self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+15].setText("%2.2f" % ret2)
+                self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+15].repaint()
                 #except:
                 #        print "erreur de recup lors du %deme match" % i
 
