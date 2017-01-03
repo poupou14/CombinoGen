@@ -7,7 +7,7 @@ import copy
 #sys.path.append("../Import/xlwt-0.7.2")
 #sys.path.append("../Import/pyexcelerator-0.6.4.1")
 
-from pyExcelerator import *
+#from pyExcelerator import *
 import xlrd
 import xlwt
 import Grille
@@ -215,13 +215,13 @@ def write_excel_header(worksheet, title_cols):
                 cno = cno + 1
         return
 
-def write_excel_row(worksheet, rowNumber, columnNumber):
-        """ Write a non-header row into the worksheet """
-        cno = 0
-        for column in columns:
-                worksheet.write(lno, cno, column)
-                cno = cno + 1
-        return
+#def write_excel_row(worksheet, rowNumber, columnNumber):
+	#""" Write a non-header row into the worksheet """
+	#cno = 0
+	#for column in columns:
+		#worksheet.write(lno, cno, column)
+		#cno = cno + 1
+	#return
 
 def save_excel_sheet(workbook, output_file_name):
         """ Saves the in-memory WorkBook object into the specified file """
