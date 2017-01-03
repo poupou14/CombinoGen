@@ -13,10 +13,10 @@ src/CombinoEngine.pyx
 src/CombinoGUI.py
 src/GridRequestor.py
 src/CombinoNetworkManager.py
-src/readGridHandlerFactory.py
-src/readGridHandler.py
-src/readWinamax7Handler.py
-src/readWinamax12Handler.py
+src/ReadGridHandlerFactory.py
+src/ReadGridHandler.py
+src/ReadWinamax7Handler.py
+src/ReadWinamax12Handler.py
 src/CombinoSource.pyx
 src/Match.pyx
 src/mainwin.ui

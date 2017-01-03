@@ -9,36 +9,36 @@ from pyvirtualdisplay import Display
 
 
 class Singleton:
-	def __init__(self, decorated):
-		self._decorated = decorated
+        def __init__(self, decorated):
+                self._decorated = decorated
 
-	def Instance(self):
-		try:
-			return self._instance
-		except AttributeError:
-			self._instance = self._decorated()
-			return self._instance
+        def Instance(self):
+                try:
+                        return self._instance
+                except AttributeError:
+                        self._instance = self._decorated()
+                        return self._instance
 
-	def __call__(self):
-		raise TypeError('Singletons must be accessed through `Instance()`.')
+        def __call__(self):
+                raise TypeError('Singletons must be accessed through `Instance()`.')
 
-	def __instancecheck__(self, inst):
-		return isinstance(inst, self._decorated)
+        def __instancecheck__(self, inst):
+                return isinstance(inst, self._decorated)
 
 @Singleton
 class CombinoNetworkManager:
-	def __init__(self):
-		self.manager = QNetworkAccessManager()
-		self.__url = None
+        def __init__(self):
+                self.manager = QNetworkAccessManager()
+                self.__url = None
 
-	def setUrl(self, url):
-		self.__url = url
+        def setUrl(self, url):
+                self.__url = url
 
-	def get(self):
-		print "set url"
-		request = QNetworkRequest(self.__url)
-		print "get method"
-		reponse = self.manager.get(request)
-		print "get method done"
-		return
+        def get(self):
+                print "set url"
+                request = QNetworkRequest(self.__url)
+                print "get method"
+                reponse = self.manager.get(request)
+                print "get method done"
+                return
 
