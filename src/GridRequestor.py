@@ -15,6 +15,7 @@ class GridRequestor(QThread):
                 QThread.__init__(self, parent)
                 self.distribPageGenerated = DistribPageGeneratedSignal()
                 self.__url = None
+                self.__display = None
 
         def setUrl(self, url):
                 self.__url = url

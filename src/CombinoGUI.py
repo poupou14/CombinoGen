@@ -367,7 +367,7 @@ class CombinoGUI(QtGui.QMainWindow):
                 cote2 = float(self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+12].text())
                 print "%2.2f " % cote2
                 self.__gridHandler.grid().getGame(i).setCotes(cote1, coteN, cote2)
-                sigmaCotesMoinsUn = 1/self.__gridHandler.grid().getGame(i).getCotes(0) + 1/self.__gridHandler.grid().getGame(i).getCotes(1) + 1/self.__gridHandler.grid().getGame(i).getCotes(2)
+                sigmaCotesMoinsUn = 1/cote1 + 1/coteN + 1/cote2
 
                 ret0 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(0)*self.__gridHandler.grid().getGame(i).getCotes(0)*sigmaCotesMoinsUn)
                 ret1 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(1)*self.__gridHandler.grid().getGame(i).getCotes(1)*sigmaCotesMoinsUn)
