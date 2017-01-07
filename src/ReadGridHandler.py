@@ -7,7 +7,7 @@ class ReadGridHandler():
 
         def __init__(self):
                 self._gridName = ""
-                self._bookUrl = QUrl("https://www.winamax.fr/paris-sportifs-grilles/")
+                self._bookUrl = None
                 self._oddsUrl = "http://www.betexplorer.com/next/soccer/"
                 self._gridList = []
                 self._index = 0

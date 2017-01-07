@@ -18,6 +18,7 @@ class ReadWinamax7Handler(ReadGridHandler):
                 self._gridName = "Winamax7"
                 print "W7: %s" % str(self)
                 self._gridSize = 7
+                self._bookUrl = QUrl("https://www.winamax.fr/paris-sportifs-grilles/")
                 return
 
         def handleHtmlPage(self, htmlPage):

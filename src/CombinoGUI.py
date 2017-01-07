@@ -111,19 +111,15 @@ class CombinoGUI(QtGui.QMainWindow):
         if index == 0:
             self.__gridHandler = ReadWinamax7Handler()
         elif index == 1:
-            self.__gridType = "winamax12"
+            self.__gridHandler = ReadWinamax12Handler()
             print "Winamax 12"
         elif index == 2:
-            self.__gridType = "lotofoot7"
             print "LotoFoot 7"
         elif index == 3:
-            self.__gridType = "lotofoot15"
             print "LotoFoot 15"
         elif index == 4:
-            self.__gridType = "betclic5"
             print "Betclic 5"
         elif index == 5:
-            self.__gridType = "betclic8"
             print "Betclic 8"
         else:
             print "index = %s" % index

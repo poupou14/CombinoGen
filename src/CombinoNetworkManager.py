@@ -35,7 +35,7 @@ class CombinoNetworkManager:
                 self.__url = url
 
         def get(self):
-                print "set url"
+                print "set url : %s" % self.__url
                 request = QNetworkRequest(self.__url)
                 print "get method"
                 reponse = self.manager.get(request)
