@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c394931b-5169-4a30-8c61-279f404049b2" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/CombinoGen.iml" afterPath="$PROJECT_DIR$/.idea/CombinoGen.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/CombinoGUI.py" afterPath="$PROJECT_DIR$/src/CombinoGUI.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ReadGridHandler.py" afterPath="$PROJECT_DIR$/src/ReadGridHandler.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ReadWinamax12Handler.py" afterPath="$PROJECT_DIR$/src/ReadWinamax12Handler.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ReadWinamax7Handler.py" afterPath="$PROJECT_DIR$/src/ReadWinamax7Handler.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ReadLoto15Handler.py" afterPath="$PROJECT_DIR$/src/ReadLoto15Handler.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -26,24 +21,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="CombinoNetworkManager.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/CombinoNetworkManager.py">
+      <file leaf-file-name="CombinoGUI.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/CombinoGUI.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="486">
-              <caret line="33" column="15" lean-forward="false" selection-start-line="33" selection-start-column="15" selection-end-line="33" selection-end-column="15" />
-              <folding />
+            <state relative-caret-position="306">
+              <caret line="147" column="82" lean-forward="false" selection-start-line="147" selection-start-column="82" selection-end-line="147" selection-end-column="82" />
+              <folding>
+                <element signature="e#0#14#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CombinoGUI.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/CombinoGUI.py">
+      <file leaf-file-name="CombinoNetworkManager.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/CombinoNetworkManager.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="168" column="52" lean-forward="false" selection-start-line="168" selection-start-column="52" selection-end-line="168" selection-end-column="52" />
-              <folding>
-                <element signature="e#0#14#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -63,31 +58,11 @@
       <file leaf-file-name="ReadGridHandler.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ReadGridHandler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="84" column="151" lean-forward="false" selection-start-line="84" selection-start-column="151" selection-end-line="84" selection-end-column="151" />
+            <state relative-caret-position="378">
+              <caret line="21" column="12" lean-forward="false" selection-start-line="21" selection-start-column="12" selection-end-line="21" selection-end-column="12" />
               <folding>
                 <element signature="e#18#39#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ReadGridHandlerFactory.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/ReadGridHandlerFactory.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="16" column="38" lean-forward="false" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GridRequestor.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/GridRequestor.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -107,8 +82,42 @@
       <file leaf-file-name="ReadLoto15Handler.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ReadLoto15Handler.py">
           <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="342">
+              <caret line="19" column="30" lean-forward="false" selection-start-line="19" selection-start-column="30" selection-end-line="19" selection-end-column="30" />
+              <folding>
+                <element signature="e#18#39#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ReadLotoHandler.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/ReadLotoHandler.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="21" column="19" lean-forward="false" selection-start-line="21" selection-start-column="19" selection-end-line="21" selection-end-column="19" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CombinoSource.pyx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/CombinoSource.pyx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="198">
+              <caret line="27" column="10" lean-forward="false" selection-start-line="27" selection-start-column="10" selection-end-line="27" selection-end-column="10" />
+              <folding>
+                <marker date="1483481732775" expanded="true" signature="9805:9811" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ReadLoto7Handler.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/ReadLoto7Handler.py">
+          <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="216">
-              <caret line="36" column="46" lean-forward="false" selection-start-line="36" selection-start-column="46" selection-end-line="36" selection-end-column="46" />
+              <caret line="12" column="21" lean-forward="false" selection-start-line="12" selection-start-column="21" selection-end-line="12" selection-end-column="21" />
               <folding>
                 <element signature="e#18#39#0" expanded="true" />
               </folding>
@@ -121,16 +130,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="117">
               <caret line="80" column="0" lean-forward="false" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Grille.pyx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Grille.pyx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-486">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -149,9 +148,11 @@
         <option value="$PROJECT_DIR$/src/CombinoNetworkManager.py" />
         <option value="$PROJECT_DIR$/src/ReadWinamax12Handler.py" />
         <option value="$PROJECT_DIR$/src/ReadWinamax7Handler.py" />
-        <option value="$PROJECT_DIR$/src/CombinoGUI.py" />
-        <option value="$PROJECT_DIR$/src/ReadLoto15Handler.py" />
         <option value="$PROJECT_DIR$/src/ReadGridHandler.py" />
+        <option value="$PROJECT_DIR$/src/CombinoGUI.py" />
+        <option value="$PROJECT_DIR$/src/ReadLotoHandler.py" />
+        <option value="$PROJECT_DIR$/src/ReadLoto15Handler.py" />
+        <option value="$PROJECT_DIR$/src/ReadLoto7Handler.py" />
       </list>
     </option>
   </component>
@@ -421,10 +422,10 @@
     <frame x="-3" y="0" width="1286" height="739" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1625" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16203336" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32913387" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32843137" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -460,27 +461,19 @@
           <line>1</line>
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/ReadLoto15Handler.py</url>
-          <line>43</line>
-          <option name="timeStamp" value="2" />
+          <url>file://$PROJECT_DIR$/src/ReadLoto7Handler.py</url>
+          <line>1</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="3" />
+      <option name="time" value="4" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/CombinoEngine.pyx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="6" column="10" lean-forward="false" selection-start-line="6" selection-start-column="10" selection-end-line="6" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/CombinoNetworkManager.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="486">
@@ -645,6 +638,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="882">
           <caret line="65" column="30" lean-forward="false" selection-start-line="65" selection-start-column="30" selection-end-line="65" selection-end-column="30" />
+          <folding>
+            <marker date="1483481732775" expanded="true" signature="9805:9811" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -720,6 +716,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1483481732775" expanded="true" signature="9805:9811" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -745,6 +744,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1483481732775" expanded="true" signature="9805:9811" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -777,25 +779,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/CombinoSource.pyx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="882">
-          <caret line="65" column="30" lean-forward="false" selection-start-line="65" selection-start-column="30" selection-end-line="65" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/CombinoEngine.pyx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="108">
           <caret line="6" column="10" lean-forward="false" selection-start-line="6" selection-start-column="10" selection-end-line="6" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/CombinoNetworkManager.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="486">
-          <caret line="33" column="15" lean-forward="false" selection-start-line="33" selection-start-column="15" selection-end-line="33" selection-end-column="15" />
           <folding />
         </state>
       </provider>
@@ -832,16 +819,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/CombinoGUI.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="168" column="52" lean-forward="false" selection-start-line="168" selection-start-column="52" selection-end-line="168" selection-end-column="52" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/ReadWinamax7Handler.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-733">
@@ -862,20 +839,66 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/CombinoSource.pyx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="27" column="10" lean-forward="false" selection-start-line="27" selection-start-column="10" selection-end-line="27" selection-end-column="10" />
+          <folding>
+            <marker date="1483481732775" expanded="true" signature="9805:9811" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CombinoNetworkManager.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/ReadLoto15Handler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="36" column="46" lean-forward="false" selection-start-line="36" selection-start-column="46" selection-end-line="36" selection-end-column="46" />
+        <state relative-caret-position="342">
+          <caret line="19" column="30" lean-forward="false" selection-start-line="19" selection-start-column="30" selection-end-line="19" selection-end-column="30" />
           <folding>
             <element signature="e#18#39#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/ReadGridHandler.py">
+    <entry file="file://$PROJECT_DIR$/src/CombinoGUI.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
-          <caret line="84" column="151" lean-forward="false" selection-start-line="84" selection-start-column="151" selection-end-line="84" selection-end-column="151" />
+          <caret line="147" column="82" lean-forward="false" selection-start-line="147" selection-start-column="82" selection-end-line="147" selection-end-column="82" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ReadLoto7Handler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="12" column="21" lean-forward="false" selection-start-line="12" selection-start-column="21" selection-end-line="12" selection-end-column="21" />
+          <folding>
+            <element signature="e#18#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ReadLotoHandler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="21" column="19" lean-forward="false" selection-start-line="21" selection-start-column="19" selection-end-line="21" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ReadGridHandler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="21" column="12" lean-forward="false" selection-start-line="21" selection-start-column="12" selection-end-line="21" selection-end-column="12" />
           <folding>
             <element signature="e#18#39#0" expanded="true" />
           </folding>

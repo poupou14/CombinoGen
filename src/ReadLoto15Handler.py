@@ -1,19 +1,14 @@
 #!/usr/bin/python
 import os,string, sys
-from ReadGridHandler import ReadGridHandler
+from ReadLotoHandler import ReadLotoHandler
 from PySide.QtCore import  QUrl, QRegExp, QDateTime, QDate
-from PySide.QtGui import  QMessageBox
-from PySide.QtNetwork import  *
 sys.path.append("../WinaScan/WinaScan/src/")
-from Grille import Grille
-from Match import Match
-import string
 
 
-class ReadLoto15Handler(ReadGridHandler):
+class ReadLoto15Handler(ReadLotoHandler):
 
         def __init__(self):
-                ReadGridHandler.__init__(self)
+                ReadLotoHandler.__init__(self)
                 print "Loto 15"
                 self.gridName = "Loto15"
                 print "L15: %s" % str(self)
@@ -21,113 +16,8 @@ class ReadLoto15Handler(ReadGridHandler):
                 self._gridSize = 15
                 return
 
-        def handleHtmlPage(self, htmlPage):
-                tup = ()
-                self._gridList = []
-                loto15rx = QRegExp("<option selected=\"selected\" value=\"(\\d+)\">")
-                loto15DateRx = QRegExp("\\d*\\s*du\\s*(\\d*\/\\d*\/\\d*)<\/option>")
-                posi_encours = loto15rx.indexIn(str(htmlPage))
-                ngrille = loto15rx.cap(1)
-                print "ngrille=%s" % ngrille
-                posi = loto15DateRx.indexIn(str(htmlPage), posi_encours)
-                date = loto15DateRx.cap(1)
-                print "Date=%s" % date
-                dmy = string.split(date, "/")
-                qdatetime = QDateTime()
-                qdatetime.setDate(QDate(int("20"+dmy[2]), int(dmy[1]), int(dmy[0])))
-                epochDate = qdatetime.toMSecsSinceEpoch()/1000
-                print "epochDate=%d" % epochDate
-                tup = (ngrille, epochDate, 0)
-                self._gridList.append(tup)
-                loto15rx = QRegExp("<option value=\"(\\d+)\">")
-                posi = 0
-                while posi != -1 and posi < posi_encours:
-                        posi = loto15rx.indexIn(str(htmlPage), posi+1)
-                        ngrille = loto15rx.cap(1)
-                        print "ngrille=%s" % ngrille
-                        posi = loto15DateRx.indexIn(str(htmlPage), posi)
-                        date = loto15DateRx.cap(1)
-                        print "Date=%s" % date
-                        dmy = string.split(date, "/")
-                        qdatetime = QDateTime()
-                        qdatetime.setDate(QDate(int("21"+dmy[2]), int(dmy[1]), int(dmy[0])))
-                        epochDate = qdatetime.toMSecsSinceEpoch()/1000
-                        print "epochDate=%d" % epochDate
-                        tup = (ngrille, epochDate, 0)
-                        self._gridList.append(tup)
-                #print self._gridList
-
-        def handleDistribHtmlPage(self, htmlPage):
-                print "handleDistribHtmlPage"
-                self._grid = Grille()
-                self._grid.setReturnRate(0.70)
-                self._grid.setFirstRankRate(0.40)
-                self._grid.setScndRankRate(0.20)
-                self._grid.setThirdRankRate(0.20)
-                jackpot = int(self._gridList[self._index][2]) / 0.70
-                self._grid.setJackpot(jackpot)
-                self._grid.setNbPlayers(jackpot)
-                htmlStrPage = str(htmlPage).decode('utf-8')
-                teamString = "<td class=\"center matchs_av\">((\\w*\.?\\s*)*)<\/td>"
-                loto15Teamrx = QRegExp(teamString)
-                repString = ">(\\d*,*\\d*)\\s*\%<"
-                loto15Reprx = QRegExp(repString)
-                index_l = 0
-                total = 0
-                posi = 0
-                i = 0
-                #try:
-                if True :
-                        posi= loto15Teamrx.indexIn(htmlStrPage, posi+1)
-                        print "posi = %d" % posi
-                        while posi != -1:
-                                i+=1
-                                team1 = loto15Teamrx.cap(1)
-                                posi= loto15Teamrx.indexIn(htmlStrPage, posi+1)
-                                print "posi2 = %d" % posi
-                                print "posi2 = %d" % posi
-                                print "team1 = %s" % team1
-                                team2 = loto15Teamrx.cap(1)
-                                print "posi3 = %d" % posi
-                                print "indice %i" % i
-                                print "team2 = %s" % team2
-                                match = Match(team1 + " vs " + team2)
-                                match.setTeam1(team1)
-                                match.setTeam2(team2)
-                                posi= loto15Reprx.indexIn(htmlStrPage, posi+1)
-                                print "posi4 = %d" % posi
-                                p1 = float(loto15Reprx.cap(1).replace(",","."))
-                                posi= loto15Reprx.indexIn(htmlStrPage, posi+1)
-                                print "posi5 = %d" % posi
-                                pN = float(loto15Reprx.cap(1).replace(",","."))
-                                posi= loto15Reprx.indexIn(htmlStrPage, posi+1)
-                                print "posi6 = %d" % posi
-                                p2 = float(loto15Reprx.cap(1).replace(",","."))
-                                total = float(p1+pN+p2)
-                                r1 = p1/total*100
-                                r2 = p2/total*100
-                                rN = pN/total*100
-                                match.setRepartition(p1/total, pN/total, p2/total)
-                                #print "{} vs {} \t{0:.3f}\t{0:.3f}\t{0:.3f}\n".format( WSDataFormat.grille['team1'][i], WSDataFormat.grille['team2'][i], r1, rN, r2)
-                                #print "{} vs {}\t{:10.3f}\t{:10.3f}\t{:10.3f} ".format( team1.encode('utf-8'), team2.encode('utf-8'), r1,rN,r2)
-                                self._grid.addGame(match)
-                                print "game added : %d" % i
-                                posi= loto15Teamrx.indexIn(htmlStrPage, posi+1)
-                                print "posi1 = %d" % posi
-                        print "%d grilles" % i
-                        self._gridSize = i
-                #except:
-                        #msg = QMessageBox()
-                        #msg.setText("Loading page error")
-                        #msg.exec_()
-                #self.__workbook1.save(self.__outPutFileName)
-                return
-
-        def generateInputGrid(self):
-                return
-
         def changeGrid(self, index):
-                ReadGridHandler.changeGrid(self, index)
+                ReadLotoHandler.changeGrid(self, index)
                 self._distributionUrl = "http://www.pronosoft.com/fr/concours/repartition_lotofoot.php?id15=%s" % self._gridList[index][0]
                 print "distributionUrl=%s" % self._distributionUrl
                 return

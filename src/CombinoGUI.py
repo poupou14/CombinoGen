@@ -8,10 +8,10 @@ from CombinoSource import CombinoSource
 from CombinoEngine import CombinoEngine
 from ui_mainwin import Ui_MainWin
 from ReadGridHandlerFactory import ReadGridHandlerFactory
-from ReadGridHandler import ReadGridHandler
 from ReadWinamax7Handler import ReadWinamax7Handler
 from ReadWinamax12Handler import ReadWinamax12Handler
 from ReadLoto15Handler import ReadLoto15Handler
+from ReadLoto7Handler import ReadLoto7Handler
 from GridRequestor import GridRequestor, DistribPageGeneratedSignal
 
 height_g = 600
@@ -116,6 +116,7 @@ class CombinoGUI(QtGui.QMainWindow):
             print "Winamax 12"
         elif index == 2:
             print "LotoFoot 7"
+            self.__gridHandler = ReadLoto7Handler()
         elif index == 3:
             print "LotoFoot 15"
             self.__gridHandler = ReadLoto15Handler()
