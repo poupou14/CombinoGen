@@ -55,8 +55,8 @@ class ReadWinamax12Handler(ReadGridHandler):
                 jackpot = int(self._gridList[self._index][2]) / 0.75
                 self._grid.setJackpot(jackpot)
                 self._grid.setNbPlayers(jackpot)
-                print "handleDistribHtmlPage"
-                print htmlPage
+                #print "handleDistribHtmlPage"
+                #print htmlPage
                 myParser = WSGridParser()
                 myParser.html = filter(onlyascii, htmlPage)
                 myParser.feed(htmlPage)
@@ -80,7 +80,7 @@ class ReadWinamax12Handler(ReadGridHandler):
                                 rN = pN/total*100
                                 match.setRepartition(p1/total, pN/total, p2/total)
                                 #print "{} vs {} \t{0:.3f}\t{0:.3f}\t{0:.3f}\n".format( WSDataFormat.grille['team1'][i], WSDataFormat.grille['team2'][i], r1, rN, r2)
-                                print "{} vs {}\t{:10.3f}\t{:10.3f}\t{:10.3f} ".format( myParser.wsDataFormat.grille['team1'][i].encode('utf-8'), myParser.wsDataFormat.grille['team2'][i].encode('utf-8'), r1,rN,r2)
+                                #print "{} vs {}\t{:10.3f}\t{:10.3f}\t{:10.3f} ".format( myParser.wsDataFormat.grille['team1'][i].encode('utf-8'), myParser.wsDataFormat.grille['team2'][i].encode('utf-8'), r1,rN,r2)
                                 self._grid.addGame(match)
                         print "%d grilles" % total
                 except:

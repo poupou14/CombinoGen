@@ -11,6 +11,7 @@ from ReadGridHandlerFactory import ReadGridHandlerFactory
 from ReadGridHandler import ReadGridHandler
 from ReadWinamax7Handler import ReadWinamax7Handler
 from ReadWinamax12Handler import ReadWinamax12Handler
+from ReadLoto15Handler import ReadLoto15Handler
 from GridRequestor import GridRequestor, DistribPageGeneratedSignal
 
 height_g = 600
@@ -117,6 +118,7 @@ class CombinoGUI(QtGui.QMainWindow):
             print "LotoFoot 7"
         elif index == 3:
             print "LotoFoot 15"
+            self.__gridHandler = ReadLoto15Handler()
         elif index == 4:
             print "Betclic 5"
         elif index == 5:
@@ -131,9 +133,9 @@ class CombinoGUI(QtGui.QMainWindow):
         reponse = combinoManager.get() #send request
 
     def do_handleDistribHtmlPage(self, sourcePage):
-        print(sourcePage)
+        #print(sourcePage)
         self.ui.progressBar.hide()
-        self.__gridHandler.handleDistribHtmlPage(sourcePage)
+        self.__gridHandler.handleDistribHtmlPage(sourcePage.encode('utf-8'))
         self.do_generateOdds()
 
     def do_generateGrid(self):

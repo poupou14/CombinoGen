@@ -63,12 +63,13 @@ class ReadGridHandler():
         def handleOddsHtmlPage(self, htmlPage):
                 strHtml = str(htmlPage)
                 oddsRx = QRegExp("<a href=.*data-odd-max=\"(\\d*\.\\d*)\".*data-odd-max=\"(\\d*\.\\d*)\".*data-odd-max=\"(\\d*\.\\d*)\".*>")
-                for match in self._grid.matches() :
+                for match in self._grid.matches():
                         team1Rx = QRegExp(match.team1())
                         team2Rx = QRegExp(match.team2())
                         posi = team1Rx.indexIn(strHtml)
                         if posi < 0:
                                 print "-%s- not found" % match.team1()
+                                print "-1- not found"
                                 posi = team2Rx.indexIn(strHtml)
                         if posi >= 0:
                                 posi = oddsRx.indexIn(strHtml, posi)
@@ -78,13 +79,13 @@ class ReadGridHandler():
                                 print "read odds1 = %s" % oddStr1
                                 try :
                                         match.setCotes(float(oddsRx.cap(1)), float(oddsRx.cap(2)), float(oddsRx.cap(3)))
-                                        print "Odds handling OK : %s" % str(match)
+                                        print "Odds handling OK : %s" % str(match.team1().encode('utf-8')+" vs "+match.team2().encode('utf-8'))
+                                        print "Odds handling OK : "
                                 except:
-                                        print "Odds handling KO for %s, cant read odds" % str(match)
+                                        print "Odds handling KO , cant read odds for %s" % str(match.team1().encode('utf-8')+" vs "+match.team2().encode('utf-8'))
                         else:
-                                print "-%s- not found" % match.team2()
-                                print "Odds handling KO %s not found" % str(match)
-
+                                print "-2- not found"
+                                #print "Odds handling KO %s not found" % str(match)
                 return
 
         def generateInputGrid(self):

@@ -7,7 +7,7 @@
       <excludeFolder url="file://$MODULE_DIR$/Output" />
       <excludeFolder url="file://$MODULE_DIR$/src/build" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Python 2.7.12 (/usr/bin/python2.7)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TestRunnerService">
