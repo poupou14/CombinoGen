@@ -15,7 +15,7 @@ class ReadWinamax12Handler(ReadGridHandler):
         def __init__(self):
                 ReadGridHandler.__init__(self)
                 print "Winamax 12"
-                self.gridName = "Winamax12"
+                self._gridName = "Winamax12"
                 print "W12: %s" % str(self)
                 self._bookUrl = QUrl("https://www.winamax.fr/paris-sportifs-grilles/")
                 self._gridSize = 12

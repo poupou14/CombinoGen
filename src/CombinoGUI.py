@@ -42,6 +42,7 @@ class CombinoGUI(QtGui.QMainWindow):
         self.ui.pbGenerate.clicked.connect(self.do_generateInputGrid)
         self.ui.pbGenerateGrid.clicked.connect(self.do_generateGrid)
         self.ui.pbImport.clicked.connect(self.do_importGrid)
+        self.ui.pbExport.clicked.connect(self.do_exportGrid)
         self.ui.pb1Browse.clicked.connect(self.do_browseDir)
         self.ui.pbQuit.clicked.connect(self.do_quit)
         self.ui.progressBar.hide()
@@ -80,7 +81,6 @@ class CombinoGUI(QtGui.QMainWindow):
         elif self.__nextAction == 'CombinoGenOdds':
             self.__gridHandler.handleOddsHtmlPage(htmlPage)
             self.ui.progressBar.hide()
-            #self.updateOddsTab()
             self.updateDistribTab()
         elif self.__nextAction == 'CombinoGenResult':
             self.__gridHandler.handleHtmlPage(htmlPage)
@@ -89,6 +89,19 @@ class CombinoGUI(QtGui.QMainWindow):
         print "DISCONNECT"
         combinoManager = CombinoNetworkManager.Instance()
         combinoManager.manager.finished[QNetworkReply].disconnect(self.do_receiveHtml)
+
+    def do_exportGrid(self):
+        inputDirName = ''.join((os.getcwd(), "/Input"))
+        outputFileName = ''.join((inputDirName,'/'))
+        list = (self.__gridHandler.gridList())
+        date = list[self.__gridIndex][0]
+        outputFileName = ''.join((outputFileName,  self.__gridHandler.gridName()))
+        outputFileName = ''.join((outputFileName, "-"))
+        outputFileName = ''.join((outputFileName, str(date)))
+        outputFileName = ''.join((outputFileName, ".xls"))
+        print "export dir = %s" % ''.join((os.getcwd(), "/Input/"))
+        self.__gridHandler.grid().export(outputFileName)
+
 
     def do_importGrid(self):
         print "input dir = %s" % ''.join((os.getcwd(), "/Input/"))
@@ -347,6 +360,7 @@ class CombinoGUI(QtGui.QMainWindow):
         self.__distribLayoutGridWidth = 18
 
         self.__gridDistribLayout.addWidget(self.ui.pbGenerateGrid, size+1, 0)
+        self.__gridDistribLayout.addWidget(self.ui.pbExport, size+1, 17)
         return
 
     def readDistribInput(self):
@@ -372,9 +386,9 @@ class CombinoGUI(QtGui.QMainWindow):
                 self.__gridHandler.grid().getGame(i).setCotes(cote1, coteN, cote2)
                 sigmaCotesMoinsUn = 1/cote1 + 1/coteN + 1/cote2
 
-                ret0 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(0)*self.__gridHandler.grid().getGame(i).getCotes(0)*sigmaCotesMoinsUn)
-                ret1 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(1)*self.__gridHandler.grid().getGame(i).getCotes(1)*sigmaCotesMoinsUn)
-                ret2 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(2)*self.__gridHandler.grid().getGame(i).getCotes(2)*sigmaCotesMoinsUn)
+                ret0 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(0)*cote1*sigmaCotesMoinsUn)
+                ret1 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(1)*coteN*sigmaCotesMoinsUn)
+                ret2 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(2)*cote2*sigmaCotesMoinsUn)
 
                 self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+8].setText("%3.1f" % total)
                 self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+8].repaint()

@@ -95,6 +95,7 @@ class CombinoEngine(QThread):
                         self.genCombinoBetRecurcive(numGame_p + 1, 1)
                         self.genCombinoBetRecurcive(numGame_p + 1, 2)
                 return
+
         def cancelGen(self):
                 print "cancelGen slot"
                 self.__cancel = True

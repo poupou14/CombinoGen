@@ -54,11 +54,6 @@ class ReadLotoHandler(ReadGridHandler):
 
         def handleDistribHtmlPage(self, htmlPage):
                 print "handleDistribHtmlPage"
-                self._grid = Grille()
-                self._grid.setReturnRate(0.70)
-                self._grid.setFirstRankRate(0.40)
-                self._grid.setScndRankRate(0.20)
-                self._grid.setThirdRankRate(0.20)
                 jackpot = int(self._gridList[self._index][2]) / 0.70
                 self._grid.setJackpot(jackpot)
                 self._grid.setNbPlayers(jackpot)
