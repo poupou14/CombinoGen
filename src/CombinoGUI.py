@@ -12,7 +12,8 @@ from ReadWinamax7Handler import ReadWinamax7Handler
 from ReadWinamax12Handler import ReadWinamax12Handler
 from ReadLoto15Handler import ReadLoto15Handler
 from ReadLoto7Handler import ReadLoto7Handler
-from GridRequestor import GridRequestor, DistribPageGeneratedSignal
+from GridRequestor import GridRequestor
+from CombinoTools import onlyascii
 
 height_g = 600
 width_g = 800
@@ -46,6 +47,8 @@ class CombinoGUI(QtGui.QMainWindow):
         self.ui.pb1Browse.clicked.connect(self.do_browseDir)
         self.ui.pbQuit.clicked.connect(self.do_quit)
         self.ui.progressBar.hide()
+        self.ui.jackpotLine.editingFinished.connect(self.do_updateJackpot)
+        self.ui.nbPlayersLine.editingFinished.connect(self.do_updateNbPlayers)
 
         self.__distribLayoutGridWidth = 0
         self.__gridIndex = -1
@@ -82,6 +85,8 @@ class CombinoGUI(QtGui.QMainWindow):
             self.__gridHandler.handleOddsHtmlPage(htmlPage)
             self.ui.progressBar.hide()
             self.updateDistribTab()
+            self.refreshJackpot()
+            self.refreshNbPlayers()
         elif self.__nextAction == 'CombinoGenResult':
             self.__gridHandler.handleHtmlPage(htmlPage)
             self.updateConfigTab()
@@ -196,6 +201,26 @@ class CombinoGUI(QtGui.QMainWindow):
 
     def do_quit(self):
         QtCore.QCoreApplication.instance().quit()
+
+    def do_updateNbPlayers(self):
+        if self.__gridHandler != None and self.__gridHandler.grid() != None :
+            try :
+                self.__gridHandler.grid().setNbPlayers(int(self.ui.nbPlayersLine.text()))
+            except:
+                self.__gridHandler.grid().setNbPlayers(0)
+
+    def refreshNbPlayers(self):
+        self.ui.nbPlayersLine.setText("%.2f" % (self.__gridHandler.grid().nbPlayers()))
+
+    def do_updateJackpot(self):
+        if self.__gridHandler != None and self.__gridHandler.grid() != None :
+            try :
+                self.__gridHandler.grid().setJackpot(float(self.ui.jackpotLine.text()))
+            except:
+                self.__gridHandler.grid().setJackpot(0)
+
+    def refreshJackpot(self):
+        self.ui.jackpotLine.setText("%.2f" % (self.__gridHandler.grid().jackpot()))
 
     def do_update(self):
         self.__nextAction = 'CombinoGenBook'

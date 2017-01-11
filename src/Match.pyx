@@ -1,8 +1,6 @@
 #!/usr/bin/python 
 import os,string, sys
-import time
-import copy
-
+from CombinoTools import onlyascii
 
 class Match():
         def __init__(self, affiche_p ):
@@ -49,7 +47,7 @@ class Match():
                 return self.__cotes[index_p]
 
         def __str__(self):
-                str = self.__affiche.encode('ascii', 'ignore').decode('ascii')
+                str = filter(onlyascii, self.__affiche)
                 str = ''.join((str, " %2.2f pct" % self.__repartition[0]))
                 str = ''.join((str, " %2.2f pct" % self.__repartition[1]))
                 str = ''.join((str, " %2.2f pct" % self.__repartition[2]))

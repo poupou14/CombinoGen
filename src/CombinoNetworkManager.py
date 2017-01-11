@@ -2,10 +2,6 @@
 import os,string, sys
 from PySide.QtCore import  QUrl, QThread, Signal, QObject
 from PySide.QtNetwork import *
-from contextlib import closing
-from selenium.webdriver import Firefox # pip install selenium
-from selenium.webdriver.support.ui import WebDriverWait
-from pyvirtualdisplay import Display
 
 
 class Singleton:

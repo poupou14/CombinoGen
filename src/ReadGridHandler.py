@@ -1,6 +1,8 @@
 #!/usr/bin/python
 import os,string, sys
 from PySide.QtCore import  QUrl, QRegExp, QDateTime
+sys.path.append("../WinaScan/WinaScan/src/")
+from WSParser import onlyascii
 
 
 class ReadGridHandler():
@@ -79,10 +81,14 @@ class ReadGridHandler():
                                 print "read odds1 = %s" % oddStr1
                                 try :
                                         match.setCotes(float(oddsRx.cap(1)), float(oddsRx.cap(2)), float(oddsRx.cap(3)))
-                                        print "Odds handling OK : %s" % str(match.team1().encode('utf-8')+" vs "+match.team2().encode('utf-8'))
+                                        team1 = filter(onlyascii, match.team1())
+                                        team2 = filter(onlyascii, match.team2())
+                                        print "Odds handling OK : %s" % team1 + " vs " + team2
                                         print "Odds handling OK : "
                                 except:
-                                        print "Odds handling KO , cant read odds for %s" % str(match.team1().encode('utf-8')+" vs "+match.team2().encode('utf-8'))
+                                        team1 = filter(onlyascii, match.team1())
+                                        team2 = filter(onlyascii, match.team2())
+                                        print "Odds handling OK : cant read odds for %s" % team1 + " vs " + team2
                         else:
                                 print "-2- not found"
                                 #print "Odds handling KO %s not found" % str(match)

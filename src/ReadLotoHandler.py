@@ -2,11 +2,8 @@
 import os,string, sys
 from ReadGridHandler import ReadGridHandler
 from PySide.QtCore import  QUrl, QRegExp, QDateTime, QDate
-from PySide.QtGui import  QMessageBox
-from PySide.QtNetwork import  *
-sys.path.append("../WinaScan/WinaScan/src/")
-from Grille import Grille
 from Match import Match
+from CombinoTools import onlyascii
 import string
 
 
@@ -57,7 +54,7 @@ class ReadLotoHandler(ReadGridHandler):
                 jackpot = int(self._gridList[self._index][2]) / 0.70
                 self._grid.setJackpot(jackpot)
                 self._grid.setNbPlayers(jackpot)
-                htmlStrPage = str(htmlPage).decode('utf-8')
+                htmlStrPage = filter(onlyascii, str(htmlPage))
                 teamString = "<td class=\"center matchs_av\">((\\w*\.?\\s*)*)<\/td>"
                 loto15Teamrx = QRegExp(teamString)
                 repString = ">(\\d*,*\\d*)\\s*\%<"
@@ -98,8 +95,6 @@ class ReadLotoHandler(ReadGridHandler):
                                 r2 = p2/total*100
                                 rN = pN/total*100
                                 match.setRepartition(p1/total, pN/total, p2/total)
-                                #print "{} vs {} \t{0:.3f}\t{0:.3f}\t{0:.3f}\n".format( WSDataFormat.grille['team1'][i], WSDataFormat.grille['team2'][i], r1, rN, r2)
-                                #print "{} vs {}\t{:10.3f}\t{:10.3f}\t{:10.3f} ".format( team1.encode('utf-8'), team2.encode('utf-8'), r1,rN,r2)
                                 self._grid.addGame(match)
                                 print "game added : %d" % i
                                 posi= loto15Teamrx.indexIn(htmlStrPage, posi+1)

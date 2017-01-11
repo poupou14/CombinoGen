@@ -1,7 +1,5 @@
 #!/usr/bin/python 
 import os,string, sys
-import time
-import copy
 from pyExcelerator import *
 import xlwt
 from xlrd import open_workbook
@@ -9,6 +7,7 @@ from xlwt import Workbook,easyxf,Formula,Style
 #from lxml import etree
 import xlrd
 from Match import Match
+from CombinoTools import onlyascii
 
 
 class Grille():
@@ -36,9 +35,9 @@ class Grille():
                 i = 0
                 while i < self.getSize():
                     grilleSheet.write(i+1, 0, "%d." % (i+1))
-                    grilleSheet.write(i+1, 1, self.getGame(i).team1())
+                    grilleSheet.write(i+1, 1, filter(onlyascii, self.getGame(i).team1()))
                     grilleSheet.write(i+1, 2, "/")
-                    grilleSheet.write(i+1, 3, self.getGame(i).team2())
+                    grilleSheet.write(i+1, 3, filter(onlyascii, self.getGame(i).team2()))
                     grilleSheet.write(i+1, 4, self.getGame(i).getRepartition(0))
                     grilleSheet.write(i+1, 5, self.getGame(i).getRepartition(1))
                     grilleSheet.write(i+1, 6, self.getGame(i).getRepartition(2))
