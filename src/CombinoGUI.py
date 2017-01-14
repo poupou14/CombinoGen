@@ -12,6 +12,7 @@ from ReadWinamax7Handler import ReadWinamax7Handler
 from ReadWinamax12Handler import ReadWinamax12Handler
 from ReadLoto15Handler import ReadLoto15Handler
 from ReadLoto7Handler import ReadLoto7Handler
+from ReadMini5Handler import ReadMini5Handler
 from GridRequestor import GridRequestor
 from CombinoTools import onlyascii
 
@@ -115,6 +116,7 @@ class CombinoGUI(QtGui.QMainWindow):
         print "Lecture fichier Source"
         self.__gridHandler = self.__gridHandlerFactory.createGridHandler(self.__inputFileName)
         # mySource = CombinoSource(self.__inputFileName)
+        print "Read Grid = %s" % str(self.__gridHandler.grid())
         self.updateDistribTab()
         self.updateOddsTab()
 
@@ -139,8 +141,11 @@ class CombinoGUI(QtGui.QMainWindow):
             print "LotoFoot 15"
             self.__gridHandler = ReadLoto15Handler()
         elif index == 4:
-            print "Betclic 5"
+            print "Combino 5"
+            self.__gridHandler = ReadMini5Handler()
         elif index == 5:
+            print "Betclic 5"
+        elif index == 6:
             print "Betclic 8"
         else:
             print "index = %s" % index
@@ -228,6 +233,7 @@ class CombinoGUI(QtGui.QMainWindow):
         self.ui.comboBookBox.addItem("Winamax 12")
         self.ui.comboBookBox.addItem("LotoFoot 7")
         self.ui.comboBookBox.addItem("LotoFoot 15")
+        self.ui.comboBookBox.addItem("Mini 5")
         self.ui.comboBookBox.addItem("Betclic 5")
         self.ui.comboBookBox.addItem("Betclic 8")
         self.do_changeBook(0)

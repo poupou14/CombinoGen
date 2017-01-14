@@ -183,7 +183,7 @@ class CombinoSource():
                                                 coteN_l = coteN_l / coteTot_l
                                                 cote2_l = cote2_l / coteTot_l
                                                 currMatch_l.setCotes(cote1_l, coteN_l, cote2_l)
-
+                                print "Read game : %s" % currMatch_l
                                 self.__grille.addGame(copy.deepcopy(currMatch_l))
 
                         else :

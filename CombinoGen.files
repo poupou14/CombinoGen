@@ -6,6 +6,7 @@ CombinoGUI.bat
 compile.sh
 src/Bet.pyx
 src/CombinoGen.py
+src/CombinoTools.py
 src/CombinoSann.pyx
 src/Grille.pyx
 src/setup.py
@@ -15,6 +16,10 @@ src/GridRequestor.py
 src/CombinoNetworkManager.py
 src/ReadGridHandlerFactory.py
 src/ReadGridHandler.py
+src/ReadLotoHandler.py
+src/ReadLoto7Handler.py
+src/ReadLoto15Handler.py
+src/ReadMini5Handler.py
 src/ReadWinamax7Handler.py
 src/ReadWinamax12Handler.py
 src/CombinoSource.pyx

@@ -25,9 +25,9 @@ class Match():
 
         def setRepartition(self, un_p, n_p, deux_p) :
                 # Standard modification rep
-                rep1_l = un_p + 0.02
-                rep2_l = deux_p + 0.02
-                repN_l = n_p + 0.02
+                rep1_l = un_p
+                rep2_l = deux_p
+                repN_l = n_p
                 total = rep1_l+repN_l+rep2_l
                 self.__repartition[0] = rep1_l/total
                 self.__repartition[1] = repN_l/total

@@ -19,6 +19,7 @@ class ReadGridHandler():
 
         def changeGrid(self, index):
                 self._index = index
+                print "index = %d" % index
                 return
 
         def gridName(self):
