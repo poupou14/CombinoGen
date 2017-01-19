@@ -67,7 +67,6 @@ class CombinoGUI(QtGui.QMainWindow):
         self.__teamDisplay = []
         self.__combinoEngine = None
 
-        self.__progressBar = None
         self.ui.outputDirLine.setText(self.__outputDirName)
         # fen_l = QtGui.QDesktopWidget().screenGeometry()
         try:
@@ -180,6 +179,11 @@ class CombinoGUI(QtGui.QMainWindow):
         self.__combinoEngine = CombinoEngine(self.__gridHandler.grid(), 1, outputFileName, self)
         #mainWindow_p.stopGenSig.connect(self.cancelGen)
         print "Grid generation"
+        self.ui.progressBar.setMaximum(100)
+        self.ui.progressBar.setValue(0)
+        self.ui.progressBar.show()
+        self.__combinoEngine.finishedSig.connect(self.on_finished)
+        self.__combinoEngine.progressSig.connect(self.on_progressed)
         self.__combinoEngine.start()
 
 
@@ -200,8 +204,8 @@ class CombinoGUI(QtGui.QMainWindow):
         self.__nextAction = 'CombinoGenDistrib'
         self.__gridRequestor.setUrl(self.__gridHandler.distribUrl())
         print "requested url = %s" % self.__gridHandler.distribUrl()
-        self.__gridRequestor.start()
         self.ui.progressBar.show()
+        self.__gridRequestor.start()
         return
 
     def do_quit(self):
@@ -362,15 +366,19 @@ class CombinoGUI(QtGui.QMainWindow):
                 self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 12)
                 j+=1
 
-                sigmaCotesMoinsUn = 1/self.__gridHandler.grid().getGame(i).getCotes(0) + 1/self.__gridHandler.grid().getGame(i).getCotes(1) + 1/self.__gridHandler.grid().getGame(i).getCotes(2)
+                try :
+                    sigmaCotesMoinsUn = 1/self.__gridHandler.grid().getGame(i).getCotes(0) + 1/self.__gridHandler.grid().getGame(i).getCotes(1) + 1/self.__gridHandler.grid().getGame(i).getCotes(2)
 
+                    ret0 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(0)*self.__gridHandler.grid().getGame(i).getCotes(0)*sigmaCotesMoinsUn)
+                    ret1 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(1)*self.__gridHandler.grid().getGame(i).getCotes(1)*sigmaCotesMoinsUn)
+                    ret2 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(2)*self.__gridHandler.grid().getGame(i).getCotes(2)*sigmaCotesMoinsUn)
+                except ZeroDivisionError:
+                    ret0 = 0
+                    ret1 = 0
+                    ret2 = 0
                 self.__dynamicDistribWidgets.append(QLabel("%1.2f" % sigmaCotesMoinsUn))
                 self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 13)
                 j+=1
-
-                ret0 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(0)*self.__gridHandler.grid().getGame(i).getCotes(0)*sigmaCotesMoinsUn)
-                ret1 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(1)*self.__gridHandler.grid().getGame(i).getCotes(1)*sigmaCotesMoinsUn)
-                ret2 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(2)*self.__gridHandler.grid().getGame(i).getCotes(2)*sigmaCotesMoinsUn)
 
                 self.__dynamicDistribWidgets.append( QLabel("|"))
                 self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 14)
@@ -480,77 +488,14 @@ class CombinoGUI(QtGui.QMainWindow):
         self.stopGenSig.emit()
 
 
-    def generate(self):
-        espMin_l = 1  # default value
-        print "Lecture fichier Source : %s" % self.__inputFileName
-        mySource_l = CombinoSource(self.__inputFileName)
-        myGrille_l = mySource_l.getGrille()
-        # create outputfile name
-        self.__outputDirName = ''.join((self.__outputDirName, "/"))
-        self.__outputFileName = ''.join((self.__inputFileName[0:-3], "csv"))
-        print "outputfile etape 1: %s" % self.__outputFileName
-        indexStartFileName_l = self.__outputFileName.rfind("/")
-        # print "separateur : %s" % os.sep
-        self.__outputFileName = ''.join((self.__outputDirName, self.__outputFileName[indexStartFileName_l:]))
-        print "outputfile final :", self.__outputDirName
-        print "Destination :", self.__outputFileName
-
-        print "Calcul Proba et Esperances des grilles"
-        self.__outputFile = open(self.__outputFileName, 'w+')
-        self.__outputFile.write(
-            "Game;Proba-Rg1;Esp-Rg1;Estim-Rg1;Proba-Rg2;Esp-Rg2;Estim-Rg2;Proba-Rg3;Esp-Rg3;Estim-Rg3;Esp-tot\n")
-        returnRate_l = mySource_l.getReturnRate()
-        firstRankRate_l = mySource_l.getFirstRankRate()
-        scndRankRate_l = mySource_l.getScndRankRate()
-        thirdRankRate_l = mySource_l.getThirdRankRate()
-        jackpot_l = mySource_l.getJackpot()
-        nbPlayers_l = mySource_l.getNbPlayers()
-        totalRate_l = returnRate_l * firstRankRate_l
-        if thirdRankRate_l != -1:
-            totalRate2nd_l = returnRate_l * scndRankRate_l
-            totalRate3rd_l = returnRate_l * thirdRankRate_l
-            print "Min Esp : %f" % espMin_l
-            print "1st rank rate Esp : %f" % firstRankRate_l
-            print "2nd rank rate Esp : %f" % scndRankRate_l
-            print "3rd rank rate Esp : %f" % thirdRankRate_l
-            print "Jackpot : %f Euros" % jackpot_l
-            print "Nb Players Esp : %f" % nbPlayers_l
-            self.__myBets = CombinoEngine(myGrille_l, totalRate_l, espMin_l, self.__outputFile, jackpot_l, nbPlayers_l,
-                                          totalRate2nd_l, totalRate3rd_l, self)
-        elif scndRankRate_l != -1:
-            totalRate2nd_l = returnRate_l * scndRankRate_l
-            print "1st rank rate Esp : %f" % firstRankRate_l
-            print "2nd rank rate Esp : %f" % scndRankRate_l
-            print "Jackpot : %f Euros" % jackpot_l
-            print "Nb Players Esp : %f" % nbPlayers_l
-            self.__myBets = CombinoEngine(myGrille_l, totalRate_l, espMin_l, self.__outputFile, jackpot_l, nbPlayers_l,
-                                          totalRate2nd_l, 0, self)
-        else:
-            print "1st rank rate Esp : %f" % firstRankRate_l
-            print "Jackpot : %f Euros" % jackpot_l
-            print "Nb Players Esp : %f" % nbPlayers_l
-            self.__myBets = CombinoEngine(myGrille_l, totalRate_l, espMin_l, self.__outputFile, jackpot_l, nbPlayers_l,
-                                          0, 0, self)
-        # Finished generation
-        self.__myBets.finishedSig.connect(self.on_finished)
-        self.__myBets.progressSig.connect(self.on_progressed)
-        self.__progressBar.setValue(0)
-        self.__progressBar.show()
-        self.__buttonCancelGen.show()
-        self.__myBets.start()
-
     @Slot(int)
     def on_progressed(self, prog):
-        print "%d pct" % prog
-        self.__progressBar.setValue(prog)
-        self.__progressBar.update()
+        self.ui.progressBar.setValue(prog)
+        self.ui.progressBar.update()
 
     @Slot()
     def on_finished(self):
-        print "Fichier genere :", self.__outputFileName
-        self.__outputFile.write(str(self.__myBets))
-        self.__progressBar.hide()
-        self.__buttonCancelGen.hide()
+        self.ui.progressBar.hide()
 
 
 app_l = QtGui.QApplication(sys.argv)

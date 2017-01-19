@@ -19,7 +19,14 @@ from Match import Match
 
 def onlyascii(char_p):
         if ord(char_p) <= 0 or ord(char_p) > 127:
-                return ''
+                if char_p == 'é' or char_p == 'ê' or char_p == 'è':
+                        return 'e'
+                elif char_p == 'ô' :
+                        return 'o'
+                elif char_p == 'â' :
+                        return 'a'
+                else :
+                        return ''
         else:
                 return char_p
 

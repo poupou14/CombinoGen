@@ -27,6 +27,7 @@ class ReadLotoHandler(ReadGridHandler):
                 dmy = string.split(date, "/")
                 qdatetime = QDateTime()
                 qdatetime.setDate(QDate(int("20"+dmy[2]), int(dmy[1]), int(dmy[0])))
+                qdatetime = qdatetime.addDays(1) # next day
                 epochDate = qdatetime.toMSecsSinceEpoch()/1000
                 print "epochDate=%d" % epochDate
                 tup = (ngrille, epochDate, 0)
@@ -55,7 +56,7 @@ class ReadLotoHandler(ReadGridHandler):
                 self._grid.setJackpot(jackpot)
                 self._grid.setNbPlayers(jackpot)
                 htmlStrPage = filter(onlyascii, str(htmlPage))
-                teamString = "<td class=\"center matchs_av\">((\\w*\.?\\s*)*)<\/td>"
+                teamString = "<td class=\"center matchs_av\">((\\w*\\.?'?\\s*)*)<\/td>"
                 loto15Teamrx = QRegExp(teamString)
                 repString = ">(\\d*,*\\d*)\\s*\%<"
                 loto15Reprx = QRegExp(repString)
@@ -69,6 +70,7 @@ class ReadLotoHandler(ReadGridHandler):
                         print "posi = %d" % posi
                         while posi != -1:
                                 i+=1
+                                print "indice %i" % i
                                 team1 = loto15Teamrx.cap(1)
                                 posi= loto15Teamrx.indexIn(htmlStrPage, posi+1)
                                 print "posi2 = %d" % posi
@@ -76,7 +78,6 @@ class ReadLotoHandler(ReadGridHandler):
                                 print "team1 = %s" % team1
                                 team2 = loto15Teamrx.cap(1)
                                 print "posi3 = %d" % posi
-                                print "indice %i" % i
                                 print "team2 = %s" % team2
                                 match = Match(team1 + " vs " + team2)
                                 match.setTeam1(team1)

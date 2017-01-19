@@ -91,7 +91,7 @@ class ReadGridHandler():
                                         team2 = filter(onlyascii, match.team2())
                                         print "Odds handling OK : cant read odds for %s" % team1 + " vs " + team2
                         else:
-                                print "-2- not found"
+                                print "-%s- not found" % match.team2()
                                 #print "Odds handling KO %s not found" % str(match)
                 return
 

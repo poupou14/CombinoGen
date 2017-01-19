@@ -59,7 +59,7 @@ class ReadWinamax7Handler(ReadGridHandler):
                 #print htmlPage
                 myParser = WSGridParser()
                 myParser.html = filter(onlyascii, htmlPage)
-                myParser.feed(htmlPage)
+                myParser.feed(myParser.html)
                 index_l = 0
                 total = 0
                 size_l = 7
