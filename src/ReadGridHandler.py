@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import os,string, sys
 from PySide.QtCore import  QUrl, QRegExp, QDateTime
+from PySide import  QtCore
 sys.path.append("../WinaScan/WinaScan/src/")
 from WSParser import onlyascii
 
@@ -67,14 +68,20 @@ class ReadGridHandler():
                 strHtml = str(htmlPage)
                 oddsRx = QRegExp("<a href=.*data-odd-max=\"(\\d*\.\\d*)\".*data-odd-max=\"(\\d*\.\\d*)\".*data-odd-max=\"(\\d*\.\\d*)\".*>")
                 for match in self._grid.matches():
-                        team1Rx = QRegExp(match.team1())
-                        team2Rx = QRegExp(match.team2())
-                        posi = team1Rx.indexIn(strHtml)
+                        team1Rx = QRegExp(">\\s*(%s)\\s*-\\s*((\\w*\\'?\\s*-?)*)<" % match.team1())
+                        team1Rx.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
+                        team2Rx = QRegExp(">\\s*(\\w*\\'?\\s*-?)*\\s*-\\s*(%s)\\s*<" % match.team2())
+                        team2Rx.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
+                        #team2Rx = QRegExp(match.team2())
+                        teamXRx = team1Rx
+                        posi = teamXRx.indexIn(strHtml)
                         if posi < 0:
                                 print "-%s- not found" % match.team1()
                                 print "-1- not found"
-                                posi = team2Rx.indexIn(strHtml)
+                                teamXRx = team2Rx
+                                posi = teamXRx.indexIn(strHtml)
                         if posi >= 0:
+                                print "-%s- found" % ''.join((teamXRx.cap(1), " vs " + teamXRx.cap(2)))
                                 posi = oddsRx.indexIn(strHtml, posi)
                                 oddStr1 = oddsRx.cap(1)
                                 oddStr2 = oddsRx.cap(2)

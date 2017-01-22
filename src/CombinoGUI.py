@@ -460,7 +460,7 @@ class CombinoGUI(QtGui.QMainWindow):
             self.ui.comboGridBox.addItem(gridNumber[0])
             try:
                 if int(now) >= int(gridNumber[1]):
-                    print "disabled"
+                    print "disabled because date : %s" % gridNumber[1]
                     self.ui.comboGridBox.model().item(index).setEnabled(False)
                 elif not selected:
                     self.ui.comboGridBox.setCurrentIndex(index)
