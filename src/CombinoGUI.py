@@ -13,6 +13,7 @@ from ReadWinamax12Handler import ReadWinamax12Handler
 from ReadLoto15Handler import ReadLoto15Handler
 from ReadLoto7Handler import ReadLoto7Handler
 from ReadMini5Handler import ReadMini5Handler
+from ReadEuro7Handler import ReadEuro7Handler
 from GridRequestor import GridRequestor
 from CombinoTools import onlyascii
 
@@ -32,6 +33,7 @@ class CombinoGUI(QtGui.QMainWindow):
         # ui
         self.ui = Ui_MainWin()
         self.ui.setupUi(self)
+        self.setWindowIcon(QtGui.QIcon("data/combinoGui.jpg"))
         self.__dynamicDistribWidgets = []
         self.__dynamicOddsWidgets = []
 
@@ -124,6 +126,10 @@ class CombinoGUI(QtGui.QMainWindow):
         self.readDistribInput()
 
     def do_changeGrid(self, index):
+        gridNumber = self.ui.comboGridBox.itemText(index)
+        mainWinText = self.__gridHandler.gridName() + " " + gridNumber
+        print "Title =%s" % mainWinText
+        self.setWindowTitle(mainWinText)
         self.__gridHandler.changeGrid(index)
         self.__gridIndex = index
 
@@ -143,8 +149,11 @@ class CombinoGUI(QtGui.QMainWindow):
             print "Combino 5"
             self.__gridHandler = ReadMini5Handler()
         elif index == 5:
-            print "Betclic 5"
+            print "Euro 7"
+            self.__gridHandler = ReadEuro7Handler()
         elif index == 6:
+            print "Betclic 5"
+        elif index == 7:
             print "Betclic 8"
         else:
             print "index = %s" % index
@@ -238,6 +247,7 @@ class CombinoGUI(QtGui.QMainWindow):
         self.ui.comboBookBox.addItem("LotoFoot 7")
         self.ui.comboBookBox.addItem("LotoFoot 15")
         self.ui.comboBookBox.addItem("Mini 5")
+        self.ui.comboBookBox.addItem("Euro 7")
         self.ui.comboBookBox.addItem("Betclic 5")
         self.ui.comboBookBox.addItem("Betclic 8")
         self.do_changeBook(0)
@@ -457,7 +467,16 @@ class CombinoGUI(QtGui.QMainWindow):
         print "now=%d" % now
         for gridNumber in self.__gridHandler.gridList():
             print "add grid n %s" % gridNumber[0]
-            self.ui.comboGridBox.addItem(gridNumber[0])
+            try:
+                gridDateTime = QDateTime.fromMSecsSinceEpoch(int(gridNumber[1])*1000)
+                itemText = gridNumber[0]
+                itemText = ''.join((itemText, " "))
+                itemText = ''.join((itemText, gridDateTime.toString()))
+            except ValueError:
+                itemText = ''
+            #itemText = "{} {}".format(gridNumber[0], gridDateTime.toString())
+            #self.ui.comboGridBox.addItem(gridNumber[0])
+            self.ui.comboGridBox.addItem(itemText)
             try:
                 if int(now) >= int(gridNumber[1]):
                     print "disabled because date : %s" % gridNumber[1]

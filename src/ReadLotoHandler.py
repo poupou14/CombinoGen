@@ -44,6 +44,7 @@ class ReadLotoHandler(ReadGridHandler):
                         dmy = string.split(date, "/")
                         qdatetime = QDateTime()
                         qdatetime.setDate(QDate(int("20"+dmy[2]), int(dmy[1]), int(dmy[0])))
+                        qdatetime = qdatetime.addDays(1) # next day
                         epochDate = qdatetime.toMSecsSinceEpoch()/1000
                         print "epochDate=%d" % epochDate
                         tup = (ngrille, epochDate, 0)
