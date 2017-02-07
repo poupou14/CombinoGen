@@ -1,6 +1,6 @@
 import os, sys
 from PySide import QtCore, QtGui
-from PySide.QtGui import QGridLayout, QLineEdit, QLabel
+from PySide.QtGui import QGridLayout, QLineEdit, QLabel, QPalette, QColor
 from PySide.QtCore import Signal, Slot, QDateTime
 from PySide.QtNetwork import QNetworkReply
 from CombinoNetworkManager import CombinoNetworkManager
@@ -361,18 +361,33 @@ class CombinoGUI(QtGui.QMainWindow):
                 self.__dynamicDistribWidgets.append( QLineEdit())
                 self.__dynamicDistribWidgets[j].setText("%.2f" % (self.__gridHandler.grid().getGame(i).getCotes(0)))
                 self.__dynamicDistribWidgets[j].editingFinished.connect(self.do_updateDataGrid)
+                dispo = self.__gridHandler.grid().getGame(i).cotesDisponibles()
+                self.__dynamicDistribWidgets[j].setAutoFillBackground(not dispo)
+                palette = self.__dynamicDistribWidgets[j].palette()
+                palette.setColor(self.__dynamicDistribWidgets[j].backgroundRole(), QColor(255, 255 * int(dispo), 255*int(dispo))) # red
+                self.__dynamicDistribWidgets[j].setPalette(palette)
                 self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 10)
                 j+=1
 
                 self.__dynamicDistribWidgets.append( QLineEdit())
                 self.__dynamicDistribWidgets[j].setText("%.2f" % (self.__gridHandler.grid().getGame(i).getCotes(1)))
                 self.__dynamicDistribWidgets[j].editingFinished.connect(self.do_updateDataGrid)
+                dispo = self.__gridHandler.grid().getGame(i).cotesDisponibles()
+                self.__dynamicDistribWidgets[j].setAutoFillBackground(not dispo)
+                palette = self.__dynamicDistribWidgets[j].palette()
+                palette.setColor(self.__dynamicDistribWidgets[j].backgroundRole(), QColor(255, 255 * int(dispo), 255*int(dispo))) # red
+                self.__dynamicDistribWidgets[j].setPalette(palette)
                 self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 11)
                 j+=1
 
                 self.__dynamicDistribWidgets.append( QLineEdit())
                 self.__dynamicDistribWidgets[j].setText("%.2f"% (self.__gridHandler.grid().getGame(i).getCotes(2)))
                 self.__dynamicDistribWidgets[j].editingFinished.connect(self.do_updateDataGrid)
+                dispo = self.__gridHandler.grid().getGame(i).cotesDisponibles()
+                self.__dynamicDistribWidgets[j].setAutoFillBackground(not dispo)
+                palette = self.__dynamicDistribWidgets[j].palette()
+                palette.setColor(self.__dynamicDistribWidgets[j].backgroundRole(), QColor(255, 255 * int(dispo), 255*int(dispo))) # red
+                self.__dynamicDistribWidgets[j].setPalette(palette)
                 self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 12)
                 j+=1
 

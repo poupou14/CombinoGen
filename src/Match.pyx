@@ -10,12 +10,19 @@ class Match():
                 self.__invSum = 1
                 self.__team1 = None
                 self.__team2 = None
+                self.__cotesDisponibles = False
 
         def setTeam1(self, team1):
                 self.__team1 = team1
 
         def setTeam2(self, team2):
                 self.__team2 = team2
+
+        def cotesDisponibles(self):
+                return self.__cotesDisponibles
+
+        def setCotesDisponibles(self, dispo):
+                self.__cotesDisponibles = dispo
 
         def team1(self):
                 return self.__team1

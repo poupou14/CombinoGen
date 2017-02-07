@@ -93,6 +93,7 @@ class ReadGridHandler():
                                         team2 = filter(onlyascii, match.team2())
                                         print "Odds handling OK : %s" % team1 + " vs " + team2
                                         print "Odds handling OK : "
+                                        match.setCotesDisponibles(True)
                                 except:
                                         team1 = filter(onlyascii, match.team1())
                                         team2 = filter(onlyascii, match.team2())
