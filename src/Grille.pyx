@@ -1,6 +1,5 @@
 #!/usr/bin/python 
 import os,string, sys
-from pyExcelerator import *
 import xlwt
 from xlrd import open_workbook
 from xlwt import Workbook,easyxf,Formula,Style
