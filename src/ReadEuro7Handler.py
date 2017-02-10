@@ -27,7 +27,7 @@ class ReadEuro7Handler(ReadGridHandler):
                 htmlAscii = filter(onlyascii, str(htmlPage))
                 #print "html = %s" % htmlAscii
                 euro7NumGrillerx = QRegExp("<div class=\"grid grid-4\" data-grid-id=\"(\\d+)\" data-grid-type=\"4\">")
-                euro7DateRx = QRegExp("<span\\s*class=\"date\">[\\s\\n\\r]*(\\w+)\\s*(\\d+)\\s*(\\w+)\\s*(\\d+)\\s*.+\\s*(\\d+):(\\d+)\\s*</span>")
+                euro7DateRx = QRegExp("<span\\s*class=\"date\">[\\s\\n\\r]*(\\w+)\\s*(\\d+)\\s*(\\w+)\\s*(\\d+)\\s*.{0,6}\\s*(\\d+):(\\d+)\\s*</span>")
                 euro7JackpotRx = QRegExp("<p class=\"montant-jackpot\">Jackpot\\s*garanti\\s*<span>\\s*(\\d+)")
                 posi = euro7NumGrillerx.indexIn(str(htmlAscii))
                 ngrille = euro7NumGrillerx.cap(1)
@@ -43,6 +43,8 @@ class ReadEuro7Handler(ReadGridHandler):
                 print "jour=%s" % jour
                 print "mois=%s" % mois
                 print "annee=%s" % annee
+                print "heure=%s" % heure
+                print "minute=%s" % minute
                 date = CombinoCalendar(int(numJour), mois, int(annee), int(heure), int(minute))
                 epochDate = date.epochDate()/1000
                 print "date=%s" % (jour + str(numJour) + mois + str(annee))
@@ -62,7 +64,14 @@ class ReadEuro7Handler(ReadGridHandler):
                         numJour = euro7DateRx.cap(2)
                         mois = euro7DateRx.cap(3)
                         annee = euro7DateRx.cap(4)
+                        heure = euro7DateRx.cap(5)
+                        minute = euro7DateRx.cap(6)
                         mois = filter(onlyascii, mois)
+                        print "jour=%s" % jour
+                        print "mois=%s" % mois
+                        print "annee=%s" % annee
+                        print "heure=%s" % heure
+                        print "minute=%s" % minute
                         print "date=%s" % (jour + str(numJour) + mois + str(annee))
                         date = CombinoCalendar(int(numJour), mois, int(annee), int(heure), int(minute))
                         epochDate = date.epochDate()/1000
@@ -88,8 +97,8 @@ class ReadEuro7Handler(ReadGridHandler):
                 euro7TeamRx = QRegExp("<label for=\"[^\"]*\">([^<]*)<\/label>")
                 self._grid = Grille()
                 self._grid.setReturnRate(0.75)
-                self._grid.setFirstRankRate(1.00)
-                self._grid.setScndRankRate(0.00)
+                self._grid.setFirstRankRate(0.55)
+                self._grid.setScndRankRate(0.45)
                 jackpot = int(self._gridList[self._index][2])
                 self._grid.setJackpot(jackpot)
                 self._grid.setNbPlayers(jackpot)

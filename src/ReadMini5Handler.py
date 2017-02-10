@@ -29,7 +29,8 @@ class ReadMini5Handler(ReadGridHandler):
                 htmlAscii = filter(onlyascii, str(htmlPage))
                 #print "html = %s" % htmlAscii
                 mini5NumGrillerx = QRegExp("<div class=\"grid grid-3\" data-grid-id=\"(\\d+)\" data-grid-type=\"3\">")
-                mini5DateRx = QRegExp("<span\\s*class=\"date\">[\\s\\n\\r]*(\\w+)\\s*(\\d+)\\s*(\\w+)\\s*(\\d+)\\s*.+\\s*(\\d+):(\\d+)\\s*</span>")
+                mini5DateRx = QRegExp("<span\\s*class=\"date\">[\\s\\n\\r]*(\\w+)\\s*(\\d+)\\s*(\\w+)\\s*(\\d+)\\s*.{0,6}\\s*(\\d+):(\\d+)\\s*</span>")
+                #mini5DateRx = QRegExp("<span\\s*class=\"date\">[\\s\\n\\r]*(\\w+)\\s*(\\d+)\\s*(\\w+)\\s*(\\d+)\\s*.+\\s*(\\d+):(\\d+)\\s*</span>")
                 mini5JackpotRx = QRegExp("<p class=\"montant-jackpot\">Jackpot\\s*garanti\\s*<span>\\s*(\\d+)")
                 posi = mini5NumGrillerx.indexIn(str(htmlAscii))
                 ngrille = mini5NumGrillerx.cap(1)
@@ -65,6 +66,8 @@ class ReadMini5Handler(ReadGridHandler):
                         mois = mini5DateRx.cap(3)
                         annee = mini5DateRx.cap(4)
                         mois = filter(onlyascii, mois)
+                        heure = mini5DateRx.cap(5)
+                        minute = mini5DateRx.cap(6)
                         print "date=%s" % (jour + str(numJour) + mois + str(annee))
                         date = CombinoCalendar(int(numJour), mois, int(annee), int(heure), int(minute))
                         epochDate = date.epochDate()/1000
