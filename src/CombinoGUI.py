@@ -1,4 +1,5 @@
 import os, sys
+from sys import platform
 from PySide import QtCore, QtGui
 from PySide.QtGui import QGridLayout, QLineEdit, QLabel, QPalette, QColor
 from PySide.QtCore import Signal, Slot, QDateTime
@@ -15,6 +16,7 @@ from ReadLoto7Handler import ReadLoto7Handler
 from ReadMini5Handler import ReadMini5Handler
 from ReadEuro7Handler import ReadEuro7Handler
 from GridRequestor import GridRequestor
+from GridRequestorWin import GridRequestorWin
 from CombinoTools import onlyascii
 
 height_g = 600
@@ -56,7 +58,14 @@ class CombinoGUI(QtGui.QMainWindow):
         self.__distribLayoutGridWidth = 0
         self.__gridIndex = -1
         self.__gridHandler = None
-        self.__gridRequestor = GridRequestor()
+	print "platform = %s" % platform
+	if platform == "linux" or platform == "linux2":
+    	# linux
+        	self.__gridRequestor = GridRequestor()
+	elif platform == "win32":
+    	# Windows...
+        	self.__gridRequestor = GridRequestorWin()
+
         self.__gridRequestor.distribPageGenerated.sig.connect(self.do_handleDistribHtmlPage)
         self.__nextAction = actions[0]
 
