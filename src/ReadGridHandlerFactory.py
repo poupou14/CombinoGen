@@ -28,6 +28,9 @@ class ReadGridHandlerFactory:
                 elif grille.getSize() == 14 and source.getReturnRate() == 0.70 and source.getFirstRankRate() == 0.40:
                         print "Factory generate Loto15"
                         return_l = ReadLoto15Handler()
+                elif grille.getSize() == 15 and source.getReturnRate() == 0.70 and source.getFirstRankRate() == 0.40:
+                        print "Factory generate Loto15"
+                        return_l = ReadLoto15Handler()
                 elif grille.getSize() == 5 and source.getReturnRate() == 0.75 and source.getFirstRankRate() == 1.00:
                         print "Factory generate Mini5"
                         return_l = ReadMini5Handler()

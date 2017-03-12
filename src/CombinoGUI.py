@@ -3,6 +3,7 @@ from PySide import QtCore, QtGui
 from PySide.QtGui import QGridLayout, QLineEdit, QLabel, QPalette, QColor
 from PySide.QtCore import Signal, Slot, QDateTime
 from PySide.QtNetwork import QNetworkReply
+import time
 from CombinoNetworkManager import CombinoNetworkManager
 from CombinoSource import CombinoSource
 from CombinoEngine import CombinoEngine
@@ -16,6 +17,7 @@ from ReadMini5Handler import ReadMini5Handler
 from ReadEuro7Handler import ReadEuro7Handler
 from GridRequestor import GridRequestor
 from CombinoTools import onlyascii
+from multiprocessing import Queue
 
 height_g = 600
 width_g = 800
@@ -67,7 +69,10 @@ class CombinoGUI(QtGui.QMainWindow):
         self.__buttonGenerate = None
         self.__myBets = None
         self.__teamDisplay = []
-        self.__combinoEngine = None
+	self.__progressionQueue = Queue()
+        self.__combinoEngine0 = None
+        self.__combinoEngine1 = None
+        self.__combinoEngine2 = None
 
         self.ui.outputDirLine.setText(self.__outputDirName)
         # fen_l = QtGui.QDesktopWidget().screenGeometry()
@@ -185,15 +190,26 @@ class CombinoGUI(QtGui.QMainWindow):
                 inputFileName = self.__inputFileName[indexSlash:]
                 outputFileName = ''.join((outputFileName, inputFileName[0:-3]))
                 outputFileName = ''.join((outputFileName, "csv"))
-        self.__combinoEngine = CombinoEngine(self.__gridHandler.grid(), 1, outputFileName, self)
+        self.__combinoEngine0 = CombinoEngine(self.__gridHandler.grid(), 1, outputFileName, 0, self.__progressionQueue, self)
+        self.__combinoEngine1 = CombinoEngine(self.__gridHandler.grid(), 1, outputFileName, 1, self.__progressionQueue, self)
+        self.__combinoEngine2 = CombinoEngine(self.__gridHandler.grid(), 1, outputFileName, 2, self.__progressionQueue, self)
         #mainWindow_p.stopGenSig.connect(self.cancelGen)
         print "Grid generation"
         self.ui.progressBar.setMaximum(100)
         self.ui.progressBar.setValue(0)
         self.ui.progressBar.show()
-        self.__combinoEngine.finishedSig.connect(self.on_finished)
-        self.__combinoEngine.progressSig.connect(self.on_progressed)
-        self.__combinoEngine.start()
+	self.__progressionQueue.put(0)
+        self.__combinoEngine0.start()
+        self.__combinoEngine1.start()
+        self.__combinoEngine2.start()
+        goOn = True
+        while goOn :
+            time.sleep(1)
+            self.on_progressed()
+	    goOn = self.__combinoEngine0.is_alive()
+	    goOn = goOn or self.__combinoEngine1.is_alive()
+	    goOn = goOn or self.__combinoEngine2.is_alive()
+        self.ui.progressBar.hide()
 
 
 
@@ -522,13 +538,21 @@ class CombinoGUI(QtGui.QMainWindow):
         self.stopGenSig.emit()
 
 
-    @Slot(int)
-    def on_progressed(self, prog):
-        self.ui.progressBar.setValue(prog)
-        self.ui.progressBar.update()
+    def on_progressed(self):
+        print "on_progressed"
+        if not self.__progressionQueue.empty():
+	    progression = self.__progressionQueue.get()
+	    self.__progressionQueue.put(progression)
+	    #self.__progressionQueue.put(progression)
+            self.ui.progressBar.setValue(progression)
+            self.ui.progressBar.update()
+            print "%d pct" % progression
 
     @Slot()
     def on_finished(self):
+	self.__combinoEngine0.join()
+	self.__combinoEngine1.join()
+	self.__combinoEngine2.join()
         self.ui.progressBar.hide()
 
 
