@@ -17,7 +17,7 @@ from ReadLoto7Handler import ReadLoto7Handler
 from ReadMini5Handler import ReadMini5Handler
 from ReadEuro7Handler import ReadEuro7Handler
 from GridRequestor import GridRequestor
-from GridRequestorWin import GridRequestorWin
+#from GridRequestorWin import GridRequestorWin
 from CombinoTools import onlyascii
 from multiprocessing import Queue
 
@@ -112,16 +112,18 @@ class CombinoGUI(QtGui.QMainWindow):
         combinoManager.manager.finished[QNetworkReply].disconnect(self.do_receiveHtml)
 
     def do_exportGrid(self):
-        inputDirName = ''.join((os.getcwd(), "/Input"))
-        outputFileName = ''.join((inputDirName,'/'))
-        list = (self.__gridHandler.gridList())
-        date = list[self.__gridIndex][0]
-        outputFileName = ''.join((outputFileName,  self.__gridHandler.gridName()))
-        outputFileName = ''.join((outputFileName, "-"))
-        outputFileName = ''.join((outputFileName, str(date)))
-        outputFileName = ''.join((outputFileName, ".xls"))
-        print "export dir = %s" % ''.join((os.getcwd(), "/Input/"))
-        self.__gridHandler.grid().export(outputFileName)
+        if self.__inputFileName == None :
+            inputDirName = ''.join((os.getcwd(), "/Input"))
+            outputFileName = ''.join((inputDirName,'/'))
+            list = (self.__gridHandler.gridList())
+            date = list[self.__gridIndex][0]
+            outputFileName = ''.join((outputFileName,  self.__gridHandler.gridName()))
+            outputFileName = ''.join((outputFileName, "-"))
+            outputFileName = ''.join((outputFileName, str(date)))
+            outputFileName = ''.join((outputFileName, ".xls"))
+            self.__inputFileName = outputFileName
+        print "export file = %s" % self.__inputFileName
+        self.__gridHandler.grid().export(self.__inputFileName)
 
 
     def do_importGrid(self):
@@ -134,6 +136,8 @@ class CombinoGUI(QtGui.QMainWindow):
         print "Read Grid = %s" % str(self.__gridHandler.grid())
         self.updateDistribTab()
         self.updateOddsTab()
+        self.refreshNbPlayers()
+        self.refreshJackpot()
 
     def do_updateDataGrid(self):
         print "do_updateDataGrid\n"
@@ -246,9 +250,11 @@ class CombinoGUI(QtGui.QMainWindow):
         QtCore.QCoreApplication.instance().quit()
 
     def do_updateNbPlayers(self):
+        print "do_updateNbPlayers slot"
         if self.__gridHandler != None and self.__gridHandler.grid() != None :
             try :
-                self.__gridHandler.grid().setNbPlayers(int(self.ui.nbPlayersLine.text()))
+                self.__gridHandler.grid().setNbPlayers(int(float(self.ui.nbPlayersLine.text())))
+                print "Nb Players modified : %2f" % self.__gridHandler.grid().nbPlayers()
             except:
                 self.__gridHandler.grid().setNbPlayers(0)
 
@@ -256,9 +262,11 @@ class CombinoGUI(QtGui.QMainWindow):
         self.ui.nbPlayersLine.setText("%.2f" % (self.__gridHandler.grid().nbPlayers()))
 
     def do_updateJackpot(self):
+        print "do_updateJackpot slot"
         if self.__gridHandler != None and self.__gridHandler.grid() != None :
             try :
                 self.__gridHandler.grid().setJackpot(float(self.ui.jackpotLine.text()))
+                print "Jackpot modified : %2f" % self.__gridHandler.grid().jackpot()
             except:
                 self.__gridHandler.grid().setJackpot(0)
 
@@ -518,7 +526,7 @@ class CombinoGUI(QtGui.QMainWindow):
             #self.ui.comboGridBox.addItem(gridNumber[0])
             self.ui.comboGridBox.addItem(itemText)
             try:
-                if int(now) >= int(gridNumber[1]):
+                if int(now) >= (int(gridNumber[1]) + (3600 * 24)):
                     print "disabled because date : %s" % gridNumber[1]
                     self.ui.comboGridBox.model().item(index).setEnabled(False)
                 elif not selected:
