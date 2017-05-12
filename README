@@ -18,3 +18,6 @@ CombinoGen :
 	$> sudo pip install pyvirtualdisplay
 - get geckodriver :
 	put it in a local directory, and update CombinoGUI.sh : export PATH=...	
+- get splinter :
+	$> sudo pip install splinter
+
