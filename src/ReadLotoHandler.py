@@ -57,7 +57,7 @@ class ReadLotoHandler(ReadGridHandler):
                 self._grid.setJackpot(jackpot)
                 self._grid.setNbPlayers(jackpot)
                 htmlStrPage = filter(onlyascii, str(htmlPage))
-                teamString = "<td class=\"center matchs_av\">((\\w*\\.?'?-?\\s*)*)<\/td>"
+                teamString = "<td class=\"center matchs_av\">((\\(?\\)?\\d*\\w*\\.?'?-?\\s*)*)<\/td>"
                 loto15Teamrx = QRegExp(teamString)
                 repString = ">(\\d*,*\\d*)\\s*\%<"
                 loto15Reprx = QRegExp(repString)
