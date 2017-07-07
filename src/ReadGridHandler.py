@@ -81,7 +81,35 @@ class ReadGridHandler():
                                 teamXRx = team2Rx
                                 posi = teamXRx.indexIn(strHtml)
                         if posi >= 0:
-                                print "-%s- found" % ''.join((teamXRx.cap(1), " vs " + teamXRx.cap(2)))
+                                print "-%s- found" % ''.join((teamXRx.cap(2), " vs " + teamXRx.cap(2)))
+                        else: # try in an other way
+                                print "-%s- not found, try anothe way" % match.team2()
+				# split team names
+				team1list = match.team1().split(" ")
+				team2list = match.team2().split(" ")
+				# find the longest 
+				maxLen = 0
+				miniTeam1 = ""
+				for elt1 in team1list :
+					if len(elt1) > maxLen :
+						maxLen = len(elt1)
+						miniTeam1 = elt1
+				maxLen = 0
+				miniTeam2 = ""
+				for elt2 in team2list :
+					if len(elt2) > maxLen :
+						maxLen = len(elt2)
+						miniTeam2 = elt2
+				
+                        	teamRx = QRegExp("><span>\\s*(\\w*\\'?\\s*-?)*{0}(\\w*\\'?\\s*-?)*</span>\\s*-\\s*<span>(\\w*\\'?\\s*-?)*{1}(\\w*\\'?\\s*-?)*</span><".format(miniTeam1, miniTeam2))
+                        	teamRx.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
+                        	posi = teamRx.indexIn(strHtml)
+				if posi >= 0:
+					print "found : {0} vs {1}".format(miniTeam1, miniTeam2)
+				else :
+					print "still not found :'("
+                                #print "Odds handling KO %s not found" % str(match)
+                        if posi >= 0:
                                 posi = oddsRx.indexIn(strHtml, posi)
                                 oddStr1 = oddsRx.cap(1)
                                 oddStr2 = oddsRx.cap(2)
@@ -98,9 +126,6 @@ class ReadGridHandler():
                                         team1 = filter(onlyascii, match.team1())
                                         team2 = filter(onlyascii, match.team2())
                                         print "Odds handling OK : cant read odds for %s" % team1 + " vs " + team2
-                        else:
-                                print "-%s- not found" % match.team2()
-                                #print "Odds handling KO %s not found" % str(match)
                 return
 
         def generateInputGrid(self):
