@@ -93,13 +93,13 @@ class ReadGridHandler():
 				for elt1 in team1list :
 					if len(elt1) > maxLen :
 						maxLen = len(elt1)
-						miniTeam1 = elt1
+						miniTeam1 = filter(onlyascii, elt1)
 				maxLen = 0
 				miniTeam2 = ""
 				for elt2 in team2list :
 					if len(elt2) > maxLen :
 						maxLen = len(elt2)
-						miniTeam2 = elt2
+						miniTeam2 = filter(onlyascii,elt2)
 				
                         	teamRx = QRegExp("><span>\\s*(\\w*\\'?\\s*-?)*{0}(\\w*\\'?\\s*-?)*</span>\\s*-\\s*<span>(\\w*\\'?\\s*-?)*{1}(\\w*\\'?\\s*-?)*</span><".format(miniTeam1, miniTeam2))
                         	teamRx.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
