@@ -25,6 +25,7 @@ class ReadLotoHandler(ReadGridHandler):
                 date = loto15DateRx.cap(1)
                 print "Date=%s" % date
                 dmy = string.split(date, "/")
+		print "dmy :%s" % str(dmy) 
                 qdatetime = QDateTime()
                 qdatetime.setDate(QDate(int("20"+dmy[2]), int(dmy[1]), int(dmy[0])))
                 qdatetime = qdatetime.addDays(1) # next day

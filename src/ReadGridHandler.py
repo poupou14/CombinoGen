@@ -68,9 +68,9 @@ class ReadGridHandler():
                 strHtml = str(htmlPage)
                 oddsRx = QRegExp("<a href=.*data-odd-max=\"(\\d*\.\\d*)\".*data-odd-max=\"(\\d*\.\\d*)\".*data-odd-max=\"(\\d*\.\\d*)\".*>")
                 for match in self._grid.matches():
-                        team1Rx = QRegExp("><span>\\s*(%s)\\s*</span>\\s*-\\s*<span>\\s*((\\w*\\'?\\s*-?)*)</span><" % match.team1())
+                        team1Rx = QRegExp("><span>(\\w*\\'?\\s*-?)*(%s)(\\w*\\'?\\s*-?)*</span>\\s*-\\s*<span>\\s*((\\w*\\'?\\s*-?)*)</span><" % match.team1())
                         team1Rx.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
-                        team2Rx = QRegExp("><span>\\s*(\\w*\\'?\\s*-?)*</span>\\s*-\\s*<span>\\s*(%s)\\s*</span><" % match.team2())
+                        team2Rx = QRegExp("><span>\\s*(\\w*\\'?\\s*-?)*</span>\\s*-\\s*<span>(\\w*\\'?\\s*-?)*(%s)(\\w*\\'?\\s*-?)*</span><" % match.team2())
                         team2Rx.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
                         #team2Rx = QRegExp(match.team2())
                         teamXRx = team1Rx
