@@ -21,7 +21,7 @@ from GridRequestor import GridRequestor
 from CombinoTools import onlyascii
 from multiprocessing import Queue
 
-COLOR_COEF=127
+COLOR_COEF=255
 height_g = 600
 width_g = 800
 actions = ('CombinoGenBook', 'CombinoGenDistrib', 'CombinoGenOdds','CombinoGenResult')
@@ -398,7 +398,7 @@ class CombinoGUI(QtGui.QMainWindow):
                 dispo = self.__gridHandler.grid().getGame(i).cotesDisponibles()
                 self.__dynamicDistribWidgets[j].setAutoFillBackground(not dispo)
                 palette = self.__dynamicDistribWidgets[j].palette()
-                palette.setColor(self.__dynamicDistribWidgets[j].backgroundRole(), QColor(COLOR_COEF, COLOR_COEF * int(dispo), COLOR_COEF*int(dispo))) # red
+                palette.setColor(self.__dynamicDistribWidgets[j].backgroundRole(), QColor(COLOR_COEF * (int(dispo) + 1) / 2, COLOR_COEF *  (int(dispo)+ 1) / 2, COLOR_COEF* (int(dispo) + 1) / 2)) # red
                 self.__dynamicDistribWidgets[j].setPalette(palette)
                 self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 10)
                 j+=1
@@ -409,7 +409,7 @@ class CombinoGUI(QtGui.QMainWindow):
                 dispo = self.__gridHandler.grid().getGame(i).cotesDisponibles()
                 self.__dynamicDistribWidgets[j].setAutoFillBackground(not dispo)
                 palette = self.__dynamicDistribWidgets[j].palette()
-                palette.setColor(self.__dynamicDistribWidgets[j].backgroundRole(), QColor(COLOR_COEF, COLOR_COEF * int(dispo), COLOR_COEF*int(dispo))) # red
+                palette.setColor(self.__dynamicDistribWidgets[j].backgroundRole(), QColor(COLOR_COEF * (int(dispo) + 1) / 2, COLOR_COEF *  (int(dispo) + 1) / 2, COLOR_COEF* (int(dispo) + 1) / 2)) # red
                 self.__dynamicDistribWidgets[j].setPalette(palette)
                 self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 11)
                 j+=1
@@ -420,7 +420,7 @@ class CombinoGUI(QtGui.QMainWindow):
                 dispo = self.__gridHandler.grid().getGame(i).cotesDisponibles()
                 self.__dynamicDistribWidgets[j].setAutoFillBackground(not dispo)
                 palette = self.__dynamicDistribWidgets[j].palette()
-                palette.setColor(self.__dynamicDistribWidgets[j].backgroundRole(), QColor(COLOR_COEF, COLOR_COEF * int(dispo), COLOR_COEF*int(dispo))) # red
+                palette.setColor(self.__dynamicDistribWidgets[j].backgroundRole(), QColor(COLOR_COEF * (int(dispo) + 1) / 2, COLOR_COEF *   (int(dispo) + 1) / 2, COLOR_COEF* (int(dispo) + 1) / 2)) # red
                 self.__dynamicDistribWidgets[j].setPalette(palette)
                 self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 12)
                 j+=1
