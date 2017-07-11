@@ -3,11 +3,13 @@ CombinoGen :
 
 - install pyhton 2.7
 - install pip
+	$> sudo apt-get install python-pip
 - install pyside
 	$> sudo apt-get install pyside-tools 
 - install cython
 	$> sudo apt-get install cython
  install pyExcelerator 
+	$> sudo apt-get install python-excelerator 
 	$> sudo apt-get install python-xlwt
 	$> sudo apt-get install python-xlrd
 - get WinaScan, and put it at the same level as CombinoGen

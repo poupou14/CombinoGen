@@ -25,7 +25,7 @@ class ReadLotoHandler(ReadGridHandler):
                 date = loto15DateRx.cap(1)
                 print "Date=%s" % date
                 dmy = string.split(date, "/")
-		print "dmy :%s" % str(dmy) 
+                print "dmy :%s" % str(dmy)
                 qdatetime = QDateTime()
                 qdatetime.setDate(QDate(int("20"+dmy[2]), int(dmy[1]), int(dmy[0])))
                 qdatetime = qdatetime.addDays(1).addSecs(-1) # next day
@@ -45,7 +45,7 @@ class ReadLotoHandler(ReadGridHandler):
                         dmy = string.split(date, "/")
                         qdatetime = QDateTime()
                         qdatetime.setDate(QDate(int("20"+dmy[2]), int(dmy[1]), int(dmy[0])))
-                        qdatetime = qdatetime.addDays(1) # next day
+                        qdatetime = qdatetime.addDays(1).addSecs(-1) # next day
                         epochDate = qdatetime.toMSecsSinceEpoch()/1000
                         print "epochDate=%d" % epochDate
                         tup = (ngrille, epochDate, 0)
