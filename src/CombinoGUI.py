@@ -1,7 +1,7 @@
 import os, sys
 from sys import platform
 from PySide import QtCore, QtGui
-from PySide.QtGui import QGridLayout, QLineEdit, QLabel, QPalette, QColor
+from PySide.QtGui import QGridLayout, QLineEdit, QLabel, QPalette, QColor, QBrush,QPainter
 from PySide.QtCore import Signal, Slot, QDateTime
 from PySide.QtNetwork import QNetworkReply
 import time
@@ -529,7 +529,8 @@ class CombinoGUI(QtGui.QMainWindow):
             try:
                 if int(now) >= (int(gridNumber[1]) + (3600 * 24)):
                     print "disabled because date : %s" % gridNumber[1]
-                    self.ui.comboGridBox.model().item(index).setEnabled(False)
+                    #self.ui.comboGridBox.model().item(index).setEnabled(False)
+                    #self.ui.comboGridBox.model().item(index).setBackground(QBrush(Qt.grey))
                 elif not selected:
                     self.ui.comboGridBox.setCurrentIndex(index)
                     self.do_changeGrid(index)

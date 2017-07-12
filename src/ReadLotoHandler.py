@@ -35,8 +35,8 @@ class ReadLotoHandler(ReadGridHandler):
                 self._gridList.append(tup)
                 loto15rx = QRegExp("<option value=\"(\\d+)\">")
                 posi = 0
-                while posi != -1 and posi < posi_encours:
-                        posi = loto15rx.indexIn(str(htmlPage), posi+1)
+                posi = loto15rx.indexIn(str(htmlPage), posi+1)
+                while posi != -1 :#and posi < posi_encours:
                         ngrille = loto15rx.cap(1)
                         print "ngrille=%s" % ngrille
                         posi = loto15DateRx.indexIn(str(htmlPage), posi)
@@ -50,6 +50,7 @@ class ReadLotoHandler(ReadGridHandler):
                         print "epochDate=%d" % epochDate
                         tup = (ngrille, epochDate, 0)
                         self._gridList.append(tup)
+			posi = loto15rx.indexIn(str(htmlPage), posi+1)
                 #print self._gridList
 
         def handleDistribHtmlPage(self, htmlPage):
