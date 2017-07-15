@@ -1,7 +1,7 @@
 import os, sys
 from sys import platform
 from PySide import QtCore, QtGui
-from PySide.QtGui import QGridLayout, QLineEdit, QLabel, QPalette, QColor, QBrush,QPainter
+from PySide.QtGui import QGridLayout, QLineEdit, QLabel, QPalette, QColor, QBrush, QPainter
 from PySide.QtCore import Signal, Slot, QDateTime
 from PySide.QtNetwork import QNetworkReply
 import time
@@ -10,6 +10,7 @@ from CombinoSource import CombinoSource
 from CombinoEngine import CombinoEngine
 from ui_mainwin import Ui_MainWin
 from ReadGridHandlerFactory import ReadGridHandlerFactory
+from ReadGridHandler import ReadGridHandler
 from ReadWinamax7Handler import ReadWinamax7Handler
 from ReadWinamax12Handler import ReadWinamax12Handler
 from ReadLoto15Handler import ReadLoto15Handler
@@ -17,14 +18,16 @@ from ReadLoto7Handler import ReadLoto7Handler
 from ReadMini5Handler import ReadMini5Handler
 from ReadEuro7Handler import ReadEuro7Handler
 from GridRequestor import GridRequestor
-#from GridRequestorWin import GridRequestorWin
+# from GridRequestorWin import GridRequestorWin
 from CombinoTools import onlyascii
 from multiprocessing import Queue
 
-COLOR_COEF=255
+import ReadGridHandler
+
+COLOR_COEF = 255
 height_g = 600
 width_g = 800
-actions = ('CombinoGenBook', 'CombinoGenDistrib', 'CombinoGenOdds','CombinoGenResult')
+actions = ('CombinoGenBook', 'CombinoGenDistrib', 'CombinoGenOdds', 'CombinoGenResult')
 
 
 class CombinoGUI(QtGui.QMainWindow):
@@ -43,7 +46,7 @@ class CombinoGUI(QtGui.QMainWindow):
         self.__dynamicOddsWidgets = []
 
         self.initDistribTab()
-        #self.initOddsTab()
+        # self.initOddsTab()
 
         self.ui.pbUpdate.clicked.connect(self.do_update)
         self.ui.comboBookBox.activated[int].connect(self.do_changeBook)
@@ -61,13 +64,13 @@ class CombinoGUI(QtGui.QMainWindow):
         self.__distribLayoutGridWidth = 0
         self.__gridIndex = -1
         self.__gridHandler = None
-	print "platform = %s" % platform
-	if platform == "linux" or platform == "linux2":
-    	# linux
-        	self.__gridRequestor = GridRequestor()
-	elif platform == "win32":
-    	# Windows...
-        	self.__gridRequestor = GridRequestorWin()
+        print "platform = %s" % platform
+        if platform == "linux" or platform == "linux2":
+            # linux
+            self.__gridRequestor = GridRequestor()
+        elif platform == "win32":
+            # Windows...
+            self.__gridRequestor = GridRequestorWin()
 
         self.__gridRequestor.distribPageGenerated.sig.connect(self.do_handleDistribHtmlPage)
         self.__nextAction = actions[0]
@@ -75,11 +78,11 @@ class CombinoGUI(QtGui.QMainWindow):
         # other attribut
         self.__gridHandlerFactory = ReadGridHandlerFactory()
         self.__inputFileName = None
-        self.__outputDirName =  ''.join((os.getcwd(), "/Output/"))
+        self.__outputDirName = ''.join((os.getcwd(), "/Output/"))
         self.__buttonGenerate = None
         self.__myBets = None
         self.__teamDisplay = []
-	self.__progressionQueue = Queue()
+        self.__progressionQueue = Queue()
         self.__combinoEngine0 = None
         self.__combinoEngine1 = None
         self.__combinoEngine2 = None
@@ -87,11 +90,38 @@ class CombinoGUI(QtGui.QMainWindow):
         self.ui.outputDirLine.setText(self.__outputDirName)
         # fen_l = QtGui.QDesktopWidget().screenGeometry()
         try:
-                self.setWindowIcon(QtGui.Icon("icon.jpg"))
+            self.setWindowIcon(QtGui.Icon("icon.jpg"))
         except:
-                pass
+            pass
 
-# ################ Slots ######################
+        # ################ Slots ######################
+
+    def do_receiveHtml3(self, reply):
+        print "do_receiveHtml3"
+        htmlPage = reply.readAll()
+        if self.__nextAction == 'CombinoGenOdds3':
+            print "handle odds ZUS"
+            self.__gridHandler.handleOddsHtmlPage(htmlPage, ReadGridHandler.ZULUBET_SOURCE)
+            self.ui.progressBar.hide()
+            self.updateDistribTab()
+            self.refreshJackpot()
+            self.refreshNbPlayers()
+        combinoManager = CombinoNetworkManager.Instance()
+        combinoManager.manager.finished[QNetworkReply].disconnect(self.do_receiveHtml3)
+
+    def do_receiveHtml2(self, reply):
+        print "do_receiveHtml2"
+        combinoManager = CombinoNetworkManager.Instance()
+        htmlPage = reply.readAll()
+        if self.__nextAction == 'CombinoGenOdds2':
+            print "handle odds ZUS"
+            self.__gridHandler.handleOddsHtmlPage(htmlPage, ReadGridHandler.ZULUBET_SOURCE)
+            self.__nextAction = 'CombinoGenOdds3'
+            combinoManager.setUrl(self.__gridHandler.oddsUrl2(1))
+            combinoManager.manager.finished[QNetworkReply].connect(self.do_receiveHtml3)
+            reponse = combinoManager.get()  # send request
+        combinoManager.manager.finished[QNetworkReply].disconnect(self.do_receiveHtml2)
+
     def do_receiveHtml(self, reply):
         print "do_receiveHtml"
         htmlPage = reply.readAll()
@@ -99,11 +129,14 @@ class CombinoGUI(QtGui.QMainWindow):
             self.__gridHandler.handleHtmlPage(htmlPage)
             self.updateConfigTab()
         elif self.__nextAction == 'CombinoGenOdds':
+            print "handle odds BES"
             self.__gridHandler.handleOddsHtmlPage(htmlPage)
-            self.ui.progressBar.hide()
-            self.updateDistribTab()
-            self.refreshJackpot()
-            self.refreshNbPlayers()
+            print "Generate Odds2"
+            self.__nextAction = 'CombinoGenOdds2'
+            combinoManager = CombinoNetworkManager.Instance()
+            combinoManager.setUrl(self.__gridHandler.oddsUrl2())
+            combinoManager.manager.finished[QNetworkReply].connect(self.do_receiveHtml2)
+            reponse = combinoManager.get()  # send request
         elif self.__nextAction == 'CombinoGenResult':
             self.__gridHandler.handleHtmlPage(htmlPage)
             self.updateConfigTab()
@@ -113,12 +146,12 @@ class CombinoGUI(QtGui.QMainWindow):
         combinoManager.manager.finished[QNetworkReply].disconnect(self.do_receiveHtml)
 
     def do_exportGrid(self):
-        if self.__inputFileName == None :
+        if self.__inputFileName == None:
             inputDirName = ''.join((os.getcwd(), "/Input"))
-            outputFileName = ''.join((inputDirName,'/'))
+            outputFileName = ''.join((inputDirName, '/'))
             list = (self.__gridHandler.gridList())
             date = list[self.__gridIndex][0]
-            outputFileName = ''.join((outputFileName,  self.__gridHandler.gridName()))
+            outputFileName = ''.join((outputFileName, self.__gridHandler.gridName()))
             outputFileName = ''.join((outputFileName, "-"))
             outputFileName = ''.join((outputFileName, str(date)))
             outputFileName = ''.join((outputFileName, ".xls"))
@@ -126,10 +159,10 @@ class CombinoGUI(QtGui.QMainWindow):
         print "export file = %s" % self.__inputFileName
         self.__gridHandler.grid().export(self.__inputFileName)
 
-
     def do_importGrid(self):
         print "input dir = %s" % ''.join((os.getcwd(), "/Input/"))
-        self.__inputFileName = QtGui.QFileDialog.getOpenFileName(self, "Open xls", ''.join((os.getcwd(), "/Input/")), "xls Files (*.xls)")[0]
+        self.__inputFileName = \
+        QtGui.QFileDialog.getOpenFileName(self, "Open xls", ''.join((os.getcwd(), "/Input/")), "xls Files (*.xls)")[0]
         print "Input file : %s" % self.__inputFileName
         print "Lecture fichier Source"
         self.__gridHandler = self.__gridHandlerFactory.createGridHandler(self.__inputFileName)
@@ -181,10 +214,10 @@ class CombinoGUI(QtGui.QMainWindow):
         combinoManager.setUrl(self.__gridHandler.bookUrl())
         combinoManager.manager.finished[QNetworkReply].connect(self.do_receiveHtml)
         # request.setAttribute(QNetworkRequest.RedirectionTargetAttribute, True)
-        reponse = combinoManager.get() #send request
+        reponse = combinoManager.get()  # send request
 
     def do_handleDistribHtmlPage(self, sourcePage):
-        #print(sourcePage)
+        # print(sourcePage)
         self.ui.progressBar.hide()
         self.__gridHandler.handleDistribHtmlPage(sourcePage.encode('utf-8'))
         self.do_generateOdds()
@@ -192,40 +225,41 @@ class CombinoGUI(QtGui.QMainWindow):
     def do_generateGrid(self):
         outputFileName = self.__outputDirName
         try:
-                outputFileName = ''.join((self.__outputDirName,'/'))
-                list = (self.__gridHandler.gridList())
-                date = list[self.__gridIndex][0]
-                outputFileName = ''.join((outputFileName,  self.__gridHandler.gridName()))
-                outputFileName = ''.join((outputFileName, "-"))
-                outputFileName = ''.join((outputFileName, str(date)))
-                outputFileName = ''.join((outputFileName, ".csv"))
+            outputFileName = ''.join((self.__outputDirName, '/'))
+            list = (self.__gridHandler.gridList())
+            date = list[self.__gridIndex][0]
+            outputFileName = ''.join((outputFileName, self.__gridHandler.gridName()))
+            outputFileName = ''.join((outputFileName, "-"))
+            outputFileName = ''.join((outputFileName, str(date)))
+            outputFileName = ''.join((outputFileName, ".csv"))
         except IndexError:
-                indexSlash = self.__inputFileName.rfind("/")
-                inputFileName = self.__inputFileName[indexSlash:]
-                outputFileName = ''.join((outputFileName, inputFileName[0:-3]))
-                outputFileName = ''.join((outputFileName, "csv"))
-        self.__combinoEngine0 = CombinoEngine(self.__gridHandler.grid(), 1, outputFileName, 0, self.__progressionQueue, self)
-        self.__combinoEngine1 = CombinoEngine(self.__gridHandler.grid(), 1, outputFileName, 1, self.__progressionQueue, self)
-        self.__combinoEngine2 = CombinoEngine(self.__gridHandler.grid(), 1, outputFileName, 2, self.__progressionQueue, self)
-        #mainWindow_p.stopGenSig.connect(self.cancelGen)
+            indexSlash = self.__inputFileName.rfind("/")
+            inputFileName = self.__inputFileName[indexSlash:]
+            outputFileName = ''.join((outputFileName, inputFileName[0:-3]))
+            outputFileName = ''.join((outputFileName, "csv"))
+        self.__combinoEngine0 = CombinoEngine(self.__gridHandler.grid(), 1, outputFileName, 0, self.__progressionQueue,
+                                              self)
+        self.__combinoEngine1 = CombinoEngine(self.__gridHandler.grid(), 1, outputFileName, 1, self.__progressionQueue,
+                                              self)
+        self.__combinoEngine2 = CombinoEngine(self.__gridHandler.grid(), 1, outputFileName, 2, self.__progressionQueue,
+                                              self)
+        # mainWindow_p.stopGenSig.connect(self.cancelGen)
         print "Grid generation"
         self.ui.progressBar.setMaximum(100)
         self.ui.progressBar.setValue(0)
         self.ui.progressBar.show()
-	self.__progressionQueue.put(0)
+        self.__progressionQueue.put(0)
         self.__combinoEngine0.start()
         self.__combinoEngine1.start()
         self.__combinoEngine2.start()
         goOn = True
-        while goOn :
+        while goOn:
             time.sleep(1)
             self.on_progressed()
-	    goOn = self.__combinoEngine0.is_alive()
-	    goOn = goOn or self.__combinoEngine1.is_alive()
-	    goOn = goOn or self.__combinoEngine2.is_alive()
+            goOn = self.__combinoEngine0.is_alive()
+            goOn = goOn or self.__combinoEngine1.is_alive()
+            goOn = goOn or self.__combinoEngine2.is_alive()
         self.ui.progressBar.hide()
-
-
 
     def do_generateOdds(self):
         self.__nextAction = 'CombinoGenOdds'
@@ -235,9 +269,9 @@ class CombinoGUI(QtGui.QMainWindow):
         combinoManager = CombinoNetworkManager.Instance()
         combinoManager.setUrl(self.__gridHandler.oddsUrl())
         combinoManager.manager.finished[QNetworkReply].connect(self.do_receiveHtml)
-        reponse = combinoManager.get() #send request
-        return
+        reponse = combinoManager.get()  # send request
 
+        return
 
     def do_generateInputGrid(self):
         self.__nextAction = 'CombinoGenDistrib'
@@ -252,8 +286,8 @@ class CombinoGUI(QtGui.QMainWindow):
 
     def do_updateNbPlayers(self):
         print "do_updateNbPlayers slot"
-        if self.__gridHandler != None and self.__gridHandler.grid() != None :
-            try :
+        if self.__gridHandler != None and self.__gridHandler.grid() != None:
+            try:
                 self.__gridHandler.grid().setNbPlayers(int(float(self.ui.nbPlayersLine.text())))
                 print "Nb Players modified : %2f" % self.__gridHandler.grid().nbPlayers()
             except:
@@ -264,8 +298,8 @@ class CombinoGUI(QtGui.QMainWindow):
 
     def do_updateJackpot(self):
         print "do_updateJackpot slot"
-        if self.__gridHandler != None and self.__gridHandler.grid() != None :
-            try :
+        if self.__gridHandler != None and self.__gridHandler.grid() != None:
+            try:
                 self.__gridHandler.grid().setJackpot(float(self.ui.jackpotLine.text()))
                 print "Jackpot modified : %2f" % self.__gridHandler.grid().jackpot()
             except:
@@ -294,13 +328,13 @@ class CombinoGUI(QtGui.QMainWindow):
                                                                  QtGui.QFileDialog.ShowDirsOnly | QtGui.QFileDialog.DontResolveSymlinks)
         self.__outputDirName = outputDirName_l.replace("\\", "/")
         self.ui.outputDirLine.setText(self.__outputDirName)
-        #self.ui.outputDirLine.adjustSize()
+        # self.ui.outputDirLine.adjustSize()
         print "Output dir : %s" % self.__outputDirName
 
-# ################ End Slots ######################
+    # ################ End Slots ######################
 
-    #def sendOddsRequest(self):
-        #for match in self.__grid:
+    # def sendOddsRequest(self):
+    # for match in self.__grid:
 
     def initDistribTab(self):
         self.__gridDistribLayout = QGridLayout()
@@ -331,8 +365,8 @@ class CombinoGUI(QtGui.QMainWindow):
 
     def cleanDistribTab(self):
         for widget in self.__dynamicDistribWidgets:
-                self.__gridDistribLayout.removeWidget(widget)
-                widget.deleteLater()
+            self.__gridDistribLayout.removeWidget(widget)
+            widget.deleteLater()
         self.__gridDistribLayout.removeWidget(self.ui.pbGenerateGrid)
 
     def updateOddsTab(self):
@@ -341,166 +375,182 @@ class CombinoGUI(QtGui.QMainWindow):
     def updateDistribTab(self):
         self.cleanDistribTab()
         size = int(self.__gridHandler.gridSize())
-        j=0
+        j = 0
         for i in range(0, size):
-                self.__dynamicDistribWidgets.append(QLabel(self.__gridHandler.grid().getGame(i).team1()))
-                self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 0)
-                j+=1
+            self.__dynamicDistribWidgets.append(QLabel(self.__gridHandler.grid().getGame(i).team1()))
+            self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1 + i, 0)
+            j += 1
 
-                self.__dynamicDistribWidgets.append( QLabel(self.__gridHandler.grid().getGame(i).team2()))
-                self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 1)
-                j+=1
+            self.__dynamicDistribWidgets.append(QLabel(self.__gridHandler.grid().getGame(i).team2()))
+            self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1 + i, 1)
+            j += 1
 
-                self.__dynamicDistribWidgets.append( QLineEdit())
-                self.__dynamicDistribWidgets[j].setText("%.1f" % (self.__gridHandler.grid().getGame(i).getRepartition(0)*100))
-                self.__dynamicDistribWidgets[j].editingFinished.connect(self.do_updateDataGrid)
-                self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 2)
-                j+=1
+            self.__dynamicDistribWidgets.append(QLineEdit())
+            self.__dynamicDistribWidgets[j].setText(
+                "%.1f" % (self.__gridHandler.grid().getGame(i).getRepartition(0) * 100))
+            self.__dynamicDistribWidgets[j].editingFinished.connect(self.do_updateDataGrid)
+            self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1 + i, 2)
+            j += 1
 
-                self.__dynamicDistribWidgets.append( QLabel("%"))
-                self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 3)
-                j+=1
+            self.__dynamicDistribWidgets.append(QLabel("%"))
+            self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1 + i, 3)
+            j += 1
 
-                self.__dynamicDistribWidgets.append( QLineEdit())
-                self.__dynamicDistribWidgets[j].setText("%.1f" % (self.__gridHandler.grid().getGame(i).getRepartition(1)*100))
-                self.__dynamicDistribWidgets[j].editingFinished.connect(self.do_updateDataGrid)
-                self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 4)
-                j+=1
+            self.__dynamicDistribWidgets.append(QLineEdit())
+            self.__dynamicDistribWidgets[j].setText(
+                "%.1f" % (self.__gridHandler.grid().getGame(i).getRepartition(1) * 100))
+            self.__dynamicDistribWidgets[j].editingFinished.connect(self.do_updateDataGrid)
+            self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1 + i, 4)
+            j += 1
 
-                self.__dynamicDistribWidgets.append( QLabel("%"))
-                self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 5)
-                j+=1
+            self.__dynamicDistribWidgets.append(QLabel("%"))
+            self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1 + i, 5)
+            j += 1
 
-                self.__dynamicDistribWidgets.append( QLineEdit())
-                self.__dynamicDistribWidgets[j].setText("%.1f"% (self.__gridHandler.grid().getGame(i).getRepartition(2)*100))
-                self.__dynamicDistribWidgets[j].editingFinished.connect(self.do_updateDataGrid)
-                self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 6)
-                j+=1
+            self.__dynamicDistribWidgets.append(QLineEdit())
+            self.__dynamicDistribWidgets[j].setText(
+                "%.1f" % (self.__gridHandler.grid().getGame(i).getRepartition(2) * 100))
+            self.__dynamicDistribWidgets[j].editingFinished.connect(self.do_updateDataGrid)
+            self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1 + i, 6)
+            j += 1
 
-                self.__dynamicDistribWidgets.append( QLabel("%"))
-                self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 7)
-                j+=1
+            self.__dynamicDistribWidgets.append(QLabel("%"))
+            self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1 + i, 7)
+            j += 1
 
-                total = self.__gridHandler.grid().getGame(i).getRepartition(0)
-                total += self.__gridHandler.grid().getGame(i).getRepartition(1)
-                total += self.__gridHandler.grid().getGame(i).getRepartition(2)
-                self.__dynamicDistribWidgets.append(QLabel("%3.1f" % (total*100)))
-                self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 8)
-                j+=1
+            total = self.__gridHandler.grid().getGame(i).getRepartition(0)
+            total += self.__gridHandler.grid().getGame(i).getRepartition(1)
+            total += self.__gridHandler.grid().getGame(i).getRepartition(2)
+            self.__dynamicDistribWidgets.append(QLabel("%3.1f" % (total * 100)))
+            self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1 + i, 8)
+            j += 1
 
-                self.__dynamicDistribWidgets.append( QLabel("|"))
-                self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 9)
-                j+=1
+            self.__dynamicDistribWidgets.append(QLabel("|"))
+            self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1 + i, 9)
+            j += 1
 
-                self.__dynamicDistribWidgets.append( QLineEdit())
-                self.__dynamicDistribWidgets[j].setText("%.2f" % (self.__gridHandler.grid().getGame(i).getCotes(0)))
-                self.__dynamicDistribWidgets[j].editingFinished.connect(self.do_updateDataGrid)
-                dispo = self.__gridHandler.grid().getGame(i).cotesDisponibles()
-                self.__dynamicDistribWidgets[j].setAutoFillBackground(not dispo)
-                palette = self.__dynamicDistribWidgets[j].palette()
-                palette.setColor(self.__dynamicDistribWidgets[j].backgroundRole(), QColor(COLOR_COEF * (int(dispo) + 1) / 2, COLOR_COEF *  (int(dispo)+ 1) / 2, COLOR_COEF* (int(dispo) + 1) / 2)) # red
-                self.__dynamicDistribWidgets[j].setPalette(palette)
-                self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 10)
-                j+=1
+            self.__dynamicDistribWidgets.append(QLineEdit())
+            self.__dynamicDistribWidgets[j].setText("%.2f" % (self.__gridHandler.grid().getGame(i).getCotes(0)))
+            self.__dynamicDistribWidgets[j].editingFinished.connect(self.do_updateDataGrid)
+            dispo = self.__gridHandler.grid().getGame(i).cotesDisponibles()
+            self.__dynamicDistribWidgets[j].setAutoFillBackground(not dispo)
+            palette = self.__dynamicDistribWidgets[j].palette()
+            palette.setColor(self.__dynamicDistribWidgets[j].backgroundRole(),
+                             QColor(COLOR_COEF * (int(dispo) + 1) / 2, COLOR_COEF * (int(dispo) + 1) / 2,
+                                    COLOR_COEF * (int(dispo) + 1) / 2))  # red
+            self.__dynamicDistribWidgets[j].setPalette(palette)
+            self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1 + i, 10)
+            j += 1
 
-                self.__dynamicDistribWidgets.append( QLineEdit())
-                self.__dynamicDistribWidgets[j].setText("%.2f" % (self.__gridHandler.grid().getGame(i).getCotes(1)))
-                self.__dynamicDistribWidgets[j].editingFinished.connect(self.do_updateDataGrid)
-                dispo = self.__gridHandler.grid().getGame(i).cotesDisponibles()
-                self.__dynamicDistribWidgets[j].setAutoFillBackground(not dispo)
-                palette = self.__dynamicDistribWidgets[j].palette()
-                palette.setColor(self.__dynamicDistribWidgets[j].backgroundRole(), QColor(COLOR_COEF * (int(dispo) + 1) / 2, COLOR_COEF *  (int(dispo) + 1) / 2, COLOR_COEF* (int(dispo) + 1) / 2)) # red
-                self.__dynamicDistribWidgets[j].setPalette(palette)
-                self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 11)
-                j+=1
+            self.__dynamicDistribWidgets.append(QLineEdit())
+            self.__dynamicDistribWidgets[j].setText("%.2f" % (self.__gridHandler.grid().getGame(i).getCotes(1)))
+            self.__dynamicDistribWidgets[j].editingFinished.connect(self.do_updateDataGrid)
+            dispo = self.__gridHandler.grid().getGame(i).cotesDisponibles()
+            self.__dynamicDistribWidgets[j].setAutoFillBackground(not dispo)
+            palette = self.__dynamicDistribWidgets[j].palette()
+            palette.setColor(self.__dynamicDistribWidgets[j].backgroundRole(),
+                             QColor(COLOR_COEF * (int(dispo) + 1) / 2, COLOR_COEF * (int(dispo) + 1) / 2,
+                                    COLOR_COEF * (int(dispo) + 1) / 2))  # red
+            self.__dynamicDistribWidgets[j].setPalette(palette)
+            self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1 + i, 11)
+            j += 1
 
-                self.__dynamicDistribWidgets.append( QLineEdit())
-                self.__dynamicDistribWidgets[j].setText("%.2f"% (self.__gridHandler.grid().getGame(i).getCotes(2)))
-                self.__dynamicDistribWidgets[j].editingFinished.connect(self.do_updateDataGrid)
-                dispo = self.__gridHandler.grid().getGame(i).cotesDisponibles()
-                self.__dynamicDistribWidgets[j].setAutoFillBackground(not dispo)
-                palette = self.__dynamicDistribWidgets[j].palette()
-                palette.setColor(self.__dynamicDistribWidgets[j].backgroundRole(), QColor(COLOR_COEF * (int(dispo) + 1) / 2, COLOR_COEF *   (int(dispo) + 1) / 2, COLOR_COEF* (int(dispo) + 1) / 2)) # red
-                self.__dynamicDistribWidgets[j].setPalette(palette)
-                self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 12)
-                j+=1
+            self.__dynamicDistribWidgets.append(QLineEdit())
+            self.__dynamicDistribWidgets[j].setText("%.2f" % (self.__gridHandler.grid().getGame(i).getCotes(2)))
+            self.__dynamicDistribWidgets[j].editingFinished.connect(self.do_updateDataGrid)
+            dispo = self.__gridHandler.grid().getGame(i).cotesDisponibles()
+            self.__dynamicDistribWidgets[j].setAutoFillBackground(not dispo)
+            palette = self.__dynamicDistribWidgets[j].palette()
+            palette.setColor(self.__dynamicDistribWidgets[j].backgroundRole(),
+                             QColor(COLOR_COEF * (int(dispo) + 1) / 2, COLOR_COEF * (int(dispo) + 1) / 2,
+                                    COLOR_COEF * (int(dispo) + 1) / 2))  # red
+            self.__dynamicDistribWidgets[j].setPalette(palette)
+            self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1 + i, 12)
+            j += 1
 
-                try :
-                    sigmaCotesMoinsUn = 1/self.__gridHandler.grid().getGame(i).getCotes(0) + 1/self.__gridHandler.grid().getGame(i).getCotes(1) + 1/self.__gridHandler.grid().getGame(i).getCotes(2)
+            try:
+                sigmaCotesMoinsUn = 1 / self.__gridHandler.grid().getGame(i).getCotes(
+                    0) + 1 / self.__gridHandler.grid().getGame(i).getCotes(1) + 1 / self.__gridHandler.grid().getGame(
+                    i).getCotes(2)
 
-                    ret0 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(0)*self.__gridHandler.grid().getGame(i).getCotes(0)*sigmaCotesMoinsUn)
-                    ret1 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(1)*self.__gridHandler.grid().getGame(i).getCotes(1)*sigmaCotesMoinsUn)
-                    ret2 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(2)*self.__gridHandler.grid().getGame(i).getCotes(2)*sigmaCotesMoinsUn)
-                except ZeroDivisionError:
-                    ret0 = 0
-                    ret1 = 0
-                    ret2 = 0
-                self.__dynamicDistribWidgets.append(QLabel("%1.2f" % sigmaCotesMoinsUn))
-                self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 13)
-                j+=1
+                ret0 = 1 / (
+                self.__gridHandler.grid().getGame(i).getRepartition(0) * self.__gridHandler.grid().getGame(i).getCotes(
+                    0) * sigmaCotesMoinsUn)
+                ret1 = 1 / (
+                self.__gridHandler.grid().getGame(i).getRepartition(1) * self.__gridHandler.grid().getGame(i).getCotes(
+                    1) * sigmaCotesMoinsUn)
+                ret2 = 1 / (
+                self.__gridHandler.grid().getGame(i).getRepartition(2) * self.__gridHandler.grid().getGame(i).getCotes(
+                    2) * sigmaCotesMoinsUn)
+            except ZeroDivisionError:
+                ret0 = 0
+                ret1 = 0
+                ret2 = 0
+            self.__dynamicDistribWidgets.append(QLabel("%1.2f" % sigmaCotesMoinsUn))
+            self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1 + i, 13)
+            j += 1
 
-                self.__dynamicDistribWidgets.append( QLabel("|"))
-                self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 14)
-                j+=1
+            self.__dynamicDistribWidgets.append(QLabel("|"))
+            self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1 + i, 14)
+            j += 1
 
-                self.__dynamicDistribWidgets.append( QLabel("%2.2f" % ret0))
-                self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 15)
-                j+=1
+            self.__dynamicDistribWidgets.append(QLabel("%2.2f" % ret0))
+            self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1 + i, 15)
+            j += 1
 
-                self.__dynamicDistribWidgets.append( QLabel("%2.2f" % ret1))
-                self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 16)
-                j+=1
+            self.__dynamicDistribWidgets.append(QLabel("%2.2f" % ret1))
+            self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1 + i, 16)
+            j += 1
 
-                self.__dynamicDistribWidgets.append( QLabel("%2.2f" % ret2))
-                self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1+i, 17)
-                j+=1
+            self.__dynamicDistribWidgets.append(QLabel("%2.2f" % ret2))
+            self.__gridDistribLayout.addWidget(self.__dynamicDistribWidgets[j], 1 + i, 17)
+            j += 1
 
         self.__distribLayoutGridWidth = 18
 
-        self.__gridDistribLayout.addWidget(self.ui.pbGenerateGrid, size+1, 0)
-        self.__gridDistribLayout.addWidget(self.ui.pbExport, size+1, 17)
+        self.__gridDistribLayout.addWidget(self.ui.pbGenerateGrid, size + 1, 0)
+        self.__gridDistribLayout.addWidget(self.ui.pbExport, size + 1, 17)
         return
 
     def readDistribInput(self):
         size = int(self.__gridHandler.gridSize())
         for i in range(0, size):
-                #try:
-                print "%s vs" % self.__gridHandler.grid().getGame(i).team1()
-                print "%s : " % self.__gridHandler.grid().getGame(i).team2()
-                distrib1 = float(self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+2].text())
-                print "%2.2f " % distrib1
-                distribN = float(self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+4].text())
-                print "%2.2f " % distribN
-                distrib2 = float(self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+6].text())
-                print "%2.2f | " % distrib2
-                self.__gridHandler.grid().getGame(i).setRepartition(distrib1, distribN, distrib2)
-                total = distrib1 + distrib2 + distribN
-                cote1 = float(self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+10].text())
-                print "%2.2f " % cote1
-                coteN = float(self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+11].text())
-                print "%2.2f " % coteN
-                cote2 = float(self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+12].text())
-                print "%2.2f " % cote2
-                self.__gridHandler.grid().getGame(i).setCotes(cote1, coteN, cote2)
-                sigmaCotesMoinsUn = 1/cote1 + 1/coteN + 1/cote2
+            # try:
+            print "%s vs" % self.__gridHandler.grid().getGame(i).team1()
+            print "%s : " % self.__gridHandler.grid().getGame(i).team2()
+            distrib1 = float(self.__dynamicDistribWidgets[i * self.__distribLayoutGridWidth + 2].text())
+            print "%2.2f " % distrib1
+            distribN = float(self.__dynamicDistribWidgets[i * self.__distribLayoutGridWidth + 4].text())
+            print "%2.2f " % distribN
+            distrib2 = float(self.__dynamicDistribWidgets[i * self.__distribLayoutGridWidth + 6].text())
+            print "%2.2f | " % distrib2
+            self.__gridHandler.grid().getGame(i).setRepartition(distrib1, distribN, distrib2)
+            total = distrib1 + distrib2 + distribN
+            cote1 = float(self.__dynamicDistribWidgets[i * self.__distribLayoutGridWidth + 10].text())
+            print "%2.2f " % cote1
+            coteN = float(self.__dynamicDistribWidgets[i * self.__distribLayoutGridWidth + 11].text())
+            print "%2.2f " % coteN
+            cote2 = float(self.__dynamicDistribWidgets[i * self.__distribLayoutGridWidth + 12].text())
+            print "%2.2f " % cote2
+            self.__gridHandler.grid().getGame(i).setCotes(cote1, coteN, cote2)
+            sigmaCotesMoinsUn = 1 / cote1 + 1 / coteN + 1 / cote2
 
-                ret0 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(0)*cote1*sigmaCotesMoinsUn)
-                ret1 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(1)*coteN*sigmaCotesMoinsUn)
-                ret2 = 1/(self.__gridHandler.grid().getGame(i).getRepartition(2)*cote2*sigmaCotesMoinsUn)
+            ret0 = 1 / (self.__gridHandler.grid().getGame(i).getRepartition(0) * cote1 * sigmaCotesMoinsUn)
+            ret1 = 1 / (self.__gridHandler.grid().getGame(i).getRepartition(1) * coteN * sigmaCotesMoinsUn)
+            ret2 = 1 / (self.__gridHandler.grid().getGame(i).getRepartition(2) * cote2 * sigmaCotesMoinsUn)
 
-                self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+8].setText("%3.1f" % total)
-                self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+8].repaint()
-                self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+13].setText("%1.2f" % sigmaCotesMoinsUn)
-                self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+13].repaint()
-                self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+15].setText("%2.2f" % ret0)
-                self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+15].repaint()
-                self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+16].setText("%2.2f" % ret1)
-                self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+16].repaint()
-                self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+17].setText("%2.2f" % ret2)
-                self.__dynamicDistribWidgets[i*self.__distribLayoutGridWidth+17].repaint()
-                #except:
-                #        print "erreur de recup lors du %deme match" % i
-
+            self.__dynamicDistribWidgets[i * self.__distribLayoutGridWidth + 8].setText("%3.1f" % total)
+            self.__dynamicDistribWidgets[i * self.__distribLayoutGridWidth + 8].repaint()
+            self.__dynamicDistribWidgets[i * self.__distribLayoutGridWidth + 13].setText("%1.2f" % sigmaCotesMoinsUn)
+            self.__dynamicDistribWidgets[i * self.__distribLayoutGridWidth + 13].repaint()
+            self.__dynamicDistribWidgets[i * self.__distribLayoutGridWidth + 15].setText("%2.2f" % ret0)
+            self.__dynamicDistribWidgets[i * self.__distribLayoutGridWidth + 15].repaint()
+            self.__dynamicDistribWidgets[i * self.__distribLayoutGridWidth + 16].setText("%2.2f" % ret1)
+            self.__dynamicDistribWidgets[i * self.__distribLayoutGridWidth + 16].repaint()
+            self.__dynamicDistribWidgets[i * self.__distribLayoutGridWidth + 17].setText("%2.2f" % ret2)
+            self.__dynamicDistribWidgets[i * self.__distribLayoutGridWidth + 17].repaint()
+            # except:
+            #        print "erreur de recup lors du %deme match" % i
 
     def updateConfigTab(self):
         # clean the comboGridBox
@@ -517,33 +567,33 @@ class CombinoGUI(QtGui.QMainWindow):
         for gridNumber in self.__gridHandler.gridList():
             print "add grid n %s" % gridNumber[0]
             try:
-                gridDateTime = QDateTime.fromMSecsSinceEpoch(int(gridNumber[1])*1000)
+                gridDateTime = QDateTime.fromMSecsSinceEpoch(int(gridNumber[1]) * 1000)
                 itemText = gridNumber[0]
                 itemText = ''.join((itemText, " "))
                 itemText = ''.join((itemText, gridDateTime.toString()))
             except ValueError:
                 itemText = ''
-            #itemText = "{} {}".format(gridNumber[0], gridDateTime.toString())
-            #self.ui.comboGridBox.addItem(gridNumber[0])
+            # itemText = "{} {}".format(gridNumber[0], gridDateTime.toString())
+            # self.ui.comboGridBox.addItem(gridNumber[0])
             self.ui.comboGridBox.addItem(itemText)
             try:
                 if int(now) >= (int(gridNumber[1]) + (3600 * 24)):
                     print "disabled because date : %s" % gridNumber[1]
-                    #self.ui.comboGridBox.model().item(index).setEnabled(False)
-                    #self.ui.comboGridBox.model().item(index).setBackground(QBrush(Qt.grey))
+                    # self.ui.comboGridBox.model().item(index).setEnabled(False)
+                    # self.ui.comboGridBox.model().item(index).setBackground(QBrush(Qt.grey))
                 elif not selected:
                     self.ui.comboGridBox.setCurrentIndex(index)
                     self.do_changeGrid(index)
                     selected = True
             except ValueError:
                 pass
-            index+=1
-
+            index += 1
 
     def browseFile(self):
         print "input dir = %s" % ''.join((os.getcwd(), "/Input/"))
         self.__inputFileName = \
-        QtGui.QFileDialog.getOpenFileName(self, "Open xls", ''.join((os.getcwd(), "/Input/")), "xls Files (*.xls)")[0]
+            QtGui.QFileDialog.getOpenFileName(self, "Open xls", ''.join((os.getcwd(), "/Input/")), "xls Files (*.xls)")[
+                0]
         #        self.__inputFileName = QtGui.QFileDialog.getOpenFileName(self, "Open xls", os.getcwd(), "xls Files (*.xls)")
         self.__labelInputFileName.setText(self.__inputFileName)
         self.__labelInputFileName.adjustSize()
@@ -556,22 +606,21 @@ class CombinoGUI(QtGui.QMainWindow):
     def cancelGen(self):
         self.stopGenSig.emit()
 
-
     def on_progressed(self):
         print "on_progressed"
         if not self.__progressionQueue.empty():
-	    progression = self.__progressionQueue.get()
-	    self.__progressionQueue.put(progression)
-	    #self.__progressionQueue.put(progression)
+            progression = self.__progressionQueue.get()
+            self.__progressionQueue.put(progression)
+            # self.__progressionQueue.put(progression)
             self.ui.progressBar.setValue(progression)
             self.ui.progressBar.update()
             print "%d pct" % progression
 
     @Slot()
     def on_finished(self):
-	self.__combinoEngine0.join()
-	self.__combinoEngine1.join()
-	self.__combinoEngine2.join()
+        self.__combinoEngine0.join()
+        self.__combinoEngine1.join()
+        self.__combinoEngine2.join()
         self.ui.progressBar.hide()
 
 
