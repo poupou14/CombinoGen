@@ -83,7 +83,13 @@ class Bet:
                 self.__thirdRankRate = thirdRankRate_p
 
         def getNetEsperance(self, combinoEngine_p) :
-                esperance_l = self.__esperance * self.__returnRate + self.__esperance_n_1 * self.__scndRankRate + self.__esperance_n_2 * self.__thirdRankRate
+                gainNet_n_1_l = self.__gainEst_n_1_min * self.__scndRankRate
+                netEsperance_n_1_l = self.__proba_n_1 * gainNet_n_1_l
+                gainNet_n_2_l = self.__gainEst_n_2 * self.__thirdRankRate
+                netEsperance_n_2_l = self.__proba_n_2 * gainNet_n_2_l
+                esperance_l = self.__esperance * self.__returnRate + \
+                              netEsperance_n_1_l + \
+                              netEsperance_n_2_l
                 return esperance_l
 
         def __str__(self):
