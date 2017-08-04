@@ -101,18 +101,18 @@ class ReadGridHandler():
             if not match.cotesDisponibles():
                 if source == BETEXPLORER_SOURCE and not deprecated:
                     team1Rx = QRegExp(
-                        "><span>(\\w*\\'?\\s*-?)*(%s)(\\w*\\'?\\s*-?)*</span>\\s*-\\s*<span>\\s*((\\w*\\'?\\s*-?)*)</span><" % match.team1())
+                        "><span>(\\w*[\\'\\.-]?\\s*)*(%s)(\\w*[\\'\\.-]?\\s*)*</span>\\s*-\\s*<span>\\s*((\\w*[\\'\\.-]?\\s*)*)</span><" % match.team1())
                     team1Rx.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
                     team2Rx = QRegExp(
-                        "><span>\\s*(\\w*\\'?\\s*-?)*</span>\\s*-\\s*<span>(\\w*\\'?\\s*-?)*(%s)(\\w*\\'?\\s*-?)*</span><" % match.team2())
+                        "><span>\\s*(\\w*[\\'\\.-]?\\s*)*</span>\\s*-\\s*<span>(\\w*[\\'\\.-]?\\s*)*(%s)(\\w*[\\'\\.-]?\\s*)*</span><" % match.team2())
                     team2Rx.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
                 elif source == ZULUBET_SOURCE:
                     team1Rx = QRegExp(
                         #"<img\\s*src=\"http://www\.zulubet\.com/flags/flag-\\w*\.png\"\\s*class=\"flags\\s*flag-\\w*\"\\s*title=\"(\\w*\\'?\\s*-?)*,(\\w*\\'?\\s*-?)*\"\\s*width=\"\\d*\"\\s*height=\"\\d*\">\\s*(%s)\\s*-\\s*(\\w*\\'?\\s*-?)*<\img>" % match.team1())
-                        "width=\"\\d*\"\\s*height=\"\\d*\">\\s*(%s)\\s*-\\s*(\\w*\\'?\\s*-?)*</td>" % match.team1())
+                        "width=\"\\d*\"\\s*height=\"\\d*\">\\s*(%s)\\s*-\\s*(\\w*[\\'\\.-]?\\s*)*</td>" % match.team1())
                     team1Rx.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
                     team2Rx = QRegExp(
-                        "width=\"\\d*\"\\s*height=\"\\d*\">(\\w*\\'?\\s*-?)*-\\s*(%s)\\s*</td>" % match.team2())
+                        "width=\"\\d*\"\\s*height=\"\\d*\">(\\w*[\\'\\.-]?\\s*)*-\\s*(%s)\\s*</td>" % match.team2())
                     team2Rx.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
                 else:
                     team1Rx = QRegExp("---deprecated---")
