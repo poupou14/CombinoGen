@@ -50,7 +50,7 @@ class ReadLotoHandler(ReadGridHandler):
                         print "epochDate=%d" % epochDate
                         tup = (ngrille, epochDate, 0)
                         self._gridList.append(tup)
-			posi = loto15rx.indexIn(str(htmlPage), posi+1)
+                        posi = loto15rx.indexIn(str(htmlPage), posi+1)
                 #print self._gridList
 
         def handleDistribHtmlPage(self, htmlPage):
@@ -80,25 +80,30 @@ class ReadLotoHandler(ReadGridHandler):
                                 print "posi2 = %d" % posi
                                 print "team1 = %s" % team1
                                 team2 = loto15Teamrx.cap(1)
+                                posiMax= loto15Teamrx.indexIn(htmlStrPage, posi+1)
                                 print "posi3 = %d" % posi
                                 print "team2 = %s" % team2
                                 match = Match(team1 + " vs " + team2)
                                 match.setTeam1(team1)
                                 match.setTeam2(team2)
-                                posi= loto15Reprx.indexIn(htmlStrPage, posi+1)
-                                print "posi4 = %d" % posi
-                                p1 = float(loto15Reprx.cap(1).replace(",","."))
-                                posi= loto15Reprx.indexIn(htmlStrPage, posi+1)
-                                print "posi5 = %d" % posi
-                                pN = float(loto15Reprx.cap(1).replace(",","."))
-                                posi= loto15Reprx.indexIn(htmlStrPage, posi+1)
-                                print "posi6 = %d" % posi
-                                p2 = float(loto15Reprx.cap(1).replace(",","."))
-                                total = float(p1+pN+p2)
-                                r1 = p1/total*100
-                                r2 = p2/total*100
-                                rN = pN/total*100
-                                match.setRepartition(p1/total, pN/total, p2/total)
+                                posiInter= loto15Reprx.indexIn(htmlStrPage, posi+1)
+                                print "posiInter = %d" % posiInter
+                                print "posiMax = %d" % posiMax
+                                if (posiInter > 0) and (posiInter <= posiMax) :
+                                        posi = posiInter
+                                        print "posi4 = %d" % posi
+                                        p1 = float(loto15Reprx.cap(1).replace(",","."))
+                                        posi= loto15Reprx.indexIn(htmlStrPage, posi+1)
+                                        print "posi5 = %d" % posi
+                                        pN = float(loto15Reprx.cap(1).replace(",","."))
+                                        posi= loto15Reprx.indexIn(htmlStrPage, posi+1)
+                                        print "posi6 = %d" % posi
+                                        p2 = float(loto15Reprx.cap(1).replace(",","."))
+                                        total = float(p1+pN+p2)
+                                        r1 = p1/total*100
+                                        r2 = p2/total*100
+                                        rN = pN/total*100
+                                        match.setRepartition(p1/total, pN/total, p2/total)
                                 self._grid.addGame(match)
                                 print "game added : %d" % i
                                 posi= loto15Teamrx.indexIn(htmlStrPage, posi+1)

@@ -121,14 +121,15 @@ class ReadGridHandler():
                 # team2Rx = QRegExp(match.team2())
                 teamXRx = team1Rx
                 posi = teamXRx.indexIn(strHtml)
-                if posi < 0:
-                    print "-1-%s- not found" % match.team1()
-                    teamXRx = team2Rx
-                    posi = teamXRx.indexIn(strHtml)
-                if posi >= 0:
-                    print "-%s- found" % ''.join((teamXRx.cap(2), " vs " + teamXRx.cap(2)))
+                posi2 = team2Rx.indexIn(strHtml)
+                #if posi < 0:
+                    #print "-1-%s- not found" % match.team1()
+                    #teamXRx = team2Rx
+                    #posi = teamXRx.indexIn(strHtml)
+                if (posi >= 0) and (posi2 >= 0):
+                    print "-%s- found" % ''.join((match.team1(), " vs " + match.team2()))
                 else:  # try in an other way
-                    print "-2-%s- not found, try anothe way" % match.team2()
+                    print "-%s- not found, try another way" % ''.join((match.team1(), " vs " + match.team2()))
                     # split team names
                     team1list = match.team1().split(" ")
                     team2list = match.team2().split(" ")
