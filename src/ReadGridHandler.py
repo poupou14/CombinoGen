@@ -126,7 +126,8 @@ class ReadGridHandler():
                     #print "-1-%s- not found" % match.team1()
                     #teamXRx = team2Rx
                     #posi = teamXRx.indexIn(strHtml)
-                if (posi >= 0) and (posi2 >= 0):
+                #if (posi >= 0) and (posi2 >= 0):
+                if (posi >= 0) and (posi2 == posi):
                     print "-%s- found" % ''.join((match.team1(), " vs " + match.team2()))
                 else:  # try in an other way
                     print "-%s- not found, try another way" % ''.join((match.team1(), " vs " + match.team2()))

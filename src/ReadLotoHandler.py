@@ -60,7 +60,10 @@ class ReadLotoHandler(ReadGridHandler):
                 self._grid.setNbPlayers(jackpot)
                 htmlStrPage = filter(onlyascii, str(htmlPage))
                 teamString = "<td class=\"center matchs_av\">((\\(?\\)?\\d*\\w*\\.?'?-?\\s*)*)<\/td>"
+                enfOfGridString = "<div class=\"repart_legende\">"
                 loto15Teamrx = QRegExp(teamString)
+                endOfGridRx = QRegExp(enfOfGridString)
+                posiEndOfGrid= endOfGridRx.indexIn(htmlStrPage, 0)
                 repString = ">(\\d*,*\\d*)\\s*\%<"
                 loto15Reprx = QRegExp(repString)
                 index_l = 0
@@ -81,6 +84,8 @@ class ReadLotoHandler(ReadGridHandler):
                                 print "team1 = %s" % team1
                                 team2 = loto15Teamrx.cap(1)
                                 posiMax= loto15Teamrx.indexIn(htmlStrPage, posi+1)
+                                if posiMax < 0:
+                                        posiMax = posiEndOfGrid
                                 print "posi3 = %d" % posi
                                 print "team2 = %s" % team2
                                 match = Match(team1 + " vs " + team2)
