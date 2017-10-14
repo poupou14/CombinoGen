@@ -59,11 +59,15 @@ class ReadWinamax7Handler(ReadGridHandler):
                 #print htmlPage
                 myParser = WSGridParser()
                 myParser.html = filter(onlyascii, htmlPage)
+                self.writeHtmlToFile(myParser.html)
                 myParser.feed(myParser.html)
                 index_l = 0
                 total = 0
                 size_l = 7
+                print "!!!!!!!!!!!!!!!!!! End Of parsing !!!!!!!!!!!!!!!!!!!"
                 try:
+                    print "Grille :"
+                    print "%s" % myParser.wsDataFormat.grille
                     for i in range(0, size_l) :
                         print "indice %i" % i
                         team1 = myParser.wsDataFormat.grille['team1'][i]

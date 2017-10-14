@@ -22,6 +22,17 @@ class ReadGridHandler():
         self._grid = None
         self._distributionUrl = ""
 
+    def writeHtmlToFile(self, html):
+        try:
+            # This will create a new file or **overwrite an existing file**.
+            f = open("html.out", "w")
+            try:
+                f.write(html) # Write a string to a file
+            finally:
+                f.close()
+        except IOError:
+            pass
+
     def changeGrid(self, index):
         self._index = index
         print "index = %d" % index
