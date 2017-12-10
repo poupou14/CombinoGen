@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/CombinoGen.iml" filepath="$PROJECT_DIR$/.idea/CombinoGen.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../WinaScan/.idea/WinaScan.iml" filepath="$PROJECT_DIR$/../WinaScan/.idea/WinaScan.iml" />
     </modules>
   </component>
 </project>

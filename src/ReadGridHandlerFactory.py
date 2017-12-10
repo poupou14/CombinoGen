@@ -8,6 +8,7 @@ from ReadWinamax7Handler import ReadWinamax7Handler
 from ReadLoto7Handler import ReadLoto7Handler
 from ReadLoto15Handler import ReadLoto15Handler
 from ReadMini5Handler import ReadMini5Handler
+from ReadPick5Handler import ReadPick5Handler
 
 class ReadGridHandlerFactory:
         def __init__(self):
@@ -34,6 +35,9 @@ class ReadGridHandlerFactory:
                 elif grille.getSize() == 5 and source.getReturnRate() == 0.75 and source.getFirstRankRate() == 1.00:
                         print "Factory generate Mini5"
                         return_l = ReadMini5Handler()
+                elif grille.getSize() == 5 and source.getReturnRate() == 0.70 and source.getFirstRankRate() == 1.00:
+                        print "Factory generate Pick5"
+                        return_l = ReadPick5Handler()
                 else:
                         print "Factory generate None !!!"
                         print "size = %d" % grille.getSize()

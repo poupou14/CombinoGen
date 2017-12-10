@@ -24,8 +24,9 @@ class GridRequestor(QThread):
                 self.__display = Display(visible=0, size=(800, 600))
                 self.__display.start()
                 page_source = ""
-                # use firefox to get page with javascript generated content
-                with closing(Firefox()) as browser:
+                try :
+                    # use firefox to get page with javascript generated content
+                    with closing(Firefox()) as browser:
                         browser = Firefox()
                         browser.get(self.__url)
                         # wait for the page to load
@@ -34,6 +35,8 @@ class GridRequestor(QThread):
                         # store it to string variable
                         page_source = browser.page_source
                         browser.quit()
+                except AttributeError :
+                    print "browser quit AttributeError issue... don't care, go on !"
                 #print(page_source)
                 self.distribPageGenerated.sig.emit(page_source)
                 self.__display.stop()
