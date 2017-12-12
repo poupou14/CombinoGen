@@ -12,14 +12,14 @@ from WSDataFormat import WSDataFormat
 from CombinoTools import onlyascii
 
 
-class ReadPick5Handler(ReadGridHandler):
+class ReadPick15Handler(ReadGridHandler):
 
         def __init__(self):
                 ReadGridHandler.__init__(self)
-                print "Pick5"
-                self._gridName = "Mini5"
-                print "P5: %s" % str(self)
-                self._gridSize = 5
+                print "Pick15"
+                self._gridName = "Pick15"
+                print "P15: %s" % str(self)
+                self._gridSize = 15
                 self._bookUrl = QUrl("")
                 return
 
@@ -93,8 +93,8 @@ class ReadPick5Handler(ReadGridHandler):
                 mini5TeamRx = QRegExp("<label for=\"[^\"]*\">([^<]*)<\/label>")
                 self._grid = Grille()
                 self._grid.setReturnRate(0.70)
-                self._grid.setFirstRankRate(0.75)
-                self._grid.setScndRankRate(0.25)
+                self._grid.setFirstRankRate(0.40)
+                self._grid.setScndRankRate(0.10)
                 jackpot = int(self._gridList[self._index][2]) #/ 0.75
                 self._grid.setJackpot(jackpot)
                 self._grid.setNbPlayers(jackpot)
