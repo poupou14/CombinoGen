@@ -24,7 +24,7 @@ class ReadWinamax12Handler(ReadGridHandler):
         def handleHtmlPage(self, htmlPage):
                 tup = ()
                 self._gridList = []
-                wina12rx = QRegExp("\{\"pool_id\":120000(\\d+).*\"pool_end\":(\\d+).*\"guaranteed_amount\":(\\d+).*\}")
+                wina12rx = QRegExp("\{\"pool_id\":12000(\\d+).*\"pool_end\":(\\d+).*\"guaranteed_amount\":(\\d+).*\}")
                 posi = wina12rx.indexIn(str(htmlPage))
                 ngrille = wina12rx.cap(1)
                 print "ngrille=%s" % ngrille

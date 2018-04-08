@@ -35,7 +35,7 @@ class ReadGridHandlerFactory:
                 elif grille.getSize() == 5 and source.getReturnRate() == 0.75 and source.getFirstRankRate() == 1.00:
                         print "Factory generate Mini5"
                         return_l = ReadMini5Handler()
-                elif grille.getSize() == 5 and source.getReturnRate() == 0.70 and source.getFirstRankRate() == 1.00:
+                elif grille.getSize() == 5 and source.getReturnRate() == 0.70 and source.getFirstRankRate() == 0.75:
                         print "Factory generate Pick5"
                         return_l = ReadPick5Handler()
                 else:
