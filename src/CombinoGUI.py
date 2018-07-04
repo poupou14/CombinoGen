@@ -168,6 +168,10 @@ class CombinoGUI(QtGui.QMainWindow):
         self.__gridHandler = self.__gridHandlerFactory.createGridHandler(self.__inputFileName)
         # mySource = CombinoSource(self.__inputFileName)
         print "Read Grid = %s" % str(self.__gridHandler.grid())
+        mainWinText = self.__inputFileName
+        print "Import File =%s" % mainWinText
+        print "Import Title =%s" % mainWinText.split("/")[-1].split(".")[0]
+        self.setWindowTitle(mainWinText.split("/")[-1].split(".")[0])
         self.updateDistribTab()
         self.updateOddsTab()
         self.refreshNbPlayers()

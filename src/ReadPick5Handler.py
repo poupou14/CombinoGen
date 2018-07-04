@@ -17,7 +17,7 @@ class ReadPick5Handler(ReadGridHandler):
         def __init__(self):
                 ReadGridHandler.__init__(self)
                 print "Pick5"
-                self._gridName = "Mini5"
+                self._gridName = "Pick5"
                 print "P5: %s" % str(self)
                 self._gridSize = 5
                 self._bookUrl = QUrl("")
