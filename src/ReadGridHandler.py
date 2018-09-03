@@ -180,6 +180,7 @@ class ReadGridHandler():
                         print "still not found :'("
                         # print "Odds handling KO %s not found" % str(match)
                 if posi >= 0:
+                    print "posi = %d" % posi
                     posi = oddsRx.indexIn(strHtml, posi)
                     oddStr1 = oddsRx.cap(1)
                     oddStr2 = oddsRx.cap(2)

@@ -228,6 +228,9 @@ class CombinoGUI(QtGui.QMainWindow):
 
     def do_generateGrid(self):
         outputFileName = self.__outputDirName
+        outputFileName1 = ""
+        outputFileName2 = ""
+        outputFileName0 = ""
         try:
             outputFileName = ''.join((self.__outputDirName, '/'))
             list = (self.__gridHandler.gridList())
@@ -241,11 +244,17 @@ class CombinoGUI(QtGui.QMainWindow):
             inputFileName = self.__inputFileName[indexSlash:]
             outputFileName = ''.join((outputFileName, inputFileName[0:-3]))
             outputFileName = ''.join((outputFileName, "csv"))
-        self.__combinoEngine0 = CombinoEngine(self.__gridHandler.grid(), 1, outputFileName, 0, self.__progressionQueue,
+        outputFileName1 = ''.join(( outputFileName, "_tmp1"))
+        outputFileName2 = ''.join(( outputFileName, "_tmp2"))
+        outputFileName0 = ''.join(( outputFileName, "_tmp0"))
+        print "tmpfiles = %s" % outputFileName0
+        print "tmpfiles = %s" % outputFileName1
+        print "tmpfiles = %s" % outputFileName2
+        self.__combinoEngine0 = CombinoEngine(self.__gridHandler.grid(), 1, outputFileName0, 0, self.__progressionQueue,
                                               self)
-        self.__combinoEngine1 = CombinoEngine(self.__gridHandler.grid(), 1, outputFileName, 1, self.__progressionQueue,
+        self.__combinoEngine1 = CombinoEngine(self.__gridHandler.grid(), 1, outputFileName1, 1, self.__progressionQueue,
                                               self)
-        self.__combinoEngine2 = CombinoEngine(self.__gridHandler.grid(), 1, outputFileName, 2, self.__progressionQueue,
+        self.__combinoEngine2 = CombinoEngine(self.__gridHandler.grid(), 1, outputFileName2, 2, self.__progressionQueue,
                                               self)
         # mainWindow_p.stopGenSig.connect(self.cancelGen)
         print "Grid generation"
@@ -264,6 +273,15 @@ class CombinoGUI(QtGui.QMainWindow):
             goOn = goOn or self.__combinoEngine1.is_alive()
             goOn = goOn or self.__combinoEngine2.is_alive()
         self.ui.progressBar.hide()
+
+        # concat tmp files, and delete
+        filenames = [outputFileName0, outputFileName1, outputFileName2]
+        with open(outputFileName, 'w') as outfile:
+            for fname in filenames:
+                with open(fname) as infile:
+                    for line in infile:
+                        outfile.write(line)
+                os.remove(fname)
 
     def do_generateOdds(self):
         self.__nextAction = 'CombinoGenOdds'
