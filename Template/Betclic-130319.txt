@@ -1,0 +1,50 @@
+8,535 Units
+
+Birmingham vs Millwall Wed, 20:45 
+1 5,653 Units
+X 1,555 Units
+2 1,326 Units
+Nottm Forest vs Aston Villa Wed, 20:45 
+1 3,756 Units
+X 2,011 Units
+2 2,767 Units
+Derby vs Stoke Wed, 20:45 
+1 4,536 Units
+X 2,128 Units
+2 1,870 Units
+Middlesbrough vs Preston Wed, 20:45 
+1 5,566 Units
+X 1,710 Units
+2 1,258 Units
+QPR vs Rotherham Wed, 20:45 
+1 6,616 Units
+X 1,250 Units
+2 669 Units
+Bayern Munich vs Liverpool Wed, 21:00 
+1 5,306 Units
+X 1,380 Units
+2 1,849 Units
+Dynamo Kiev vs Chelsea Thu, 18:55 
+1 952 Units
+X 1,269 Units
+2 6,313 Units
+FC Salzburg vs Napoli Thu, 18:55 
+1 2,942 Units
+X 1,165 Units
+2 4,427 Units
+FK Krasnodar vs Valencia Thu, 18:55 
+1 1,956 Units
+X 1,805 Units
+2 4,774 Units
+Inter Milan vs E Frankfurt Thu, 21:00 
+1 6,667 Units
+X 1,080 Units
+2 787 Units
+Slavia Praha vs Sevilla Thu, 21:00 
+1 1,887 Units
+X 1,002 Units
+2 5,646 Units
+Cagliari vs Fiorentina Fri, 20:30 
+1 1,569 Units
+X 1,698 Units
+2 5,268 Units
