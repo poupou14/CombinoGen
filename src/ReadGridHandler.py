@@ -53,6 +53,7 @@ class ReadGridHandler():
     def gridSize(self):
         return self._gridSize
 
+    @property
     def oddsUrl(self):
         url = self._oddsUrl
         epochDate = self._gridList[self._index][1]
@@ -64,7 +65,7 @@ class ReadGridHandler():
         urlComplement = "?year=%d" % year
         urlComplement = urlComplement + "&month=%d" % month
         urlComplement = urlComplement + "&day=%d" % day
-        print "urlComplement"
+        print "urlComplement=%s" % urlComplement
         return self._oddsUrl + urlComplement
 
     def oddsUrl2(self, dayMore=0):

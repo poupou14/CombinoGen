@@ -13,7 +13,7 @@ class ReadLoto7Handler(ReadLotoHandler):
                 print "Loto 7"
                 self._gridName = "Loto7"
                 print "L7: %s" % str(self)
-                self._bookUrl = QUrl("http://www.pronosoft.com/fr/concours/repartition_lotofoot_7.php")
+                self._bookUrl = QUrl("https://www.pronosoft.com/fr/lotofoot/repartition/lf7/")
                 self._gridSize = 7
                 self._grid = Grille()
                 self._grid.setReturnRate(0.70)

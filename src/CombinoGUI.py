@@ -278,18 +278,21 @@ class CombinoGUI(QtGui.QMainWindow):
         filenames = [outputFileName0, outputFileName1, outputFileName2]
         with open(outputFileName, 'w') as outfile:
             for fname in filenames:
-                with open(fname) as infile:
-                    for line in infile:
-                        outfile.write(line)
-                os.remove(fname)
+                try:
+                    with open(fname) as infile:
+                        for line in infile:
+                            outfile.write(line)
+                        os.remove(fname)
+                except IOError:
+                    pass
 
     def do_generateOdds(self):
         self.__nextAction = 'CombinoGenOdds'
         print "Generate Odds"
-        print "requested url = %s" % self.__gridHandler.oddsUrl()
+        print "requested url = %s" % self.__gridHandler.oddsUrl
         self.ui.progressBar.show()
         combinoManager = CombinoNetworkManager.Instance()
-        combinoManager.setUrl(self.__gridHandler.oddsUrl())
+        combinoManager.setUrl(self.__gridHandler.oddsUrl)
         combinoManager.manager.finished[QNetworkReply].connect(self.do_receiveHtml)
         reponse = combinoManager.get()  # send request
 

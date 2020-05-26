@@ -29,6 +29,7 @@ class CombinoNetworkManager:
 
         def setUrl(self, url):
                 self.__url = url
+                print "CombinoNetworkManager url : %s" % self.__url
 
         def get(self):
                 print "set url : %s" % self.__url

@@ -22,7 +22,6 @@ class ReadWinamax7Handler(ReadGridHandler):
                 return
 
         def handleHtmlPage(self, htmlPage):
-                tup = ()
                 self._gridList = []
                 wina7rx = QRegExp("\{\"pool_id\":700(\\d+).*\"pool_end\":(\\d+).*\"guaranteed_amount\":(\\d+).*\}")
                 posi = wina7rx.indexIn(str(htmlPage))

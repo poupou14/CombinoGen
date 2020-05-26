@@ -14,12 +14,14 @@ class ReadLotoHandler(ReadGridHandler):
                 return
 
         def handleHtmlPage(self, htmlPage):
-                tup = ()
                 self._gridList = []
-                loto15rx = QRegExp("<option selected=\"selected\" value=\"(\\d+)\">")
-                loto15DateRx = QRegExp("\\d*\\s*du\\s*(\\d*\/\\d*\/\\d*)<\/option>")
+                #loto15rx = QRegExp("<option\\s*(selected=\"selected\"\\s*)value=\"(\/\\w*)*\/lf\\d*\/(\\d*)-grille-(\\d+)\/\">")
+                loto15rx = QRegExp("<option\\s*value=\"(\/\\w*)*\/lf\\d*\/(\\d*)-grille-(\\d+)\/\"\\s*(selected=\"selected\"\\s*)>")
+                #loto15DateRx = QRegExp("\\d*\\s*du\\s*(\\d*\/\\d*\/\\d*)<\/option>")
+                loto15DateRx = QRegExp("LF\\d*\\s*n.\\d*\\s*-\\s*(\\d*\/\\d*\/\\d*)*(auj\.)*\\s*\\w*\\s*(\\d*h\\d*)<\/option>")
                 posi_encours = loto15rx.indexIn(str(htmlPage))
-                ngrille = loto15rx.cap(1)
+                print "posi_encours=%s" % posi_encours
+                ngrille = loto15rx.cap(3)
                 print "ngrille=%s" % ngrille
                 posi = loto15DateRx.indexIn(str(htmlPage), posi_encours)
                 date = loto15DateRx.cap(1)
@@ -27,7 +29,10 @@ class ReadLotoHandler(ReadGridHandler):
                 dmy = string.split(date, "/")
                 print "dmy :%s" % str(dmy)
                 qdatetime = QDateTime()
-                qdatetime.setDate(QDate(int("20"+dmy[2]), int(dmy[1]), int(dmy[0])))
+                try:
+                        qdatetime.setDate(QDate(int("20"+dmy[2]), int(dmy[1]), int(dmy[0])))
+                except IndexError:
+                        qdatetime.setDate(QDateTime.currentDateTime().date())
                 qdatetime = qdatetime.addDays(1).addSecs(-1) # next day
                 epochDate = qdatetime.toMSecsSinceEpoch()/1000
                 print "epochDate=%d" % epochDate
@@ -59,10 +64,13 @@ class ReadLotoHandler(ReadGridHandler):
                 self._grid.setJackpot(jackpot)
                 self._grid.setNbPlayers(jackpot)
                 htmlStrPage = filter(onlyascii, str(htmlPage))
-                teamString = "<td class=\"center matchs_av\">((\\(?\\)?\\d*\\w*\\.?'?-?\\s*)*)<\/td>"
-                enfOfGridString = "<div class=\"repart_legende\">"
+                startOfGridString = "<div class=\"repart_inside\">"
+                #teamString = "<td class=\"team\">((\\(?\\)?\\d*\\w*\\.?'?-?\\s*)*)<\/td>"
+                teamString = "<span class=\"team\">((\\(?\\)?\\d*\\w*\\.?'?\\s*)*)\\s*-\\s*((\\(?\\)?\\d*\\w*\\.?'?\\s*)*)<\/span>"
+                enfOfGridString = "<div class=\"legend_repart\">"
                 loto15Teamrx = QRegExp(teamString)
                 endOfGridRx = QRegExp(enfOfGridString)
+                startOfGridRx = QRegExp(startOfGridString)
                 posiEndOfGrid= endOfGridRx.indexIn(htmlStrPage, 0)
                 repString = ">(\\d*,*\\d*)\\s*\%<"
                 loto15Reprx = QRegExp(repString)
@@ -72,20 +80,19 @@ class ReadLotoHandler(ReadGridHandler):
                 i = 0
                 #try:
                 if True :
-                        posi= loto15Teamrx.indexIn(htmlStrPage, posi+1)
+                        posi= startOfGridRx.indexIn(htmlStrPage, posi+1)
+                        posiMax = endOfGridRx.indexIn(htmlStrPage, posi+1)
                         print "posi = %d" % posi
+                        posi= loto15Teamrx.indexIn(htmlStrPage, posi+1)
                         while posi != -1:
                                 i+=1
                                 print "indice %i" % i
                                 team1 = loto15Teamrx.cap(1)
-                                posi= loto15Teamrx.indexIn(htmlStrPage, posi+1)
-                                print "posi2 = %d" % posi
-                                print "posi2 = %d" % posi
                                 print "team1 = %s" % team1
-                                team2 = loto15Teamrx.cap(1)
-                                posiMax= loto15Teamrx.indexIn(htmlStrPage, posi+1)
-                                if posiMax < 0:
-                                        posiMax = posiEndOfGrid
+                                team2 = loto15Teamrx.cap(3)
+                                #posiMax= loto15Teamrx.indexIn(htmlStrPage, posi+1)
+                                #if posiMax < 0:
+                                        #posiMax = posiEndOfGrid
                                 print "posi3 = %d" % posi
                                 print "team2 = %s" % team2
                                 match = Match(team1 + " vs " + team2)
@@ -109,9 +116,10 @@ class ReadLotoHandler(ReadGridHandler):
                                         r2 = p2/total*100
                                         rN = pN/total*100
                                         match.setRepartition(p1/total, pN/total, p2/total)
+                                        print "match :\n %s" % match
                                 self._grid.addGame(match)
                                 print "game added : %d" % i
-                                posi= loto15Teamrx.indexIn(htmlStrPage, posi+1)
+                                posi= loto15Teamrx.indexIn(htmlStrPage, posiInter+1)
                                 print "posi1 = %d" % posi
                         print "%d grilles" % i
                         self._gridSize = i

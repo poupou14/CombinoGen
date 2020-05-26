@@ -1,9 +1,12 @@
 #!/usr/bin/python
-import os,string, sys, httplib
-from PySide.QtCore import  QUrl, QThread, Signal, QObject
+import httplib
+import time
+from PySide.QtCore import QThread, Signal, QObject
 from contextlib import closing
+#from selenium.webdriver import Firefox # pip install selenium
 from selenium.webdriver import Firefox # pip install selenium
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common import exceptions
 from pyvirtualdisplay import Display
 
 class DistribPageGeneratedSignal(QObject):
@@ -27,7 +30,7 @@ class GridRequestor(QThread):
             def _wrapper(*args, **kwargs):
                 try:
                     result = wrapped_function(*args, **kwargs)
-                except httplib.BadStatusLine:
+                except httplib.BadStatusLine, exceptions.WebDriverException:
                     return
                 return result
             return _wrapper
@@ -42,6 +45,7 @@ class GridRequestor(QThread):
                     with closing(Firefox()) as browser:
                         browser = Firefox()
                         browser.get(self.__url)
+			time.sleep(3)
                         # wait for the page to load
                         WebDriverWait(browser, timeout=20)#.until(
                         #lambda x: x.find_element_by_id('someId_that_must_be_on_new_page'))
@@ -49,9 +53,11 @@ class GridRequestor(QThread):
                         page_source = browser.page_source
                         self.distribPageGenerated.sig.emit(page_source)
                         self.__display.stop()
+                        print "browser quit !!"
                         browser.quit()
-                        
-                except AttributeError:
+                        print "End browser quit !!"
+
+                except AttributeError, exceptions.WebDriverException:
                     print "browser quit AttributeError issue... don't care, go on !"
                     pass
                 #print(page_source)

@@ -17,6 +17,7 @@ CombinoGen :
 	$> pip install selenium
 - get xvfb :
 	$> sudo apt-get install xvfb
+	$> sudo pip install setuptools
 	$> sudo pip install pyvirtualdisplay
 - get geckodriver :
 	put it in a local directory, and update CombinoGUI.sh : export PATH=...	
