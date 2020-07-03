@@ -16,7 +16,8 @@ class ReadLotoHandler(ReadGridHandler):
         def handleHtmlPage(self, htmlPage):
                 self._gridList = []
                 #loto15rx = QRegExp("<option\\s*(selected=\"selected\"\\s*)value=\"(\/\\w*)*\/lf\\d*\/(\\d*)-grille-(\\d+)\/\">")
-                loto15rx = QRegExp("<option\\s*value=\"(\/\\w*)*\/lf\\d*\/(\\d*)-grille-(\\d+)\/\"\\s*(selected=\"selected\"\\s*)>")
+                loto15rx = QRegExp("<option\\s*value=\"(\/\\w*)*\/l\\w*-*f\\w*-*\\d*\/(\\d*)-grille-(\\d+)\/\"\\s*(selected=\"selected\"\\s*)>")
+                #loto15rx = QRegExp("<option\\s*value=\"(\/\\w*)*\/l\\w*-*f\\w*-*\\d*\/(\\d*)-grille-(\\d+)\/\"\\s*(selected=\"selected\"\\s*)>")
                 #loto15DateRx = QRegExp("\\d*\\s*du\\s*(\\d*\/\\d*\/\\d*)<\/option>")
                 loto15DateRx = QRegExp("LF\\d*\\s*n.\\d*\\s*-\\s*(\\d*\/\\d*\/\\d*)*(auj\.)*\\s*\\w*\\s*(\\d*h\\d*)<\/option>")
                 posi_encours = loto15rx.indexIn(str(htmlPage))
@@ -41,6 +42,7 @@ class ReadLotoHandler(ReadGridHandler):
                 loto15rx = QRegExp("<option value=\"(\\d+)\">")
                 posi = 0
                 posi = loto15rx.indexIn(str(htmlPage), posi+1)
+                print "posi_2=%s" % posi
                 while posi != -1 :#and posi < posi_encours:
                         ngrille = loto15rx.cap(1)
                         print "ngrille=%s" % ngrille

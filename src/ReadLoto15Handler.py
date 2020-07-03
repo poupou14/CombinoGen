@@ -13,7 +13,8 @@ class ReadLoto15Handler(ReadLotoHandler):
                 print "Loto 15"
                 self._gridName = "Loto15"
                 print "L15: %s" % str(self)
-                self._bookUrl = QUrl("https://www.pronosoft.com/fr/lotofoot/repartition/lf15/")
+                self._bookUrl = QUrl("https://www.pronosoft.com/fr/lotosports/repartition/loto-foot-12")
+                #self._bookUrl = QUrl("https://www.pronosoft.com/fr/lotofoot/repartition/lf15/")
                 self._gridSize = 14
                 self._grid = Grille()
                 self._grid.setReturnRate(0.70)
@@ -24,7 +25,8 @@ class ReadLoto15Handler(ReadLotoHandler):
 
         def changeGrid(self, index):
                 ReadLotoHandler.changeGrid(self, index)
-                self._distributionUrl = "http://www.pronosoft.com/fr/concours/repartition_lotofoot.php?id15=%s" % self._gridList[index][0]
+                self._distributionUrl = "https://www.pronosoft.com/fr/lotosports/repartition/loto-foot-12/2020-grille-%s" % self._gridList[index][0]
+                #self._distributionUrl = "http://www.pronosoft.com/fr/concours/repartition_lotofoot.php?id15=%s" % self._gridList[index][0]
                 print "distributionUrl=%s" % self._distributionUrl
                 return
 

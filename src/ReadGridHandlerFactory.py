@@ -25,12 +25,16 @@ class ReadGridHandlerFactory:
                 if grille.getSize() == 7 and source.getReturnRate() == 0.75 and source.getFirstRankRate() == 0.55:
                         print "Factory generate Wina7"
                         return_l = ReadWinamax7Handler()
-                elif grille.getSize() == 12:
-                        print "Factory generate Wina12"
-                        return_l = ReadWinamax12Handler()
                 elif grille.getSize() == 7 and source.getReturnRate() == 0.70 and source.getFirstRankRate() == 0.45:
                         print "Factory generate Loto7"
                         return_l = ReadLoto7Handler()
+                elif grille.getSize() == 12 and source.getReturnRate() == 0.75:
+                        print "Factory generate Wina12"
+                        return_l = ReadWinamax12Handler()
+                elif grille.getSize() == 12 and source.getReturnRate() == 0.70 \
+                        and source.getFirstRankRate() == 0.40:
+                        print "Factory generate Loto 12"
+                        return_l = ReadLoto15Handler()
                 elif grille.getSize() == 14 and source.getReturnRate() == 0.70 \
                         and source.getFirstRankRate() == 0.40:
                         print "Factory generate Loto15 (14)"
