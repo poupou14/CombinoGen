@@ -5,9 +5,12 @@ CombinoGen :
 - install pip
 	$> sudo apt-get install python-pip
 - install pyside
-	$> sudo apt-get install pyside-tools 
+#	$> sudo apt-get install pyside-tools 
+install pyside-tools : https://pyside.readthedocs.io/en/latest/building/linux.html
 - install cython
 	$> sudo apt-get install cython
+- install qt4*
+	$> sudo apt-get install qt4-*
  install pyExcelerator 
 	$> sudo apt-get install python-excelerator 
 	$> sudo apt-get install python-xlwt
@@ -19,7 +22,7 @@ CombinoGen :
 	$> sudo apt-get install xvfb
 	$> sudo pip install setuptools
 	$> sudo pip install pyvirtualdisplay
-- get geckodriver :
+- get geckodriver : https://github.com/mozilla/geckodriver/releases
 	put it in a local directory, and update CombinoGUI.sh : export PATH=...	
 - get splinter :
 	$> sudo pip install splinter
