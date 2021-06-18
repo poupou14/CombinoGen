@@ -1,4 +1,6 @@
 #!/usr/bin/python
+import sys
+sys.path.insert(0, "/home/poupou/.local/lib/python2.7/site-packages/pyvirtualdisplay/")
 import httplib
 import time
 from PySide.QtCore import QThread, Signal, QObject
