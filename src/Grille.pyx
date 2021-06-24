@@ -110,7 +110,8 @@ class Grille():
                 return self.__matches[index_p]
 
         def getSize(self) :
-                return len(self.__matches)
+                size = len(self.__matches)
+                return size
 
         def matches(self) :
                 return self.__matches

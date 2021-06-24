@@ -51,7 +51,7 @@ class ReadGridHandler():
         return self._grid
 
     def gridSize(self):
-        return self._gridSize
+        return len(self._grid.matches())
 
     @property
     def oddsUrl(self):

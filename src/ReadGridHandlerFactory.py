@@ -11,7 +11,7 @@ from ReadLoto7Handler import ReadLoto7Handler
 from ReadLoto15Handler import ReadLoto15Handler
 from ReadMini5Handler import ReadMini5Handler
 from ReadPick5Handler import ReadPick5Handler
-from ReadPick8Handler import ReadPick8Handler
+from ReadLoto8Handler import ReadLoto8Handler
 from ReadPick15Handler import ReadPick15Handler
 
 class ReadGridHandlerFactory:
@@ -50,9 +50,9 @@ class ReadGridHandlerFactory:
                 elif grille.getSize() == 5 and source.getReturnRate() == 0.70 and source.getFirstRankRate() == 0.75:
                         print "Factory generate Pick5"
                         return_l = ReadPick5Handler()
-                elif grille.getSize() == 8 and source.getReturnRate() == 0.70 and source.getFirstRankRate() == 0.75:
-                        print "Factory generate Pick8"
-                        return_l = ReadPick8Handler()
+                elif grille.getSize() == 8 and source.getReturnRate() == 0.70 and source.getFirstRankRate() == 0.45:
+                        print "Factory generate Loto8"
+                        return_l = ReadLoto8Handler()
                 elif grille.getSize() == 15 and source.getReturnRate() == 0.70 \
                         and source.getFirstRankRate() == 0.4 \
                         and source.getScndRankRate() == 0.1:

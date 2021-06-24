@@ -63,7 +63,7 @@ class CombinoGUI(QtGui.QMainWindow):
 
         self.__distribLayoutGridWidth = 0
         self.__gridIndex = -1
-        self.__gridHandler = None
+        self.__gridHandler = ""
         print "platform = %s" % platform
         if platform == "linux" or platform == "linux2":
             # linux

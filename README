@@ -12,6 +12,8 @@ CombinoGen :
 	$> sudo pip install pyside
 - install cython
 	$> sudo apt-get install cython
+- install qt4*
+	$> sudo apt-get install qt4-*
  install pyExcelerator 
 	$> sudo apt-get install python-excelerator 
 	$> sudo apt-get install python-xlwt
