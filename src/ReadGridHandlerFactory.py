@@ -22,7 +22,7 @@ class ReadGridHandlerFactory:
                 source = CombinoSource(inputFile)
                 grille = source.getGrille()
                 print "Factory grid size =  %d " % grille.getSize()
-                if grille.getSize() == 7 and source.getReturnRate() == 0.75 and source.getFirstRankRate() == 0.55:
+                if grille.getSize() == 7 and source.getReturnRate() == 0.75 and source.getFirstRankRate() == 0.50:
                         print "Factory generate Wina7"
                         return_l = ReadWinamax7Handler()
                 elif grille.getSize() == 7 and source.getReturnRate() == 0.70 and source.getFirstRankRate() == 0.45:

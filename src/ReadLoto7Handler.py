@@ -24,7 +24,7 @@ class ReadLoto7Handler(ReadLotoHandler):
 
         def changeGrid(self, index):
                 ReadLotoHandler.changeGrid(self, index)
-                self._distributionUrl = "http://www.pronosoft.com/fr/concours/repartition_lotofoot.php?id7=%s" % self._gridList[index][0]
+                self._distributionUrl = "http://www.pronosoft.com/fr/lotofoot/repartition/lf7/2021-grille-%s" % self._gridList[index][0]
                 print "distributionUrl=%s" % self._distributionUrl
                 return
 

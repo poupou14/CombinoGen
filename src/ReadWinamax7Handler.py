@@ -18,7 +18,7 @@ class ReadWinamax7Handler(ReadGridHandler):
                 self._gridName = "Winamax7"
                 print "W7: %s" % str(self)
                 self._gridSize = 7
-                self._bookUrl = QUrl("https://www.winamax.fr/paris-sportifs-grilles/")
+                self._bookUrl = QUrl("https://www.winamax.fr/paris-sportifs/grilles/")
                 return
 
         def handleHtmlPage(self, htmlPage):
@@ -99,6 +99,6 @@ class ReadWinamax7Handler(ReadGridHandler):
 
         def changeGrid(self, index):
                 ReadGridHandler.changeGrid(self, index)
-                self._distributionUrl = "https://www.winamax.fr/paris-sportifs-grilles/grille7-%s/grilles-publiques" % self._gridList[index][0]
+                self._distributionUrl = "https://www.winamax.fr/paris-sportifs/grilles/grille7-%s/public/" % self._gridList[index][0]
                 print "distributionUrl=%s" % self._distributionUrl
                 return

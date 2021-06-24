@@ -221,7 +221,7 @@ class CombinoGUI(QtGui.QMainWindow):
         reponse = combinoManager.get()  # send request
 
     def do_handleDistribHtmlPage(self, sourcePage):
-        # print(sourcePage)
+        print(sourcePage)
         self.ui.progressBar.hide()
         self.__gridHandler.handleDistribHtmlPage(sourcePage.encode('utf-8'))
         self.do_generateOdds()

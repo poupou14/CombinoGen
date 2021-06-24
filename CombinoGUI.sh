@@ -1,5 +1,5 @@
 # En cas général les "#" servent à faire des commentaires comme ici
-export PATH=$PATH:$HOME/Program/geckodriver/:/media/sf_Thalès/geckodriver/
+export PATH=$PATH:/home/poupou/DATA/Program/GeckoDiver
 echo Lancement de CombinoGUI !
 cd $COMBINO
 date > ./date1.txt
