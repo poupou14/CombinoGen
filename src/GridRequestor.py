@@ -6,10 +6,10 @@ import time
 from PySide.QtCore import QThread, Signal, QObject
 from contextlib import closing
 #from selenium.webdriver import Firefox # pip install selenium
-from selenium.webdriver import Firefox # pip install selenium
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common import exceptions
-from pyvirtualdisplay import Display
+#from selenium.webdriver import Firefox # pip install selenium
+#from selenium.webdriver.support.ui import WebDriverWait
+#from selenium.common import exceptions
+#from pyvirtualdisplay import Display
 
 class DistribPageGeneratedSignal(QObject):
         sig = Signal(str)

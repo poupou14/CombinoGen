@@ -2,6 +2,7 @@
 import os,string, sys
 from ReadGridHandler import ReadGridHandler
 from PySide.QtNetwork import  *
+sys.path.append("../WinaScan//")
 from WSParser import WSGridParser, onlyascii
 from PySide.QtCore import QUrl, QRegExp, QDateTime, QDate
 from Grille import Grille

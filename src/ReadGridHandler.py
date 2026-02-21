@@ -3,7 +3,7 @@ import os, string, sys
 from PySide.QtCore import QUrl, QRegExp, QDateTime
 from PySide import QtCore
 
-sys.path.append("../WinaScan/WinaScan/src/")
+sys.path.append("../WinaScan//")
 from WSParser import onlyascii
 
 BETEXPLORER_SOURCE = 0

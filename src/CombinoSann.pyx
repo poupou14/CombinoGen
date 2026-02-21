@@ -68,7 +68,8 @@ def write_excel_header(worksheet, title_cols):
 def write_excel_row(worksheet, rowNumber, columnNumber):
         """ Write a non-header row into the worksheet """
         cno = 0
-        for column in columns:
+        lno = 0
+        for column in columnNumber:
                 worksheet.write(lno, cno, column)
                 cno = cno + 1
         return
